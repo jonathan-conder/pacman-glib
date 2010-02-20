@@ -8,8 +8,8 @@ libgpacmaninclude_HEADERS = pacman-conflict.h pacman-database.h pacman-delta.h p
 
 lib_LTLIBRARIES = libgpacman-@API_VERSION@.la
 libgpacman_@API_VERSION@_la_SOURCES = pacman-config.c pacman-conflict.c pacman-database.c pacman-delta.c pacman-dependency.c pacman-enum.c pacman-error.c pacman-file-conflict.c pacman-group.c pacman-install.c pacman-list.c pacman-manager.c pacman-marshal.c pacman-missing-dependency.c pacman-package.c pacman-remove.c pacman-sync.c pacman-transaction.c pacman-update.c
-libgpacman_@API_VERSION@_la_CFLAGS = $(GLIB_CFLAGS) $(PACMAN_CFLAGS) -include $(CONFIG_HEADER)
-libgpacman_@API_VERSION@_la_LIBADD = $(GLIB_LIBS) $(PACMAN_LIBS)
+libgpacman_@API_VERSION@_la_CFLAGS = $(GLIB_CFLAGS) $(ALPM_CFLAGS) -include $(CONFIG_HEADER)
+libgpacman_@API_VERSION@_la_LIBADD = $(GLIB_LIBS) $(ALPM_LIBS)
 
 pacman-enum.c: pacman-enum.c.template pacman-dependency.h pacman-error.h pacman-transaction.h
 	$(GLIB_MKENUMS) --template $^ > $@.tmp && \
