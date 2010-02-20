@@ -23,8 +23,8 @@
 #ifndef __PACMAN_DEPENDENCY_H__
 #define __PACMAN_DEPENDENCY_H__
 
-#include <glib-object.h>
 #include <glib.h>
+#include <glib-object.h>
 #include "pacman-types.h"
 
 G_BEGIN_DECLS

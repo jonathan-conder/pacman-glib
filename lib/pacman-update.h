@@ -23,6 +23,7 @@
 #ifndef __PACMAN_UPDATE_H__
 #define __PACMAN_UPDATE_H__
 
+#include <glib.h>
 #include <glib-object.h>
 #include "pacman-types.h"
 

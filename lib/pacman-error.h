@@ -23,8 +23,8 @@
 #ifndef __PACMAN_ERROR_H__
 #define __PACMAN_ERROR_H__
 
-#include <glib-object.h>
 #include <glib.h>
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 

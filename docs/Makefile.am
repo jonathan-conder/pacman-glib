@@ -10,7 +10,7 @@ SCAN_OPTIONS = --rebuild-types
 MKDB_OPTIONS = --sgml-mode --output-format=xml --name-space=pacman
 MKTMPL_OPTIONS = 
 MKHTML_OPTIONS = 
-FIXXREF_OPTIONS = --extra-dir=$(prefix)/share/gtk-doc/html/gobject --extra-dir=$(prefix)/share/gtk-doc/html/glib
+FIXXREF_OPTIONS = --extra-dir=$(prefix)/share/gtk-doc/html/glib --extra-dir=$(prefix)/share/gtk-doc/html/gobject
 
 HFILE_GLOB = $(top_srcdir)/lib/*.h
 CFILE_GLOB = $(top_srcdir)/lib/*.c

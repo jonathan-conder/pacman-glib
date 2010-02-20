@@ -23,6 +23,8 @@
 #ifndef __PACMAN_TYPES_H__
 #define __PACMAN_TYPES_H__
 
+#include <glib.h>
+
 G_BEGIN_DECLS
 
 typedef struct __pmconflict_t PacmanConflict;
