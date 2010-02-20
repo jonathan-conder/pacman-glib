@@ -10,8 +10,10 @@ AM_PROG_CC_C_O
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
-PKGCONFIG_NAME=patsubst(AC_PACKAGE_TARNAME-AC_PACKAGE_VERSION, [\.[0-9]+$])
-AC_SUBST([PKGCONFIG_NAME])
+API_VERSION=patsubst(AC_PACKAGE_VERSION, [\.[0-9]+$])
+AC_SUBST([API_VERSION])
+API_NAME="$PACKAGE_TARNAME-$API_VERSION"
+AC_SUBST([API_NAME])
 
 AC_SUBST([CFLAGS])
 AC_SUBST([CPPFLAGS])
@@ -55,5 +57,5 @@ AC_SUBST([PACMAN_CONFIG_FILE])
 AC_ARG_WITH(log-file, AS_HELP_STRING([--with-log-file=path], [set the default location of the log file]), [PACMAN_LOG_FILE=[$withval]], [PACMAN_LOG_FILE=[$localstatedir/log/pacman.log]])
 AC_SUBST([PACMAN_LOG_FILE])
 
-AC_CONFIG_FILES([Makefile $PKGCONFIG_NAME.pc docs/Makefile lib/Makefile po/Makefile.in])
+AC_CONFIG_FILES([Makefile $API_NAME.pc docs/$PACKAGE_TARNAME-docs.sgml lib/Makefile po/Makefile.in docs/Makefile])
 AC_OUTPUT

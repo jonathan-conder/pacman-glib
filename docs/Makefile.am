@@ -22,9 +22,9 @@ content_files =
 expand_content_files = 
 
 GTKDOC_CFLAGS = $(GLIB_CFLAGS)
-GTKDOC_LIBS = $(GLIB_LIBS) -lalpm $(top_builddir)/lib/lib$(PACKAGE_TARNAME).la
+GTKDOC_LIBS = $(GLIB_LIBS) -lalpm $(top_builddir)/lib/lib$(API_NAME).la
 
 include $(top_srcdir)/gtk-doc.make
 
 # TODO: remove overrides.txt when gtk-doc 1.14 comes out
-DISTCLEANFILES = $(DOC_MODULE).types Makefile.in -rf tmpl
+DISTCLEANFILES = $(DOC_MODULE).types $(DOC_MODULE)-docs.sgml Makefile.in -rf tmpl
