@@ -21,7 +21,5 @@ pacman-marshal.c: pacman-marshal.list
 
 BUILT_SOURCES = pacman-enum.c pacman-marshal.c
 
-EXTRA_DIST = $(libgpacmaninclude_HEADERS)
-
 CLEANFILES = $(BUILT_SOURCES)
 DISTCLEANFILES = Makefile.in
