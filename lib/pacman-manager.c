@@ -1333,7 +1333,7 @@ static void pacman_manager_get_property (GObject *object, guint prop_id, GValue 
  *
  * Returns: A list of #PacmanMissingDependency. Free the contents with pacman_missing_dependency_free(), then free the list with pacman_list_free().
  */
-PacmanList *pacman_missing_dependency_check_transaction (PacmanManager *manager, const PacmanList *remove, const PacmanList *install) {
+PacmanList *pacman_manager_find_missing_dependencies (PacmanManager *manager, const PacmanList *remove, const PacmanList *install) {
 	PacmanDatabase *database;
 	
 	g_return_val_if_fail (manager != NULL, NULL);

@@ -28,6 +28,7 @@
 
 G_BEGIN_DECLS
 
+PacmanList *pacman_list_new (void);
 void pacman_list_free (PacmanList *list);
 void pacman_list_free_contents (PacmanList *list, GDestroyNotify func);
 void pacman_list_free_full (PacmanList *list, GDestroyNotify func);

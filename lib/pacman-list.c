@@ -16,6 +16,17 @@
  */
 
 /**
+ * pacman_list_new:
+ *
+ * Creates a new list. Note that this is a convenience function only and simply returns %NULL.
+ *
+ * Returns: A new #PacmanList. Free with pacman_list_free().
+ */
+PacmanList *pacman_list_new (void) {
+	return NULL;
+}
+
+/**
  * pacman_list_free:
  * @list: A #PacmanList.
  *
