@@ -1,12 +1,15 @@
 DEFS = -DPACMAN_COMPILATION -DG_LOG_DOMAIN=\"Pacman\" -DPACMAN_ROOT_PATH=\"$(PACMAN_ROOT_PATH)\" -DPACMAN_DATABASE_PATH=\"$(PACMAN_DATABASE_PATH)\" -DPACMAN_CACHE_PATH=\"$(PACMAN_CACHE_PATH)\" -DPACMAN_CONFIG_FILE=\"$(PACMAN_CONFIG_FILE)\" -DPACMAN_LOG_FILE=\"$(PACMAN_LOG_FILE)\"
 
-libgpacmanincludedir = $(includedir)/$(PKGCONFIG_NAME)
-libgpacmaninclude_HEADERS = pacman.h pacman-conflict.h pacman-database.h pacman-delta.h pacman-dependency.h pacman-error.h pacman-file-conflict.h pacman-group.h pacman-install.h pacman-list.h pacman-manager.h pacman-missing-dependency.h pacman-package.h pacman-remove.h pacman-sync.h pacman-transaction.h pacman-types.h pacman-update.h
+libheaderincludedir = $(includedir)/$(PKGCONFIG_NAME)
+libheaderinclude_HEADERS = pacman.h
 
-lib_LTLIBRARIES = libgpacman.la
-libgpacman_la_SOURCES = pacman-config.c pacman-conflict.c pacman-database.c pacman-delta.c pacman-dependency.c pacman-enum.c pacman-error.c pacman-file-conflict.c pacman-group.c pacman-install.c pacman-list.c pacman-manager.c pacman-marshal.c pacman-missing-dependency.c pacman-package.c pacman-remove.c pacman-sync.c pacman-transaction.c pacman-update.c
-libgpacman_la_CFLAGS = $(GLIB_CFLAGS) $(PACMAN_CFLAGS) -include $(CONFIG_HEADER)
-libgpacman_la_LIBADD = $(GLIB_LIBS) $(PACMAN_LIBS)
+libgpacmanincludedir = $(libheaderincludedir)/$(PACKAGE_TARNAME)
+libgpacmaninclude_HEADERS = pacman-conflict.h pacman-database.h pacman-delta.h pacman-dependency.h pacman-error.h pacman-file-conflict.h pacman-group.h pacman-install.h pacman-list.h pacman-manager.h pacman-missing-dependency.h pacman-package.h pacman-remove.h pacman-sync.h pacman-transaction.h pacman-types.h pacman-update.h
+
+lib_LTLIBRARIES = libgpacman-3.3.la
+libgpacman_3_3_la_SOURCES = pacman-config.c pacman-conflict.c pacman-database.c pacman-delta.c pacman-dependency.c pacman-enum.c pacman-error.c pacman-file-conflict.c pacman-group.c pacman-install.c pacman-list.c pacman-manager.c pacman-marshal.c pacman-missing-dependency.c pacman-package.c pacman-remove.c pacman-sync.c pacman-transaction.c pacman-update.c
+libgpacman_3_3_la_CFLAGS = $(GLIB_CFLAGS) $(PACMAN_CFLAGS) -include $(CONFIG_HEADER)
+libgpacman_3_3_la_LIBADD = $(GLIB_LIBS) $(PACMAN_LIBS)
 
 pacman-enum.c: pacman-enum.c.template pacman-dependency.h pacman-error.h pacman-transaction.h
 	$(GLIB_MKENUMS) --template $^ > $@.tmp && \
