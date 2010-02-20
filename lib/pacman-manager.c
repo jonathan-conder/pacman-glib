@@ -293,15 +293,15 @@ gboolean pacman_manager_remove_cache_path (PacmanManager *manager, const gchar *
 /**
  * pacman_manager_set_cache_paths:
  * @manager: A #PacmanManager.
- * @cache_paths: A list of directory names.
+ * @paths: A list of directory names.
  *
- * Sets the list of CacheDirs to @cache_paths. See pacman_manager_get_cache_paths().
+ * Sets the list of CacheDirs to @paths. See pacman_manager_get_cache_paths().
  */
-void pacman_manager_set_cache_paths (PacmanManager *manager, PacmanList *cache_paths) {
+void pacman_manager_set_cache_paths (PacmanManager *manager, PacmanList *paths) {
 	g_return_if_fail (manager != NULL);
-	g_return_if_fail (cache_paths != NULL);
+	g_return_if_fail (paths != NULL);
 	
-	alpm_option_set_cachedirs (alpm_list_strdup (cache_paths));
+	alpm_option_set_cachedirs (alpm_list_strdup (paths));
 }
 
 /**
@@ -532,11 +532,11 @@ static gint pacman_manager_fetch_cb (const gchar *url, const gchar *path, time_t
 /**
  * pacman_manager_set_transfer_closure:
  * @manager: A #PacmanManager.
- * @transfer_closure: A #GClosure, or %NULL to download files internally.
+ * @closure: A #GClosure, or %NULL to download files internally.
  *
- * Sets the closure that pacman will use to download files to @transfer_closure. See #PacmanTransferFunc.
+ * Sets the closure that pacman will use to download files to @closure. See #PacmanTransferFunc.
  */
-void pacman_manager_set_transfer_closure (PacmanManager *manager, GClosure *transfer_closure) {
+void pacman_manager_set_transfer_closure (PacmanManager *manager, GClosure *closure) {
 	PacmanManagerPrivate *priv;
 	
 	g_return_if_fail (manager != NULL);
@@ -546,14 +546,14 @@ void pacman_manager_set_transfer_closure (PacmanManager *manager, GClosure *tran
 		g_closure_unref (priv->transfer);
 	}
 	
-	if (transfer_closure == NULL) {
+	if (closure == NULL) {
 		alpm_option_set_fetchcb (NULL);
 		priv->transfer = NULL;
 	} else {
 		if (priv->transfer == NULL) {
 			alpm_option_set_fetchcb (pacman_manager_fetch_cb);
 		}
-		priv->transfer = transfer_closure;
+		priv->transfer = closure;
 	}
 }
 
@@ -562,21 +562,21 @@ void g_cclosure_user_marshal_BOOLEAN__STRING_STRING_POINTER (GClosure *closure, 
 /**
  * pacman_manager_set_transfer_handler:
  * @manager: A #PacmanManager.
- * @transfer_func: A #PacmanTransferFunc function, or %NULL to download files internally.
- * @user_data: User data to pass to @transfer_func.
+ * @func: A #PacmanTransferFunc function, or %NULL to download files internally.
+ * @user_data: User data to pass to @func.
  * @destroy_data: A #GClosureNotify to be called when @user_data is no longer needed.
  *
- * Sets the function that pacman will use to download files to @transfer_func. See #PacmanTransferFunc.
+ * Sets the function that pacman will use to download files to @func. See #PacmanTransferFunc.
  */
-void pacman_manager_set_transfer_handler (PacmanManager *manager, PacmanTransferFunc transfer_func, gpointer user_data, GClosureNotify destroy_data) {
+void pacman_manager_set_transfer_handler (PacmanManager *manager, PacmanTransferFunc func, gpointer user_data, GClosureNotify destroy_data) {
 	g_return_if_fail (manager != NULL);
 	
-	if (transfer_func == NULL) {
+	if (func == NULL) {
 		pacman_manager_set_transfer_closure (manager, NULL);
 	} else {
-		GClosure *transfer_closure = g_cclosure_new (G_CALLBACK (transfer_func), user_data, destroy_data);
-		g_closure_set_marshal (transfer_closure, g_cclosure_user_marshal_BOOLEAN__STRING_STRING_POINTER);
-		pacman_manager_set_transfer_closure (manager, transfer_closure);
+		GClosure *closure = g_cclosure_new (G_CALLBACK (func), user_data, destroy_data);
+		g_closure_set_marshal (closure, g_cclosure_user_marshal_BOOLEAN__STRING_STRING_POINTER);
+		pacman_manager_set_transfer_closure (manager, closure);
 	}
 }
 
@@ -780,18 +780,18 @@ gboolean pacman_manager_remove_hold_package (PacmanManager *manager, const gchar
 /**
  * pacman_manager_set_hold_packages:
  * @manager: A #PacmanManager.
- * @hold_packages: A list of package names.
+ * @packages: A list of package names.
  *
- * Sets the list of HoldPkgs to @hold_packages. See pacman_manager_get_hold_packages().
+ * Sets the list of HoldPkgs to @packages. See pacman_manager_get_hold_packages().
  */
-void pacman_manager_set_hold_packages (PacmanManager *manager, PacmanList *hold_packages) {
+void pacman_manager_set_hold_packages (PacmanManager *manager, PacmanList *packages) {
 	PacmanManagerPrivate *priv;
 	
 	g_return_if_fail (manager != NULL);
 	
 	priv = PACMAN_MANAGER_GET_PRIVATE (manager);
 	pacman_list_free_full (priv->hold_packages, (GDestroyNotify) g_free);
-	priv->hold_packages = pacman_list_strdup (hold_packages);
+	priv->hold_packages = pacman_list_strdup (packages);
 }
 
 /**
@@ -858,18 +858,18 @@ gboolean pacman_manager_remove_sync_first (PacmanManager *manager, const gchar *
 /**
  * pacman_manager_set_sync_firsts:
  * @manager: A #PacmanManager.
- * @sync_firsts: A list of package names.
+ * @packages: A list of package names.
  *
  * Sets the list of SyncFirsts to @sync_firsts. See pacman_manager_get_sync_firsts().
  */
-void pacman_manager_set_sync_firsts (PacmanManager *manager, PacmanList *sync_firsts) {
+void pacman_manager_set_sync_firsts (PacmanManager *manager, PacmanList *packages) {
 	PacmanManagerPrivate *priv;
 	
 	g_return_if_fail (manager != NULL);
 	
 	priv = PACMAN_MANAGER_GET_PRIVATE (manager);
 	pacman_list_free_full (priv->sync_firsts, (GDestroyNotify) g_free);
-	priv->sync_firsts = pacman_list_strdup (sync_firsts);
+	priv->sync_firsts = pacman_list_strdup (packages);
 }
 
 /**
@@ -919,14 +919,14 @@ gboolean pacman_manager_remove_ignore_group (PacmanManager *manager, const gchar
 /**
  * pacman_manager_set_ignore_groups:
  * @manager: A #PacmanManager.
- * @ignore_groups: A list of group names.
+ * @groups: A list of group names.
  *
- * Sets the list of IgnoreGroups to @ignore_groups. See pacman_manager_get_ignore_groups().
+ * Sets the list of IgnoreGroups to @groups. See pacman_manager_get_ignore_groups().
  */
-void pacman_manager_set_ignore_groups (PacmanManager *manager, PacmanList *ignore_groups) {
+void pacman_manager_set_ignore_groups (PacmanManager *manager, PacmanList *groups) {
 	g_return_if_fail (manager != NULL);
 	
-	alpm_option_set_ignoregrps (alpm_list_strdup (ignore_groups));
+	alpm_option_set_ignoregrps (alpm_list_strdup (groups));
 }
 
 /**
@@ -976,14 +976,14 @@ gboolean pacman_manager_remove_ignore_package (PacmanManager *manager, const gch
 /**
  * pacman_manager_set_ignore_packages:
  * @manager: A #PacmanManager.
- * @ignore_packages: A list of package names.
+ * @packages: A list of package names.
  *
- * Sets the list of IgnorePkgs to @ignore_packages. See pacman_manager_get_ignore_packages().
+ * Sets the list of IgnorePkgs to @packages. See pacman_manager_get_ignore_packages().
  */
-void pacman_manager_set_ignore_packages (PacmanManager *manager, PacmanList *ignore_packages) {
+void pacman_manager_set_ignore_packages (PacmanManager *manager, PacmanList *packages) {
 	g_return_if_fail (manager != NULL);
 	
-	alpm_option_set_ignorepkgs (alpm_list_strdup (ignore_packages));
+	alpm_option_set_ignorepkgs (alpm_list_strdup (packages));
 }
 
 /**
@@ -1033,14 +1033,14 @@ gboolean pacman_manager_remove_no_extract (PacmanManager *manager, const gchar *
 /**
  * pacman_manager_set_no_extracts:
  * @manager: A #PacmanManager.
- * @no_extracts: A list of file locations (without a leading slash).
+ * @filenames: A list of file locations (without a leading slash).
  *
  * Sets the list of NoExtracts to @no_extracts. See pacman_manager_get_no_extracts().
  */
-void pacman_manager_set_no_extracts (PacmanManager *manager, PacmanList *no_extracts) {
+void pacman_manager_set_no_extracts (PacmanManager *manager, PacmanList *filenames) {
 	g_return_if_fail (manager != NULL);
 	
-	alpm_option_set_noextracts (alpm_list_strdup (no_extracts));
+	alpm_option_set_noextracts (alpm_list_strdup (filenames));
 }
 
 /**
@@ -1090,14 +1090,14 @@ gboolean pacman_manager_remove_no_upgrade (PacmanManager *manager, const gchar *
 /**
  * pacman_manager_set_no_upgrades:
  * @manager: A #PacmanManager.
- * @no_upgrades: A list of file names (without a leading slash).
+ * @filenames: A list of file names (without a leading slash).
  *
- * Sets the list of NoUpgrades to @no_upgrades. See pacman_manager_get_no_upgrades().
+ * Sets the list of NoUpgrades to @filenames. See pacman_manager_get_no_upgrades().
  */
-void pacman_manager_set_no_upgrades (PacmanManager *manager, PacmanList *no_upgrades) {
+void pacman_manager_set_no_upgrades (PacmanManager *manager, PacmanList *filenames) {
 	g_return_if_fail (manager != NULL);
 	
-	alpm_option_set_noupgrades (alpm_list_strdup (no_upgrades));
+	alpm_option_set_noupgrades (alpm_list_strdup (filenames));
 }
 
 /**

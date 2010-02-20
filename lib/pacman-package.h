@@ -63,7 +63,7 @@ goffset pacman_package_get_download_size (PacmanPackage *package);
 goffset pacman_package_get_installed_size (PacmanPackage *package);
 
 const gchar *pacman_package_get_md5sum (PacmanPackage *package);
-gchar *pacman_package_generate_md5sum (const gchar *filename);
+gchar *pacman_package_generate_md5sum (const gchar *filename, GError **error);
 gboolean pacman_package_check_md5sum (PacmanPackage *package, GError **error);
 
 gboolean pacman_package_has_force (PacmanPackage *package);

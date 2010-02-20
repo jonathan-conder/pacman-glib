@@ -25,7 +25,7 @@
  * @full: %TRUE or %FALSE.
  * @error: A #GError, or %NULL.
  *
- * Creates a new package from @filename, and loads detailed information about it immediately if @full is %TRUE.
+ * Creates a new package from the file at @filename, and loads detailed information about it immediately if @full is %TRUE.
  *
  * Returns: A #PacmanPackage, or %NULL if @error is set. Free with pacman_package_free().
  */
@@ -147,7 +147,7 @@ gint pacman_package_compare_version (const gchar *a, const gchar *b) {
  *
  * Gets the processor architecture that @package was built for.
  *
- * Returns: A processor architecture, or "any" if @package is portable across architectures. Do not free.
+ * Returns: A processor architecture, or "any" if @package is architecture-independent. Do not free.
  */
 const gchar *pacman_package_get_arch (PacmanPackage *package) {
 	g_return_val_if_fail (package != NULL, NULL);
@@ -161,7 +161,7 @@ const gchar *pacman_package_get_arch (PacmanPackage *package) {
  *
  * Gets a description of @package.
  *
- * Returns: A string, or %NULL if it is not known. Do not free.
+ * Returns: A string. Do not free.
  */
 const gchar *pacman_package_get_description (PacmanPackage *package) {
 	g_return_val_if_fail (package != NULL, NULL);
@@ -203,7 +203,7 @@ const PacmanList *pacman_package_get_licenses (PacmanPackage *package) {
  *
  * Gets the address of the project website for @package.
  *
- * Returns: A URL, or %NULL if it is not known. Do not free.
+ * Returns: A URL. Do not free.
  */
 const gchar *pacman_package_get_url (PacmanPackage *package) {
 	g_return_val_if_fail (package != NULL, NULL);
@@ -285,7 +285,7 @@ const PacmanList *pacman_package_get_conflicts (PacmanPackage *package) {
  *
  * Gets a list of packages that are provided by @package.
  *
- * Returns: A list of 'package' and 'package=version'. Do not free.
+ * Returns: A list of 'package' or 'package=version'. Do not free.
  */
 const PacmanList *pacman_package_get_provides (PacmanPackage *package) {
 	g_return_val_if_fail (package != NULL, NULL);
@@ -407,11 +407,11 @@ goffset pacman_package_get_installed_size (PacmanPackage *package) {
 
 /**
  * pacman_package_get_md5sum:
- * @package: A #PacmanPackage.
+ * @package: A sync #PacmanPackage.
  *
  * Gets the MD5 sum that @package should satisfy.
  *
- * Returns: An MD5 sum. Do not free.
+ * Returns: An MD5 sum, or %NULL if it is not known. Do not free.
  */
 const gchar *pacman_package_get_md5sum (PacmanPackage *package) {
 	g_return_val_if_fail (package != NULL, NULL);
@@ -422,12 +422,13 @@ const gchar *pacman_package_get_md5sum (PacmanPackage *package) {
 /**
  * pacman_package_generate_md5sum:
  * @filename: A file name.
+ * @error: A #GError, or %NULL.
  *
- * Generates an MD5 sum from @filename.
+ * Generates an MD5 sum from the file at @filename.
  *
- * Returns: An MD5 sum. Free with g_free().
+ * Returns: An MD5 sum, or %NULL if @error is set. Free with g_free().
  */
-gchar *pacman_package_generate_md5sum (const gchar *filename) {
+gchar *pacman_package_generate_md5sum (const gchar *filename, GError **error) {
 	gchar *result, *temp;
 	g_return_val_if_fail (filename != NULL, NULL);
 	
@@ -507,7 +508,7 @@ gboolean pacman_package_has_install_scriptlet (PacmanPackage *package) {
 gboolean pacman_package_was_explicitly_installed (PacmanPackage *package) {
 	g_return_val_if_fail (package != NULL, FALSE);
 	
-	return alpm_pkg_get_reason (package) == PM_PKG_REASON_EXPLICIT;
+	return alpm_pkg_get_reason (package) != PM_PKG_REASON_DEPEND;
 }
 
 /**

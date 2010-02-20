@@ -60,7 +60,7 @@ void pacman_manager_set_log_file (PacmanManager *manager, const gchar *filename)
 const PacmanList *pacman_manager_get_cache_paths (PacmanManager *manager);
 void pacman_manager_add_cache_path (PacmanManager *manager, const gchar *path);
 gboolean pacman_manager_remove_cache_path (PacmanManager *manager, const gchar *path);
-void pacman_manager_set_cache_paths (PacmanManager *manager, PacmanList *cache_paths);
+void pacman_manager_set_cache_paths (PacmanManager *manager, PacmanList *paths);
 
 gboolean pacman_manager_get_i_love_candy (PacmanManager *manager);
 void pacman_manager_set_i_love_candy (PacmanManager *manager, gboolean value);
@@ -93,8 +93,8 @@ void pacman_manager_set_use_syslog (PacmanManager *manager, gboolean value);
  * Returns: %TRUE if the download succeeded, %FALSE otherwise.
  */
 typedef gboolean (*PacmanTransferFunc) (PacmanManager *manager, const gchar *url, const gchar *filename, time_t *mtime, gpointer user_data);
-void pacman_manager_set_transfer_closure (PacmanManager *manager, GClosure *transfer_closure);
-void pacman_manager_set_transfer_handler (PacmanManager *manager, PacmanTransferFunc transfer_func, gpointer user_data, GClosureNotify destroy_data);
+void pacman_manager_set_transfer_closure (PacmanManager *manager, GClosure *closure);
+void pacman_manager_set_transfer_handler (PacmanManager *manager, PacmanTransferFunc func, gpointer user_data, GClosureNotify destroy_data);
 void pacman_manager_set_transfer_command (PacmanManager *manager, const gchar *command);
 
 const gchar *pacman_manager_get_clean_method (PacmanManager *manager);
@@ -103,32 +103,32 @@ void pacman_manager_set_clean_method (PacmanManager *manager, const gchar *metho
 const PacmanList *pacman_manager_get_ignore_groups (PacmanManager *manager);
 void pacman_manager_add_ignore_group (PacmanManager *manager, const gchar *group);
 gboolean pacman_manager_remove_ignore_group (PacmanManager *manager, const gchar *group);
-void pacman_manager_set_ignore_groups (PacmanManager *manager, PacmanList *ignore_groups);
+void pacman_manager_set_ignore_groups (PacmanManager *manager, PacmanList *groups);
 
 const PacmanList *pacman_manager_get_hold_packages (PacmanManager *manager);
 void pacman_manager_add_hold_package (PacmanManager *manager, const gchar *package);
 gboolean pacman_manager_remove_hold_package (PacmanManager *manager, const gchar *package);
-void pacman_manager_set_hold_packages (PacmanManager *manager, PacmanList *hold_packages);
+void pacman_manager_set_hold_packages (PacmanManager *manager, PacmanList *packages);
 
 const PacmanList *pacman_manager_get_sync_firsts (PacmanManager *manager);
 void pacman_manager_add_sync_first (PacmanManager *manager, const gchar *package);
 gboolean pacman_manager_remove_sync_first (PacmanManager *manager, const gchar *package);
-void pacman_manager_set_sync_firsts (PacmanManager *manager, PacmanList *sync_firsts);
+void pacman_manager_set_sync_firsts (PacmanManager *manager, PacmanList *packages);
 
 const PacmanList *pacman_manager_get_ignore_packages (PacmanManager *manager);
 void pacman_manager_add_ignore_package (PacmanManager *manager, const gchar *package);
 gboolean pacman_manager_remove_ignore_package (PacmanManager *manager, const gchar *package);
-void pacman_manager_set_ignore_packages (PacmanManager *manager, PacmanList *ignore_packages);
+void pacman_manager_set_ignore_packages (PacmanManager *manager, PacmanList *packages);
 
 const PacmanList *pacman_manager_get_no_extracts (PacmanManager *manager);
 void pacman_manager_add_no_extract (PacmanManager *manager, const gchar *filename);
 gboolean pacman_manager_remove_no_extract (PacmanManager *manager, const gchar *filename);
-void pacman_manager_set_no_extracts (PacmanManager *manager, PacmanList *no_extracts);
+void pacman_manager_set_no_extracts (PacmanManager *manager, PacmanList *filenames);
 
 const PacmanList *pacman_manager_get_no_upgrades (PacmanManager *manager);
 void pacman_manager_add_no_upgrade (PacmanManager *manager, const gchar *filename);
 gboolean pacman_manager_remove_no_upgrade (PacmanManager *manager, const gchar *filename);
-void pacman_manager_set_no_upgrades (PacmanManager *manager, PacmanList *no_upgrades);
+void pacman_manager_set_no_upgrades (PacmanManager *manager, PacmanList *filenames);
 
 PacmanDatabase *pacman_manager_get_local_database (PacmanManager *manager);
 PacmanDatabase *pacman_manager_register_local_database (PacmanManager *manager, GError **error);
