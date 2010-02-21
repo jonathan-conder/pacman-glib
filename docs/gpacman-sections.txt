@@ -334,6 +334,7 @@ pacman_list_set
 pacman_list_prev
 pacman_list_next
 pacman_list_nth
+pacman_list_position
 pacman_list_first
 pacman_list_last
 pacman_list_add

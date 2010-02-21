@@ -161,6 +161,32 @@ PacmanList *pacman_list_nth (const PacmanList *list, guint n) {
 }
 
 /**
+ * pacman_list_position:
+ * @list: A #PacmanList.
+ * @entry: An entry in a #PacmanList.
+ *
+ * Finds the position of @entry in @list (starting at 0).
+ *
+ * Returns: A position, or -1 if @entry was not found.
+ */
+gint pacman_list_position (const PacmanList *list, const PacmanList *entry) {
+	guint result = 0;
+	
+	g_return_val_if_fail (entry != NULL, -1);
+	
+	while (list != NULL) {
+		if (list == entry) {
+			return result;
+		} else {
+			++result;
+			list = list->next;
+		}
+	}
+	
+	return -1;
+}
+
+/**
  * pacman_list_first:
  * @list: A #PacmanList.
  *

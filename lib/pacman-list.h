@@ -39,7 +39,9 @@ void pacman_list_set (PacmanList *entry, gpointer item);
 
 PacmanList *pacman_list_prev (const PacmanList *entry);
 PacmanList *pacman_list_next (const PacmanList *entry);
+
 PacmanList *pacman_list_nth (const PacmanList *list, guint n);
+gint pacman_list_position (const PacmanList *list, const PacmanList *entry);
 
 PacmanList *pacman_list_first (const PacmanList *list);
 PacmanList *pacman_list_last (const PacmanList *list);
