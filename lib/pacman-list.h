@@ -1,6 +1,6 @@
 /* pacman-list.h
  *
- * Copyright (C) 2010 Jonathan Conder <jonno@skurvy.org>
+ * Copyright (C) 2010 Jonathan Conder <j@skurvy.no-ip.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
