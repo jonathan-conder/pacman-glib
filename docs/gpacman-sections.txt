@@ -331,11 +331,15 @@ pacman_list_free_full
 pacman_list_length
 pacman_list_get
 pacman_list_set
+pacman_list_prev
 pacman_list_next
 pacman_list_nth
+pacman_list_first
+pacman_list_last
 pacman_list_add
 pacman_list_add_sorted
 pacman_list_concat
+pacman_list_concat_sorted
 pacman_list_remove
 pacman_list_remove_direct
 pacman_list_remove_string

@@ -117,6 +117,23 @@ void pacman_list_set (PacmanList *entry, gpointer item) {
 }
 
 /**
+ * pacman_list_prev:
+ * @entry: An entry in a #PacmanList.
+ *
+ * Finds the list entry that precedes @entry.
+ *
+ * Returns: An entry in a #PacmanList, or %NULL if @entry was the first one.
+ */
+PacmanList *pacman_list_prev (const PacmanList *entry) {
+	PacmanList *result = entry->prev;
+	if (result->next != NULL) {
+		return result;
+	} else {
+		return NULL;
+	}
+}
+
+/**
  * pacman_list_next:
  * @entry: An entry in a #PacmanList.
  *
@@ -125,7 +142,7 @@ void pacman_list_set (PacmanList *entry, gpointer item) {
  * Returns: An entry in a #PacmanList, or %NULL if @entry was the last one.
  */
 PacmanList *pacman_list_next (const PacmanList *entry) {
-	return alpm_list_next (entry);
+	return entry->next;
 }
 
 /**
@@ -141,6 +158,30 @@ PacmanList *pacman_list_nth (const PacmanList *list, guint n) {
 	while (list != NULL && n-- > 0)
 		list = list->next;
 	return (PacmanList *) list;
+}
+
+/**
+ * pacman_list_first:
+ * @list: A #PacmanList.
+ *
+ * Finds the first entry in @list.
+ *
+ * Returns: An entry in a #PacmanList, or %NULL if @list is empty.
+ */
+PacmanList *pacman_list_first (const PacmanList *list) {
+	return alpm_list_first (list);
+}
+
+/**
+ * pacman_list_last:
+ * @list: A #PacmanList.
+ *
+ * Finds the last entry in @list.
+ *
+ * Returns: An entry in a #PacmanList, or %NULL if @list is empty.
+ */
+PacmanList *pacman_list_last (const PacmanList *list) {
+	return alpm_list_last (list);
 }
 
 /**
@@ -181,6 +222,20 @@ PacmanList *pacman_list_add_sorted (PacmanList *list, gpointer item, GCompareFun
  */
 PacmanList *pacman_list_concat (PacmanList *first, PacmanList *second) {
 	return alpm_list_join (first, second);
+}
+
+/**
+ * pacman_list_concat_sorted:
+ * @first: A sorted #PacmanList.
+ * @second: A sorted #PacmanList.
+ * @func: A #GCompareFunc function.
+ *
+ * Creates a new list by appending @second to @first, in the correct order as determined by @func.
+ *
+ * Returns: A #PacmanList composed of @first and @second. Do not use or free @first or @second afterwards.
+ */
+PacmanList *pacman_list_concat_sorted (PacmanList *first, PacmanList *second, GCompareFunc func) {
+	return alpm_list_mmerge (first, second, (alpm_list_fn_cmp) func);
 }
 
 /**

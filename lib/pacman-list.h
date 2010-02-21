@@ -37,12 +37,17 @@ guint pacman_list_length (const PacmanList *list);
 gpointer pacman_list_get (const PacmanList *entry);
 void pacman_list_set (PacmanList *entry, gpointer item);
 
+PacmanList *pacman_list_prev (const PacmanList *entry);
 PacmanList *pacman_list_next (const PacmanList *entry);
 PacmanList *pacman_list_nth (const PacmanList *list, guint n);
+
+PacmanList *pacman_list_first (const PacmanList *list);
+PacmanList *pacman_list_last (const PacmanList *list);
 
 PacmanList *pacman_list_add (PacmanList *list, gpointer item);
 PacmanList *pacman_list_add_sorted (PacmanList *list, gpointer item, GCompareFunc func);
 PacmanList *pacman_list_concat (PacmanList *first, PacmanList *second);
+PacmanList *pacman_list_concat_sorted (PacmanList *first, PacmanList *second, GCompareFunc func);
 
 PacmanList *pacman_list_remove (PacmanList *haystack, gconstpointer needle, GCompareFunc func, gpointer *removed);
 PacmanList *pacman_list_remove_direct (PacmanList *haystack, gconstpointer needle, gpointer *removed);
