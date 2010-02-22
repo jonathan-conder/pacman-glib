@@ -21,23 +21,23 @@
 
 #define __PACMAN_H_INSIDE__
 
-#include <gpacman/pacman-conflict.h>
-#include <gpacman/pacman-database.h>
-#include <gpacman/pacman-delta.h>
-#include <gpacman/pacman-dependency.h>
-#include <gpacman/pacman-error.h>
-#include <gpacman/pacman-file-conflict.h>
-#include <gpacman/pacman-group.h>
-#include <gpacman/pacman-install.h>
-#include <gpacman/pacman-list.h>
-#include <gpacman/pacman-manager.h>
-#include <gpacman/pacman-missing-dependency.h>
-#include <gpacman/pacman-package.h>
-#include <gpacman/pacman-remove.h>
-#include <gpacman/pacman-sync.h>
-#include <gpacman/pacman-transaction.h>
-#include <gpacman/pacman-types.h>
-#include <gpacman/pacman-update.h>
+#include <pacman-conflict.h>
+#include <pacman-database.h>
+#include <pacman-delta.h>
+#include <pacman-dependency.h>
+#include <pacman-error.h>
+#include <pacman-file-conflict.h>
+#include <pacman-group.h>
+#include <pacman-install.h>
+#include <pacman-list.h>
+#include <pacman-manager.h>
+#include <pacman-missing-dependency.h>
+#include <pacman-package.h>
+#include <pacman-remove.h>
+#include <pacman-sync.h>
+#include <pacman-transaction.h>
+#include <pacman-types.h>
+#include <pacman-update.h>
 
 #undef __PACMAN_H_INSIDE__
 
