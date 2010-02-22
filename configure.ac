@@ -10,11 +10,6 @@ AM_PROG_CC_C_O
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
-API_VERSION=patsubst(AC_PACKAGE_VERSION, [\.[0-9]+$])
-AC_SUBST([API_VERSION])
-API_NAME="$PACKAGE_TARNAME-$API_VERSION"
-AC_SUBST([API_NAME])
-
 AC_SUBST([CFLAGS])
 AC_SUBST([CPPFLAGS])
 AC_SUBST([LDFLAGS])
@@ -25,6 +20,9 @@ AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], "$GETTEXT_PACKAGE")
 AC_SUBST([GETTEXT_PACKAGE])
 AM_GLIB_GNU_GETTEXT
 IT_PROG_INTLTOOL([0.35.0])
+
+LIB_VERSION_INFO="0.0.0"
+AC_SUBST([LIB_VERSION_INFO])
 
 # Earlier versions probably work, but I'm not sure
 GLIB_REQUIRED=[2.22.0]
@@ -57,5 +55,5 @@ AC_SUBST([PACMAN_CONFIG_FILE])
 AC_ARG_WITH(log-file, AS_HELP_STRING([--with-log-file=path], [set the default location of the log file]), [PACMAN_LOG_FILE=[$withval]], [PACMAN_LOG_FILE=[$localstatedir/log/pacman.log]])
 AC_SUBST([PACMAN_LOG_FILE])
 
-AC_CONFIG_FILES([Makefile $API_NAME.pc docs/$PACKAGE_TARNAME-docs.sgml lib/Makefile po/Makefile.in docs/Makefile])
+AC_CONFIG_FILES([Makefile $PACKAGE_TARNAME.pc docs/$PACKAGE_TARNAME-docs.sgml lib/Makefile po/Makefile.in docs/Makefile])
 AC_OUTPUT

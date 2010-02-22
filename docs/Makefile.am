@@ -22,7 +22,7 @@ content_files =
 expand_content_files = 
 
 GTKDOC_CFLAGS = $(GLIB_CFLAGS)
-GTKDOC_LIBS = $(GLIB_LIBS) $(top_builddir)/lib/lib$(API_NAME).la
+GTKDOC_LIBS = $(GLIB_LIBS) $(top_builddir)/lib/lib$(PACKAGE_TARNAME).la
 
 include $(top_srcdir)/gtk-doc.make
 
