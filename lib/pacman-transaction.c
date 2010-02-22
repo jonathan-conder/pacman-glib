@@ -672,7 +672,7 @@ static void pacman_transaction_progress_cb (pmtransprog_t type, const gchar *tar
 	g_return_if_fail (type < PACMAN_TRANSACTION_PROGRESS_LAST);
 	g_return_if_fail (targets > 0);
 	g_return_if_fail (current > 0);
-	g_return_if_fail (current < targets);
+	g_return_if_fail (current <= targets);
 	
 	g_return_if_fail (pacman_manager != NULL);
 	transaction = pacman_manager_get_transaction (pacman_manager);
