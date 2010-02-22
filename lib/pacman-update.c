@@ -155,7 +155,7 @@ static gboolean pacman_update_commit (PacmanTransaction *transaction, GError **e
 	g_return_val_if_fail (transaction != NULL, FALSE);
 	
 	databases = PACMAN_UPDATE_GET_PRIVATE (PACMAN_UPDATE (transaction))->databases;
-	force = ((pacman_transaction_get_flags (transaction) & PACMAN_TRANSACTION_FLAGS_SYNC_OUTDATED_ONLY) == 0);
+	force = ((pacman_transaction_get_flags (transaction) & PACMAN_TRANSACTION_FLAGS_UPDATE_ALLOW_DOWNGRADE) != 0);
 	
 	if (databases == NULL) {
 		g_set_error (error, PACMAN_ERROR, PACMAN_ERROR_TRANSACTION_NOT_PREPARED, _("Could not commit transaction: %s"), alpm_strerror (PM_ERR_TRANS_NOT_PREPARED));

@@ -61,6 +61,7 @@ typedef struct _PacmanTransactionClass {
  * @PACMAN_TRANSACTION_FLAGS_REMOVE_CASCADE: Remove packages that depend on those being removed (equivalent to pacman -Rc).
  * @PACMAN_TRANSACTION_FLAGS_REMOVE_RECURSIVE: Remove packages that are no longer required by other packages, unless they were explicity installed (equivalent to pacman -Rs).
  * @PACMAN_TRANSACTION_FLAGS_REMOVE_KEEP_FILES: Remove packages from the database but leave the files on the system (equivalent to pacman -Rk).
+ * @PACMAN_TRANSACTION_FLAGS_UPDATE_ALLOW_DOWNGRADE: "Update" databases that are newer than the remote database (equivalent to pacman -Syy).
  * @PACMAN_TRANSACTION_FLAGS_INSTALL_IMPLICIT: Install packages as if they were only a dependency of another package (equivalent to pacman --asdeps).
  * @PACMAN_TRANSACTION_FLAGS_SYNC_DOWNLOAD_ONLY: Download package files but do not install them (equivalent to pacman -Sw).
  * @PACMAN_TRANSACTION_FLAGS_INSTALL_IGNORE_SCRIPTLET: Do not execute the install scriptlet of the packages (equivalent to pacman --noscriptlet).
@@ -82,6 +83,7 @@ typedef enum {
 	PACMAN_TRANSACTION_FLAGS_REMOVE_CASCADE = (1 << 4),
 	PACMAN_TRANSACTION_FLAGS_REMOVE_RECURSIVE = (1 << 5),
 	PACMAN_TRANSACTION_FLAGS_REMOVE_KEEP_FILES = (1 << 6),
+	PACMAN_TRANSACTION_FLAGS_UPDATE_ALLOW_DOWNGRADE = (1 << 7),
 	PACMAN_TRANSACTION_FLAGS_INSTALL_IMPLICIT = (1 << 8),
 	PACMAN_TRANSACTION_FLAGS_SYNC_DOWNLOAD_ONLY = (1 << 9),
 	PACMAN_TRANSACTION_FLAGS_INSTALL_IGNORE_SCRIPTLET = (1 << 10),
