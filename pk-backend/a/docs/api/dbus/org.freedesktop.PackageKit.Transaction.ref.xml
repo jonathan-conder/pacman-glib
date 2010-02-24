@@ -1,0 +1,1533 @@
+<?xml version="1.0"?><!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<refentry id="Transaction">
+  <refmeta>
+    <refentrytitle role="top_of_page">org.freedesktop.PackageKit.Transaction</refentrytitle>
+  </refmeta>
+  <refnamediv>
+    <refname>org.freedesktop.PackageKit.Transaction</refname>
+    <refpurpose>Transaction interface</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv role="synopsis">
+    <title role="synopsis.title">Methods</title>
+    <synopsis><link linkend="Transaction.SetLocale">SetLocale</link>               (in  's'  code)
+<link linkend="Transaction.SetHints">SetHints</link>                (in  'as' hints)
+<link linkend="Transaction.AcceptEula">AcceptEula</link>              (in  's'  eula_id)
+<link linkend="Transaction.Cancel">Cancel</link>                  ()
+<link linkend="Transaction.DownloadPackages">DownloadPackages</link>        (in  'as' package_ids)
+<link linkend="Transaction.GetCategories">GetCategories</link>           ()
+<link linkend="Transaction.GetDepends">GetDepends</link>              (in  's'  filter,
+                         in  'as' package_ids,
+                         in  'b'  recursive)
+<link linkend="Transaction.GetDetails">GetDetails</link>              (in  'as' package_ids)
+<link linkend="Transaction.GetFiles">GetFiles</link>                (in  'as' package_ids)
+<link linkend="Transaction.GetOldTransactions">GetOldTransactions</link>      (in  'u'  number)
+<link linkend="Transaction.GetPackages">GetPackages</link>             (in  's'  filter)
+<link linkend="Transaction.GetRepoList">GetRepoList</link>             (in  's'  filter)
+<link linkend="Transaction.GetRequires">GetRequires</link>             (in  's'  filter,
+                         in  'as' package_ids,
+                         in  'b'  recursive)
+<link linkend="Transaction.GetUpdateDetail">GetUpdateDetail</link>         (in  'as' package_ids)
+<link linkend="Transaction.GetUpdates">GetUpdates</link>              (in  's'  filter)
+<link linkend="Transaction.GetDistroUpgrades">GetDistroUpgrades</link>       ()
+<link linkend="Transaction.InstallFiles">InstallFiles</link>            (in  'b'  only_trusted,
+                         in  'as' full_paths)
+<link linkend="Transaction.InstallPackages">InstallPackages</link>         (in  'b'  only_trusted,
+                         in  'as' package_ids)
+<link linkend="Transaction.InstallSignature">InstallSignature</link>        (in  's'  sig_type,
+                         in  's'  key_id,
+                         in  's'  package_id)
+<link linkend="Transaction.RefreshCache">RefreshCache</link>            (in  'b'  force)
+<link linkend="Transaction.RemovePackages">RemovePackages</link>          (in  'as' package_ids,
+                         in  'b'  allow_deps,
+                         in  'b'  autoremove)
+<link linkend="Transaction.RepoEnable">RepoEnable</link>              (in  's'  repo_id,
+                         in  'b'  enabled)
+<link linkend="Transaction.RepoSetData">RepoSetData</link>             (in  's'  repo_id,
+                         in  's'  parameter,
+                         in  's'  value)
+<link linkend="Transaction.Resolve">Resolve</link>                 (in  's'  filter,
+                         in  'as' packages)
+<link linkend="Transaction.Rollback">Rollback</link>                (in  's'  transaction_id)
+<link linkend="Transaction.SearchDetails">SearchDetails</link>           (in  's'  filter,
+                         in  'as' values)
+<link linkend="Transaction.SearchFiles">SearchFiles</link>             (in  's'  filter,
+                         in  'as' values)
+<link linkend="Transaction.SearchGroups">SearchGroups</link>            (in  's'  filter,
+                         in  'as' values)
+<link linkend="Transaction.SearchNames">SearchNames</link>             (in  's'  filter,
+                         in  'as' values)
+<link linkend="Transaction.SimulateInstallFiles">SimulateInstallFiles</link>    (in  'as' full_paths)
+<link linkend="Transaction.SimulateInstallPackages">SimulateInstallPackages</link> (in  'as' package_ids)
+<link linkend="Transaction.SimulateRemovePackages">SimulateRemovePackages</link>  (in  'as' package_ids)
+<link linkend="Transaction.SimulateUpdatePackages">SimulateUpdatePackages</link>  (in  'as' package_ids)
+<link linkend="Transaction.UpdatePackages">UpdatePackages</link>          (in  'b'  only_trusted,
+                         in  'as' package_ids)
+<link linkend="Transaction.UpdateSystem">UpdateSystem</link>            (in  'b'  only_trusted)
+<link linkend="Transaction.WhatProvides">WhatProvides</link>            (in  's'  filter,
+                         in  's'  type,
+                         in  'as' values)
+</synopsis>
+  </refsynopsisdiv>
+  <refsect1 role="signal_proto">
+    <title role="signal_proto.title">Signals</title>
+    <synopsis><link linkend="Transaction::Category">Category</link>              ('s' parent_id,
+                       's' cat_id,
+                       's' name,
+                       's' summary,
+                       's' icon)
+<link linkend="Transaction::Details">Details</link>               ('s' package_id,
+                       's' license,
+                       's' group,
+                       's' detail,
+                       's' url,
+                       't' size)
+<link linkend="Transaction::ErrorCode">ErrorCode</link>             ('s' code,
+                       's' details)
+<link linkend="Transaction::Files">Files</link>                 ('s' package_id,
+                       's' file_list)
+<link linkend="Transaction::Finished">Finished</link>              ('s' exit,
+                       'u' runtime)
+<link linkend="Transaction::Message">Message</link>               ('s' type,
+                       's' details)
+<link linkend="Transaction::Package">Package</link>               ('s' info,
+                       's' package_id,
+                       's' summary)
+<link linkend="Transaction::RepoDetail">RepoDetail</link>            ('s' repo_id,
+                       's' description,
+                       'b' enabled)
+<link linkend="Transaction::RepoSignatureRequired">RepoSignatureRequired</link> ('s' package_id,
+                       's' repository_name,
+                       's' key_url,
+                       's' key_userid,
+                       's' key_id,
+                       's' key_fingerprint,
+                       's' key_timestamp,
+                       's' type)
+<link linkend="Transaction::EulaRequired">EulaRequired</link>          ('s' eula_id,
+                       's' package_id,
+                       's' vendor_name,
+                       's' license_agreement)
+<link linkend="Transaction::MediaChangeRequired">MediaChangeRequired</link>   ('s' media_type,
+                       's' media_id,
+                       's' media_text)
+<link linkend="Transaction::RequireRestart">RequireRestart</link>        ('s' type,
+                       's' package_id)
+<link linkend="Transaction::Transaction">Transaction</link>           ('s' old_tid,
+                       's' timespec,
+                       'b' succeeded,
+                       's' role,
+                       'u' duration,
+                       's' data,
+                       'u' uid,
+                       's' cmdline)
+<link linkend="Transaction::UpdateDetail">UpdateDetail</link>          ('s' package_id,
+                       's' updates,
+                       's' obsoletes,
+                       's' vendor_url,
+                       's' bugzilla_url,
+                       's' cve_url,
+                       's' restart,
+                       's' update_text,
+                       's' changelog,
+                       's' state,
+                       's' issued,
+                       's' updated)
+<link linkend="Transaction::DistroUpgrade">DistroUpgrade</link>         ('s' type,
+                       's' name,
+                       's' summary)
+<link linkend="Transaction::Changed">Changed</link>               ()
+<link linkend="Transaction::Destroy">Destroy</link>               ()
+</synopsis>
+  </refsect1>
+  <refsect1 role="impl_interfaces">
+    <title role="impl_interfaces.title">Implemented Interfaces</title>
+    <para>org.freedesktop.PackageKit.Transaction implements
+    org.freedesktop.DBus.Introspectable,
+    org.freedesktop.DBus.Properties
+    </para>
+  </refsect1>
+  <refsect1 role="properties">
+    <title role="properties.title">Properties</title>
+    <synopsis><link linkend="Transaction:Role">'Role'</link>          read      's'
+<link linkend="Transaction:Status">'Status'</link>        read      's'
+<link linkend="Transaction:LastPackage">'LastPackage'</link>   read      's'
+<link linkend="Transaction:Uid">'Uid'</link>           read      'u'
+<link linkend="Transaction:Percentage">'Percentage'</link>    read      'u'
+<link linkend="Transaction:Subpercentage">'Subpercentage'</link> read      'u'
+<link linkend="Transaction:AllowCancel">'AllowCancel'</link>   read      'b'
+<link linkend="Transaction:CallerActive">'CallerActive'</link>  read      'b'
+<link linkend="Transaction:ElapsedTime">'ElapsedTime'</link>   read      'u'
+<link linkend="Transaction:RemainingTime">'RemainingTime'</link> read      'u'
+<link linkend="Transaction:Speed">'Speed'</link>         read      'u'
+</synopsis>
+  </refsect1>
+  <refsect1 role="desc">
+    <title role="desc.title">Description</title>
+    <para>
+      
+        <para>
+          The transaction interface is used for interacting with individual transactions.
+        </para>
+      
+    </para>
+  </refsect1>
+  <refsect1 role="details"><title role="details.title">Details</title><refsect2><title><anchor role="function" id="Transaction.SetLocale"/>SetLocale ()</title><indexterm><primary>SetLocale</primary><secondary>Transaction</secondary></indexterm><programlisting>SetLocale (in  's' code)</programlisting></refsect2>
+          <para>
+            This method allows the calling session to set a system locale for
+            the package manager so that summaries and descriptions can be
+            correctly localised.
+          </para>
+          <para>
+            THIS FUNCTION IS DEPRECATED. It will be removed in a future release.
+            Use SetHints("locale=$code") instead.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>code</parameter>:</term><listitem><simpara>
+            
+              The locale code, for example en_GB.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.SetHints"/>SetHints ()</title><indexterm><primary>SetHints</primary><secondary>Transaction</secondary></indexterm><programlisting>SetHints (in  'as' hints)</programlisting></refsect2>
+          <para>
+            This method allows the calling session to set transaction hints for
+            the package manager which can change as the transaction runs.
+          </para>
+          <para>
+            This method can be sent before the transaction has been run or
+            whilst it is running. There is no limit to the number of times this
+            method can be sent, although some backends may only use the values
+            that were set before the transaction was started.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>hints</parameter>:</term><listitem><simpara>
+            
+              The values as an array of strings, for example
+              ['locale=en_GB.utf8','idle=true','interactive=false'].
+            
+            
+              The following parameter values are understood:
+            
+            
+              
+                locale
+                
+                  The locale code, for example en_GB.
+                
+              
+              
+                background
+                
+                  If the method should be executed as a background task, valid
+                  values are true and false,
+                  and other values will result in an error.
+                  Background tasks are normally treated with a low priority than
+                  regular tasks, and normally only use idle CPU and network.
+                
+              
+              
+                interactive
+                
+                  If the method can ask interactive questions whilst running,
+                  valid values are true and false,
+                  and other values will result in an error.
+                
+              
+            
+            
+              Other values will cause a verbose warning in the daemon, but will
+              not cause the method to fail. This will preserve forward and
+              backwards compatibility for future API versions.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.AcceptEula"/>AcceptEula ()</title><indexterm><primary>AcceptEula</primary><secondary>Transaction</secondary></indexterm><programlisting>AcceptEula (in  's' eula_id)</programlisting></refsect2>
+          <para>
+            This method allows the user to accept a end user licence agreement.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>eula_id</parameter>:</term><listitem><simpara>
+            
+              A valid EULA ID
+            
+          </simpara></listitem></varlistentry></variablelist><para role="permission">Callers need the org.freedesktop.packagekit.accept-eula</para><refsect2><title><anchor role="function" id="Transaction.Cancel"/>Cancel ()</title><indexterm><primary>Cancel</primary><secondary>Transaction</secondary></indexterm><programlisting>Cancel ()</programlisting></refsect2>
+          <para>
+            This method cancels a transaction that is already running
+          </para>
+        <variablelist role="params"/><refsect2><title><anchor role="function" id="Transaction.DownloadPackages"/>DownloadPackages ()</title><indexterm><primary>DownloadPackages</primary><secondary>Transaction</secondary></indexterm><programlisting>DownloadPackages (in  'as' package_ids)</programlisting></refsect2>
+          <para>
+            This method downloads packages into a temporary directory.
+          </para>
+          <para>
+            This method should emit one
+            Files signal for each package that is downloaded,
+            with the file list set as the name of the complete downloaded file
+            and directory, so for example:
+          </para>
+          <para>
+            DownloadPackages('hal;0.1.2;i386;fedora','hal-info;2009-09-07;no-arch;updates')
+            should send two signals, e.g.
+            Files('hal;0.1.2;i386;fedora', '/tmp/hal-0.1.2.i386.rpm')
+            and
+            Files('hal-info;2009-09-07;no-arch;updates', '/tmp/hal-info-2009-09-07.noarch.rpm').
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>package_ids</parameter>:</term><listitem><simpara>
+            
+              An array of package IDs.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.GetCategories"/>GetCategories ()</title><indexterm><primary>GetCategories</primary><secondary>Transaction</secondary></indexterm><programlisting>GetCategories ()</programlisting></refsect2>
+          <para>
+            This method return the collection categories
+          </para>
+        <variablelist role="params"/><refsect2><title><anchor role="function" id="Transaction.GetDepends"/>GetDepends ()</title><indexterm><primary>GetDepends</primary><secondary>Transaction</secondary></indexterm><programlisting>GetDepends (in  's'  filter,
+            in  'as' package_ids,
+            in  'b'  recursive)</programlisting></refsect2>
+          <para>
+            This method returns packages that this package depends on.
+          </para>
+          <para>
+            This method typically emits
+            Progress,
+            Status and
+            Error and
+            Package.
+          </para>
+          <para>
+            Package enumerated types should be
+            available or installed.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>filter</parameter>:</term><listitem><simpara>
+            
+              A correct filter, e.g. none or installed;~devel
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>package_ids</parameter>:</term><listitem><simpara>
+            
+              An array of package IDs.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>recursive</parameter>:</term><listitem><simpara>
+            
+              Either true or false. If yes then the requirements should be
+              returned for all packages returned.
+              This means if gnome-power-manager depends on NetworkManager
+              and NetworkManager depends on HAL, then GetDepends on
+              gnome-power-manager should return both HAL and NetworkManager.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.GetDetails"/>GetDetails ()</title><indexterm><primary>GetDetails</primary><secondary>Transaction</secondary></indexterm><programlisting>GetDetails (in  'as' package_ids)</programlisting></refsect2>
+          <para>
+            This method should return all the details about a specific
+            package_id.
+          </para>
+          <para>
+            This method typically emits
+            Progress,
+            Status and
+            Error and
+            Details.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>package_ids</parameter>:</term><listitem><simpara>
+            
+              An array of package IDs.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.GetFiles"/>GetFiles ()</title><indexterm><primary>GetFiles</primary><secondary>Transaction</secondary></indexterm><programlisting>GetFiles (in  'as' package_ids)</programlisting></refsect2>
+          <para>
+            This method should return the file list of the package_id.
+          </para>
+          <para>
+            This method typically emits
+            Progress,
+            Status and
+            Error and
+            Files.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>package_ids</parameter>:</term><listitem><simpara>
+            
+              An array of package IDs.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.GetOldTransactions"/>GetOldTransactions ()</title><indexterm><primary>GetOldTransactions</primary><secondary>Transaction</secondary></indexterm><programlisting>GetOldTransactions (in  'u' number)</programlisting></refsect2>
+          <para>
+            This method allows a client to view details for old transactions.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>number</parameter>:</term><listitem><simpara>
+            
+              The number of past transactions, or 0 for all known transactions.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.GetPackages"/>GetPackages ()</title><indexterm><primary>GetPackages</primary><secondary>Transaction</secondary></indexterm><programlisting>GetPackages (in  's' filter)</programlisting></refsect2>
+          <para>
+            This method returns all the packages without a search term.
+          </para>
+          <para>
+            This method typically emits
+            Progress,
+            Error and
+            Package.
+          </para>
+          <para>
+            Package enumerated types should be
+            available or installed.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>filter</parameter>:</term><listitem><simpara>
+            
+              A correct filter, e.g. none or installed;~devel
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.GetRepoList"/>GetRepoList ()</title><indexterm><primary>GetRepoList</primary><secondary>Transaction</secondary></indexterm><programlisting>GetRepoList (in  's' filter)</programlisting></refsect2>
+          <para>
+            This method returns the list of repositories used in the system.
+          </para>
+          <para>
+            This method should emit RepoDetail.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>filter</parameter>:</term><listitem><simpara>
+            
+              A correct filter, e.g. none or installed;~devel
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.GetRequires"/>GetRequires ()</title><indexterm><primary>GetRequires</primary><secondary>Transaction</secondary></indexterm><programlisting>GetRequires (in  's'  filter,
+             in  'as' package_ids,
+             in  'b'  recursive)</programlisting></refsect2>
+          <para>
+            This method returns packages that depend on this package.
+            This is useful to know, as if package_id is being
+            removed, we can warn the user what else would be removed.
+          </para>
+          <para>
+            This method typically emits
+            Progress,
+            Status and
+            Error and
+            Package.
+          </para>
+          <para>
+            Package enumerated types should be
+            available or installed.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>filter</parameter>:</term><listitem><simpara>
+            
+              A correct filter, e.g. none or installed;~devel
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>package_ids</parameter>:</term><listitem><simpara>
+            
+              An array of package IDs.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>recursive</parameter>:</term><listitem><simpara>
+            
+              Either true or false. If yes then the requirements should be
+              returned for all packages returned.
+              This means if gnome-power-manager depends on NetworkManager
+              and NetworkManager depends on HAL, then GetRequires on
+              HAL should return both gnome-power-manager and NetworkManager.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.GetUpdateDetail"/>GetUpdateDetail ()</title><indexterm><primary>GetUpdateDetail</primary><secondary>Transaction</secondary></indexterm><programlisting>GetUpdateDetail (in  'as' package_ids)</programlisting></refsect2>
+          <para>
+            This method returns details about a specific update.
+          </para>
+          <para>
+            This method typically emits
+            UpdateDetail and
+            Error
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>package_ids</parameter>:</term><listitem><simpara>
+            
+              An array of package IDs.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.GetUpdates"/>GetUpdates ()</title><indexterm><primary>GetUpdates</primary><secondary>Transaction</secondary></indexterm><programlisting>GetUpdates (in  's' filter)</programlisting></refsect2>
+          <para>
+            This method should return a list of packages that are installed and are upgradable.
+            It should only return the newest update for each installed package.
+          </para>
+          <para>
+            This method typically emits
+            Progress,
+            Error and
+            Package.
+          </para>
+          <para>
+            Package enumerated types should be
+            blocked,
+            low,
+            normal,
+            important or
+            security.
+          </para>
+          <para>
+            The status blocked signifies the package cannot be
+            updated, probably due to other dependencies not being met.
+            This type allows the GUI tools to show to the user that an update
+            exists, but cannot be installed.
+            The reason for it not being installed should be put into the update
+            description when doing GetUpdateDetail.
+          </para>
+          <para>
+            A filter such as basename or gui
+            is also useful if you want to do filtering on the method to only show
+            the main packages rather than the complete list.
+            The complete list is available but specifying none
+            as the filter.
+            Using no filter which may be useful in advanced tools or when using
+            libpackagekit and searching for an update of a specific name.
+            Other filter types may be present, but can be safely ignored of the
+            backend does not support them.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>filter</parameter>:</term><listitem><simpara>
+            
+              A correct filter, e.g. none or installed;~devel
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.GetDistroUpgrades"/>GetDistroUpgrades ()</title><indexterm><primary>GetDistroUpgrades</primary><secondary>Transaction</secondary></indexterm><programlisting>GetDistroUpgrades ()</programlisting></refsect2>
+          <para>
+            This method should return a list of distribution upgrades that are
+            available.
+            It should not return updates, only major upgrades.
+          </para>
+          <para>
+            This method typically emits
+            DistroUpgrade,
+            Error and
+          </para>
+        <variablelist role="params"/><refsect2><title><anchor role="function" id="Transaction.InstallFiles"/>InstallFiles ()</title><indexterm><primary>InstallFiles</primary><secondary>Transaction</secondary></indexterm><programlisting>InstallFiles (in  'b'  only_trusted,
+              in  'as' full_paths)</programlisting></refsect2>
+          <para>
+            This method installs local package files onto the local system.
+          </para>
+          <para>
+            The installer should always install extra dependant packages automatically.
+          </para>
+          <para>
+            This method typically emits
+            Progress,
+            Status and
+            Error and
+            Package.
+          </para>
+          <para>
+            Package enumerated types should be
+            downloading,
+            updating,
+            installing or
+            removing.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>only_trusted</parameter>:</term><listitem><simpara>
+            
+              If the transaction is only allowed to install trusted files.
+              Unsigned files should not be installed if this parameter is TRUE.
+            
+            
+              If this method is can only install trusted files, and the files are unsigned, then
+              the backend will send a ErrorCode(missing-gpg-signature).
+              On recieving this error, the client may choose to retry with only_trusted FALSE
+              after gaining further authentication.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>full_paths</parameter>:</term><listitem><simpara>
+            
+              An array of full path and filenames to packages.
+            
+          </simpara></listitem></varlistentry></variablelist><para role="permission">Callers need the org.freedesktop.packagekit.localinstall-untrusted</para><refsect2><title><anchor role="function" id="Transaction.InstallPackages"/>InstallPackages ()</title><indexterm><primary>InstallPackages</primary><secondary>Transaction</secondary></indexterm><programlisting>InstallPackages (in  'b'  only_trusted,
+                 in  'as' package_ids)</programlisting></refsect2>
+          <para>
+            This method installs new packages on the local system.
+          </para>
+          <para>
+            The installer should always install extra packages automatically
+            as the use could call GetDepends prior to the install if a confirmation
+            is required in the UI.
+          </para>
+          <para>
+            This method typically emits
+            Progress,
+            Status and
+            Error and
+            Package.
+          </para>
+          <para>
+            Package enumerated types should be
+            downloading,
+            updating,
+            installing or
+            removing.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>only_trusted</parameter>:</term><listitem><simpara>
+            
+              If the transaction is only allowed to install trusted packages.
+              Unsigned packages should not be installed if this parameter is TRUE.
+            
+            
+              If this method is can only install trusted packages, and the packages are unsigned, then
+              the backend will send a ErrorCode(missing-gpg-signature).
+              On recieving this error, the client may choose to retry with only_trusted FALSE
+              after gaining further authentication.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>package_ids</parameter>:</term><listitem><simpara>
+            
+              An array of package IDs.
+            
+          </simpara></listitem></varlistentry></variablelist><para role="permission">Callers need the org.freedesktop.packagekit.install-untrusted</para><refsect2><title><anchor role="function" id="Transaction.InstallSignature"/>InstallSignature ()</title><indexterm><primary>InstallSignature</primary><secondary>Transaction</secondary></indexterm><programlisting>InstallSignature (in  's' sig_type,
+                  in  's' key_id,
+                  in  's' package_id)</programlisting></refsect2>
+          <para>
+            This method allows us to install new security keys.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>sig_type</parameter>:</term><listitem><simpara>
+            
+              A key type, e.g. gpg
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>key_id</parameter>:</term><listitem><simpara>
+            
+              A key ID, e.g. BB7576AC
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>package_id</parameter>:</term><listitem><simpara>
+            
+              A PackageID for the package that the user is trying to install
+            
+          </simpara></listitem></varlistentry></variablelist><para role="permission">Callers need the org.freedesktop.packagekit.install-signature</para><refsect2><title><anchor role="function" id="Transaction.RefreshCache"/>RefreshCache ()</title><indexterm><primary>RefreshCache</primary><secondary>Transaction</secondary></indexterm><programlisting>RefreshCache (in  'b' force)</programlisting></refsect2>
+          <para>
+            This method should fetch updated meta-data for all enabled repositories.
+            This operation should be only scheduled when the computer is idle as
+            the network connection will be very active, and will the computer will
+            have have non-trivial levels of hard disk and processor activity.
+            For these reasons, it should not be done automatically when on battery
+            power.
+          </para>
+          <para>
+            This method typically emits
+            Progress,
+            Error and
+            Package.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>force</parameter>:</term><listitem><simpara>
+            
+              If the caches should be cleaned and reloaded even if there is valid, up to date data.
+            
+          </simpara></listitem></varlistentry></variablelist><para role="permission">Callers need the org.freedesktop.packagekit.refresh-cache</para><refsect2><title><anchor role="function" id="Transaction.RemovePackages"/>RemovePackages ()</title><indexterm><primary>RemovePackages</primary><secondary>Transaction</secondary></indexterm><programlisting>RemovePackages (in  'as' package_ids,
+                in  'b'  allow_deps,
+                in  'b'  autoremove)</programlisting></refsect2>
+          <para>
+            This method removes packages from the local system.
+          </para>
+          <para>
+            This method typically emits
+            Progress,
+            Status and
+            Error and
+            Package.
+          </para>
+          <para>
+            Package enumerated types should be
+            downloading,
+            updating,
+            installing or
+            removing.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>package_ids</parameter>:</term><listitem><simpara>
+            
+              An array of package IDs.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>allow_deps</parameter>:</term><listitem><simpara>
+            
+              Either true or false.
+              If true allow other packages to be removed with the package,
+              but false should cause the script to abort if other packages
+              are dependant on the package.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>autoremove</parameter>:</term><listitem><simpara>
+            
+              Either true or false.
+              This option is only really interesting on embedded devices with a limited amount of
+              flash storage.
+              It suggests to the packagekit backend that dependencies installed at the same time as
+              the package should also be removed if they are not required by anything else.
+              For instance, if you install OpenOffice, it might download libneon as a dependency.
+              When auto_remove is set to true, and you remove OpenOffice then
+              libneon will also get removed automatically.
+            
+          </simpara></listitem></varlistentry></variablelist><para role="permission">Callers need the org.freedesktop.packagekit.remove</para><refsect2><title><anchor role="function" id="Transaction.RepoEnable"/>RepoEnable ()</title><indexterm><primary>RepoEnable</primary><secondary>Transaction</secondary></indexterm><programlisting>RepoEnable (in  's' repo_id,
+            in  'b' enabled)</programlisting></refsect2>
+          <para>
+            This method enables the repository specified.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>repo_id</parameter>:</term><listitem><simpara>
+            
+              A repository identifier, e.g. fedora-development-debuginfo
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>enabled</parameter>:</term><listitem><simpara>
+            
+              true if enabled, false if disabled.
+            
+          </simpara></listitem></varlistentry></variablelist><para role="permission">Callers need the org.freedesktop.packagekit.repo-change</para><refsect2><title><anchor role="function" id="Transaction.RepoSetData"/>RepoSetData ()</title><indexterm><primary>RepoSetData</primary><secondary>Transaction</secondary></indexterm><programlisting>RepoSetData (in  's' repo_id,
+             in  's' parameter,
+             in  's' value)</programlisting></refsect2>
+          <para>
+            This method allows arbitary data to be passed to the repository handler.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>repo_id</parameter>:</term><listitem><simpara>
+            
+              A repository identifier, e.g. fedora-development-debuginfo
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>parameter</parameter>:</term><listitem><simpara>
+            
+              The backend specific value, e.g. set-download-url.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>value</parameter>:</term><listitem><simpara>
+            
+              The backend specific value, e.g. http://foo.bar.org/baz.
+            
+          </simpara></listitem></varlistentry></variablelist><para role="permission">Callers need the org.freedesktop.packagekit.repo-change</para><refsect2><title><anchor role="function" id="Transaction.Resolve"/>Resolve ()</title><indexterm><primary>Resolve</primary><secondary>Transaction</secondary></indexterm><programlisting>Resolve (in  's'  filter,
+         in  'as' packages)</programlisting></refsect2>
+          <para>
+            This method turns a single package name into a package_id suitable for the
+            other methods.
+          </para>
+          <para>
+            If the package is a fully formed package_id, then this should be treated
+            as an exact package match. This is useful to find the summary or installed
+            status of a package_id returned from other methods.
+          </para>
+          <para>
+            This method typically emits
+            Error and
+            Package.
+          </para>
+          <para>
+            Package enumerated types should be
+            available or installed.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>filter</parameter>:</term><listitem><simpara>
+            
+              A correct filter, e.g. none or installed;~devel
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>packages</parameter>:</term><listitem><simpara>
+            
+              An array of package names, e.g. scribus-clipart.
+            
+            
+              The package names are case sensitive, so for instance:
+              Resolve('Packagekit') would not match PackageKit.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.Rollback"/>Rollback ()</title><indexterm><primary>Rollback</primary><secondary>Transaction</secondary></indexterm><programlisting>Rollback (in  's' transaction_id)</programlisting></refsect2>
+          <para>
+            This method rolls back the package database to a previous transaction.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>transaction_id</parameter>:</term><listitem><simpara>
+            
+              A valid transaction ID.
+            
+          </simpara></listitem></varlistentry></variablelist><para role="permission">Callers need the org.freedesktop.packagekit.rollback</para><refsect2><title><anchor role="function" id="Transaction.SearchDetails"/>SearchDetails ()</title><indexterm><primary>SearchDetails</primary><secondary>Transaction</secondary></indexterm><programlisting>SearchDetails (in  's'  filter,
+               in  'as' values)</programlisting></refsect2>
+          <para>
+            This method allows deeper searching than SearchName().
+          </para>
+          <para>
+            Do not refresh the package cache. This should be fast.
+            This is very similar to search-name.
+            This should search as much data as possible, including, if possible
+            repo names, package summaries, descriptions, licenses and URLs.
+          </para>
+          <para>
+            Try to emit installed before
+            available packages first, as it allows the client
+            program to perform the GUI filtering and matching whilst the daemon is
+            running the transaction.
+          </para>
+          <para>
+            If the backend includes installed and
+            available versions of the same package when searching
+            then the available version will have to be filtered
+            in the backend.
+          </para>
+          <para>
+            This method typically emits
+            Progress,
+            Error and
+            Package.
+          </para>
+          <para>
+            Package enumerated types should be
+            available or installed.
+          </para>        <variablelist role="params"><varlistentry><term><parameter>filter</parameter>:</term><listitem><simpara>
+            
+              A correct filter, e.g. none or installed;~devel
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>values</parameter>:</term><listitem><simpara>
+            
+              A single word search term with no wildcard chars. The search can
+              contain many words separated by spaces. In this case, the
+              search operator is AND and the words can be found
+              in any details section/field. For example, search of
+              GPL games should returns every games with a GPL
+              license.
+            
+            
+              The search should not be treated as case sensitive.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.SearchFiles"/>SearchFiles ()</title><indexterm><primary>SearchFiles</primary><secondary>Transaction</secondary></indexterm><programlisting>SearchFiles (in  's'  filter,
+             in  'as' values)</programlisting></refsect2>
+          <para>
+            This method searches for files on the local system and files in available packages.
+          </para>
+          <para>
+            This should search for files.
+            This should allow an application to find out what package owns
+            a file on the system.
+          </para>
+          <para>
+            This method typically emits
+            Progress,
+            Error and
+            Package.
+          </para>
+          <para>
+            Package enumerated types should be
+            available or installed.
+          </para>        <variablelist role="params"><varlistentry><term><parameter>filter</parameter>:</term><listitem><simpara>
+            
+              A correct filter, e.g. none or installed;~devel
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>values</parameter>:</term><listitem><simpara>
+            
+              A filename or fully qualified path and filename on the system.
+              If the search term begins with a / it will be assumed the entire path has been given and only packages that contain this exact path and filename will be returned.
+              If the search term does not start with / then it should be treated as a single filename, which can be in any directory.
+            
+            
+              The search is case sensitive, and should not be escaped or surrounded in quotes.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.SearchGroups"/>SearchGroups ()</title><indexterm><primary>SearchGroups</primary><secondary>Transaction</secondary></indexterm><programlisting>SearchGroups (in  's'  filter,
+              in  'as' values)</programlisting></refsect2>
+          <para>
+            This method returns packages from a given group enumerated type.
+          </para>
+          <para>
+            Do not refresh the package cache. This should be fast.
+          </para>
+          <para>
+            Try to emit installed before
+            available packages first, as it allows the client
+            program to perform the GUI filtering and matching whilst the daemon is
+            running the transaction.
+          </para>
+          <para>
+            If the backend includes installed and
+            available versions of the same package when searching
+            then the available version will have to be filtered
+            in the backend.
+          </para>
+          <para>
+            This method typically emits
+            Progress,
+            Error and
+            Package.
+          </para>
+          <para>
+            Package enumerated types should be
+            available or installed.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>filter</parameter>:</term><listitem><simpara>
+            
+              A correct filter, e.g. none or installed;~devel
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>values</parameter>:</term><listitem><simpara>
+            
+              An enumerated group_type, or unknown. The search
+              can't contain spaces. It must contains only one group_type.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.SearchNames"/>SearchNames ()</title><indexterm><primary>SearchNames</primary><secondary>Transaction</secondary></indexterm><programlisting>SearchNames (in  's'  filter,
+             in  'as' values)</programlisting></refsect2>
+          <para>
+            This method searches the package database by package name.
+          </para>
+          <para>
+            Do not refresh the package cache. This should be fast.
+          </para>
+          <para>
+            Try to emit installed before
+            available packages first, as it allows the client
+            program to perform the GUI filtering and matching whilst the daemon is
+            running the transaction.
+          </para>
+          <para>
+            If the backend includes installed and
+            available versions of the same package when searching
+            then the available version will have to be filtered
+            in the backend.
+          </para>
+          <para>
+            The search methods should return all results in all repositories.
+            This may mean that multiple versions of package are returned.
+            If this is not what is wanted by the client program, then the
+            newest filter should be used.
+          </para>
+          <para>
+            This method typically emits
+            Progress,
+            Error and
+            Package.
+          </para>
+          <para>
+            Package enumerated types should be
+            available or installed.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>filter</parameter>:</term><listitem><simpara>
+            
+              A correct filter, e.g. none or installed;~devel
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>values</parameter>:</term><listitem><simpara>
+            
+              A single word search term with no wildcard chars. The search term
+              can contain many words separated by spaces. In this case, the
+              search operator is AND. For example, search of
+              gnome power should returns
+              gnome-power-manager but not
+              gnomesword or powertop.
+            
+            
+              The search should not be treated as case sensitive.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.SimulateInstallFiles"/>SimulateInstallFiles ()</title><indexterm><primary>SimulateInstallFiles</primary><secondary>Transaction</secondary></indexterm><programlisting>SimulateInstallFiles (in  'as' full_paths)</programlisting></refsect2>
+          <para>
+            This method simulates a package file instalation emitting packages required to be
+            installed, removed, reinstalled or updated.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>full_paths</parameter>:</term><listitem><simpara>
+            
+              An array of full path and filenames to packages.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.SimulateInstallPackages"/>SimulateInstallPackages ()</title><indexterm><primary>SimulateInstallPackages</primary><secondary>Transaction</secondary></indexterm><programlisting>SimulateInstallPackages (in  'as' package_ids)</programlisting></refsect2>
+          <para>
+            This method simulates a package instalation emitting packages required to be
+            installed, removed, reinstalled or updated.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>package_ids</parameter>:</term><listitem><simpara>
+            
+              An array of package IDs.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.SimulateRemovePackages"/>SimulateRemovePackages ()</title><indexterm><primary>SimulateRemovePackages</primary><secondary>Transaction</secondary></indexterm><programlisting>SimulateRemovePackages (in  'as' package_ids)</programlisting></refsect2>
+          <para>
+            This method simulates a package removal emitting packages required to be
+            installed, removed, reinstalled or updated.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>package_ids</parameter>:</term><listitem><simpara>
+            
+              An array of package IDs.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.SimulateUpdatePackages"/>SimulateUpdatePackages ()</title><indexterm><primary>SimulateUpdatePackages</primary><secondary>Transaction</secondary></indexterm><programlisting>SimulateUpdatePackages (in  'as' package_ids)</programlisting></refsect2>
+          <para>
+            This method simulates a package update emitting packages required to be
+            installed, removed, reinstalled or updated.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>package_ids</parameter>:</term><listitem><simpara>
+            
+              An array of package IDs.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction.UpdatePackages"/>UpdatePackages ()</title><indexterm><primary>UpdatePackages</primary><secondary>Transaction</secondary></indexterm><programlisting>UpdatePackages (in  'b'  only_trusted,
+                in  'as' package_ids)</programlisting></refsect2>
+          <para>
+            This method updates existing packages on the local system.
+          </para>
+          <para>
+            The installer should always update extra packages automatically to fulfil dependencies.
+          </para>
+          <para>
+            This should allow an application to find out what package owns a file on the system.
+          </para>
+          <para>
+            This method typically emits
+            Progress,
+            Status and
+            Error and
+            Package.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>only_trusted</parameter>:</term><listitem><simpara>
+            
+              If the transaction is only allowed to update to trusted packages.
+              Unsigned packages should not be installed if this parameter is TRUE.
+            
+            
+              If this method is can only update trusted packages, and the packages are unsigned, then
+              the backend will send a ErrorCode(missing-gpg-signature).
+              On recieving this error, the client may choose to retry with only_trusted FALSE
+              after gaining further authentication.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>package_ids</parameter>:</term><listitem><simpara>
+            
+              An array of package IDs.
+            
+          </simpara></listitem></varlistentry></variablelist><para role="permission">Callers need the org.freedesktop.packagekit.update-package</para><refsect2><title><anchor role="function" id="Transaction.UpdateSystem"/>UpdateSystem ()</title><indexterm><primary>UpdateSystem</primary><secondary>Transaction</secondary></indexterm><programlisting>UpdateSystem (in  'b' only_trusted)</programlisting></refsect2>
+          <para>
+            This method updates all packages on the system to thier newest versions.
+          </para>
+          <para>
+            The installer should update all the updateable packages on the system,
+            including automatically installing any new packages that are needed for
+            dependancies.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>only_trusted</parameter>:</term><listitem><simpara>
+            
+              If the transaction is only allowed to update to trusted packages.
+              Unsigned packages should not be installed if this parameter is TRUE.
+            
+            
+              If this method is can only update trusted packages, and the packages are unsigned, then
+              the backend will send a ErrorCode(missing-gpg-signature).
+              On recieving this error, the client may choose to retry with only_trusted FALSE
+              after gaining further authentication.
+            
+          </simpara></listitem></varlistentry></variablelist><para role="permission">Callers need the org.freedesktop.packagekit.update-system</para><refsect2><title><anchor role="function" id="Transaction.WhatProvides"/>WhatProvides ()</title><indexterm><primary>WhatProvides</primary><secondary>Transaction</secondary></indexterm><programlisting>WhatProvides (in  's'  filter,
+              in  's'  type,
+              in  'as' values)</programlisting></refsect2>
+          <para>
+            This method returns packages that provide the supplied attributes.
+            This method is useful for finding out what package(s) provide a modalias
+            or GStreamer codec string.
+          </para>
+          <para>
+            This method typically emits
+            Progress,
+            Status and
+            Error and
+            Package.
+          </para>
+          <para>
+            Package enumerated types should be
+            available or installed.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>filter</parameter>:</term><listitem><simpara>
+            
+              A correct filter, e.g. none or installed;~devel
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>type</parameter>:</term><listitem><simpara>
+            
+              A PkProvideType, e.g. PK_PROVIDES_ENUM_CODEC.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>values</parameter>:</term><listitem><simpara>
+            
+              The data to send to the backend to get the packages.
+              Note: This is backend specific.
+            
+          </simpara></listitem></varlistentry></variablelist></refsect1>
+  <refsect1 role="signals"><title role="signals.title">Signal Details</title><refsect2><title><anchor role="function" id="Transaction::Category"/>The Category signal</title><indexterm><primary>Category</primary><secondary>Transaction</secondary></indexterm><programlisting>Category ('s' parent_id,
+          's' cat_id,
+          's' name,
+          's' summary,
+          's' icon)</programlisting></refsect2>
+          <para>
+            This signal send information about a collection category
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>parent_id</parameter>:</term><listitem><simpara>
+            
+              The parent identifier, e.g. applications.
+              If the category is a root entry, use a blank parent.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>cat_id</parameter>:</term><listitem><simpara>
+            
+              The category identifier, e.g. applications;system-tools.
+              The identifier does not have to be related to the parent_id
+              in any way.
+              A menu tree is made from multiple Category signals.
+              The tree does not have any depth or bredth limits, although it should be kept
+              to less than about 100 entries as this will be shown to the user in a menu.
+            
+            
+              The cat_id will be sent as a parameter to SearchGroup
+              so you may have to prefix or otherwise identify the ID to not confuse the search method.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>name</parameter>:</term><listitem><simpara>
+            
+              The localised name of the category, e.g. System Tools.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>summary</parameter>:</term><listitem><simpara>
+            
+              The localised category summary, e.g. Tools for mangaing system state.
+              This is not normally shown in the menus, but may be shown in helper popups.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>icon</parameter>:</term><listitem><simpara>
+            
+              The icon name for the category, e.g. server-cfg.
+              If the icon is not known, then it should be set to image-missing.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction::Details"/>The Details signal</title><indexterm><primary>Details</primary><secondary>Transaction</secondary></indexterm><programlisting>Details ('s' package_id,
+         's' license,
+         's' group,
+         's' detail,
+         's' url,
+         't' size)</programlisting></refsect2>
+          <para>
+            This signal allows the backend to convey more details about the package.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>package_id</parameter>:</term><listitem><simpara>
+            
+              The package ID
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>license</parameter>:</term><listitem><simpara>
+            
+              The license string, e.g. GPLv2+ or BSD and (MPLv1.1 or GPLv2+).
+            
+            
+              More details about the correct way to format licensing strings can be found on the
+              Fedora packaging wiki.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>group</parameter>:</term><listitem><simpara>
+            
+              The enumerated package group description
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>detail</parameter>:</term><listitem><simpara>
+            
+              The multi-line package description.
+            
+            
+              If formatting is required, then markdown syntax should be used,
+              e.g. This is **critically** important
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>url</parameter>:</term><listitem><simpara>
+            
+              The upstream project homepage
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>size</parameter>:</term><listitem><simpara>
+            
+              The size of the package in bytes. This should be the size of the entire package file,
+              not the size of the files installed on the system.
+              If the package is not installed, and already downloaded and
+              present in the package manager cache, then this value should be set to zero.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction::ErrorCode"/>The ErrorCode signal</title><indexterm><primary>ErrorCode</primary><secondary>Transaction</secondary></indexterm><programlisting>ErrorCode ('s' code,
+           's' details)</programlisting></refsect2>
+          <para>
+            This signal is used to report errors back to the session program.
+          </para>
+          <para>
+            Errors should only be send on fatal abort.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>code</parameter>:</term><listitem><simpara>
+            
+              Enumerated type, e.g. no-network.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>details</parameter>:</term><listitem><simpara>
+            
+              Long description or error, e.g. failed to connect to mytry.xml
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction::Files"/>The Files signal</title><indexterm><primary>Files</primary><secondary>Transaction</secondary></indexterm><programlisting>Files ('s' package_id,
+       's' file_list)</programlisting></refsect2>
+          <para>
+            This signal is used to push file lists from the backend to the session.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>package_id</parameter>:</term><listitem><simpara>
+            
+              The Package ID that called the method.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>file_list</parameter>:</term><listitem><simpara>
+            
+              The file list, with each file seporated with ;.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction::Finished"/>The Finished signal</title><indexterm><primary>Finished</primary><secondary>Transaction</secondary></indexterm><programlisting>Finished ('s' exit,
+          'u' runtime)</programlisting></refsect2>
+          <para>
+            This signal is used to signal that the transaction has finished.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>exit</parameter>:</term><listitem><simpara>
+            
+              The PkExitEnum describing the exit status of the transaction.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>runtime</parameter>:</term><listitem><simpara>
+            
+              The amount of time in milliseconds that the transaction ran for.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction::Message"/>The Message signal</title><indexterm><primary>Message</primary><secondary>Transaction</secondary></indexterm><programlisting>Message ('s' type,
+         's' details)</programlisting></refsect2>
+          <para>
+            This signal is sent when the backend wants to send a message to the session.
+          </para>
+          <para>
+            This allows the backend to queue up a message to be shown after the transaction has
+            completed.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>type</parameter>:</term><listitem><simpara>
+            
+              One of warning, notice, or
+              daemon.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>details</parameter>:</term><listitem><simpara>
+            
+              Required details about the message, non-localised.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction::Package"/>The Package signal</title><indexterm><primary>Package</primary><secondary>Transaction</secondary></indexterm><programlisting>Package ('s' info,
+         's' package_id,
+         's' summary)</programlisting></refsect2>
+          <para>
+            This signal allows the backend to communicate packages to the session.
+          </para>
+          <para>
+            If updating, as packages are updated then emit them to the screen.
+            This allows a summary to be presented after the transaction.
+          </para>
+          <para>
+            When returning results from a search always return
+            installed before available for
+            the same package name.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>info</parameter>:</term><listitem><simpara>
+            
+              A valid info string enumerated type
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>package_id</parameter>:</term><listitem><simpara>
+            
+              A valid package ID string with as much data as known
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>summary</parameter>:</term><listitem><simpara>
+            
+              The one line package summary, e.g. Clipart for OpenOffice
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction::RepoDetail"/>The RepoDetail signal</title><indexterm><primary>RepoDetail</primary><secondary>Transaction</secondary></indexterm><programlisting>RepoDetail ('s' repo_id,
+            's' description,
+            'b' enabled)</programlisting></refsect2>
+          <para>
+            This signal describes a repository on the system.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>repo_id</parameter>:</term><listitem><simpara>
+            
+              The repository ID.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>description</parameter>:</term><listitem><simpara>
+            
+              A description of the repository.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>enabled</parameter>:</term><listitem><simpara>
+            
+              If the repository is enabled and in use.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction::RepoSignatureRequired"/>The RepoSignatureRequired signal</title><indexterm><primary>RepoSignatureRequired</primary><secondary>Transaction</secondary></indexterm><programlisting>RepoSignatureRequired ('s' package_id,
+                       's' repository_name,
+                       's' key_url,
+                       's' key_userid,
+                       's' key_id,
+                       's' key_fingerprint,
+                       's' key_timestamp,
+                       's' type)</programlisting></refsect2>
+          <para>
+            This signal is emitted when a transaction is not possible due to a missing security
+            certificate.
+          </para>
+          <para>
+            Some backends support repositories which use a cryptographic
+            signature, such as GPG. If a package cannot be installed
+            because it is signed with a key that has not been verified,
+            this signal is generated so the user can choose to accept or
+            decline the key.
+          </para>
+          <para>
+            This signal includes information that can be used to verify
+            that the key should be trusted, such as a URL for the company
+            or person who owns the key, the key's ID, the userid of
+            the key creator, and the date the key was generated.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>package_id</parameter>:</term><listitem><simpara>
+            
+              A package ID for the package that is trying to be installed
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>repository_name</parameter>:</term><listitem><simpara>
+            
+              The name of the repository associated with the provided key.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>key_url</parameter>:</term><listitem><simpara>
+            
+              The URL provided with the key.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>key_userid</parameter>:</term><listitem><simpara>
+            
+              The user id associated with the key.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>key_id</parameter>:</term><listitem><simpara>
+            
+              A unique identifier for the key.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>key_fingerprint</parameter>:</term><listitem><simpara>
+            
+              The hashed fingerprint of the key.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>key_timestamp</parameter>:</term><listitem><simpara>
+            
+              The date the key was created.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>type</parameter>:</term><listitem><simpara>
+            
+              The type of signature used. gpg, for example.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction::EulaRequired"/>The EulaRequired signal</title><indexterm><primary>EulaRequired</primary><secondary>Transaction</secondary></indexterm><programlisting>EulaRequired ('s' eula_id,
+              's' package_id,
+              's' vendor_name,
+              's' license_agreement)</programlisting></refsect2>
+          <para>
+            This signal is emitted when a transaction is not possible due to a EULA that needs to
+            be agreed to at install time.
+          </para>
+          <para>
+            Some backends support EULAs, which have to be agreed to before the install can proceed.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>eula_id</parameter>:</term><listitem><simpara>
+            
+              The eula_id which identifies the EULA - this is provided
+              so that if a specific EULA has previously agreed to a EULA from Acme Corp it is
+              not asked again.
+              An example eula_id's is vmware5_single_user.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>package_id</parameter>:</term><listitem><simpara>
+            
+              A package ID for the package that is trying to be installed.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>vendor_name</parameter>:</term><listitem><simpara>
+            
+              The vendor that is providing the EULA.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>license_agreement</parameter>:</term><listitem><simpara>
+            
+              The full text EULA.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction::MediaChangeRequired"/>The MediaChangeRequired signal</title><indexterm><primary>MediaChangeRequired</primary><secondary>Transaction</secondary></indexterm><programlisting>MediaChangeRequired ('s' media_type,
+                     's' media_id,
+                     's' media_text)</programlisting></refsect2>
+          <para>
+            This signal is emitted when a transaction needsneeds a different media
+            to grab the packages.
+          </para>
+          <para>
+            Some backends support Media changing, which will fail the transaction each time it needs
+            a new media.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>media_type</parameter>:</term><listitem><simpara>
+            
+              Enumerated type, e.g. dvd.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>media_id</parameter>:</term><listitem><simpara>
+            
+              The media_id which identifies the Media - this is provided
+              so that if DeviceKit or another program is able to identify the right media
+              before continuing, note however that it's not the DeviceKit oblication to
+              check the media when the transaction is re-scheduled this is the backend task.
+              An example media_id's is Debian testing amd64 Bin-1.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>media_text</parameter>:</term><listitem><simpara>
+            
+              Might be used for the disk label too, something like Fedora Disk 1
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction::RequireRestart"/>The RequireRestart signal</title><indexterm><primary>RequireRestart</primary><secondary>Transaction</secondary></indexterm><programlisting>RequireRestart ('s' type,
+                's' package_id)</programlisting></refsect2>
+          <para>
+            This signal is sent when the session program should notify the user that a restart is
+            required.
+          </para>
+          <para>
+            This is optional, but highly recommended.
+          </para>
+          <para>
+            This can be sent as many times as needed by the backend script.
+            PackageKit will always choose the 'worst' method in the UI notification.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>type</parameter>:</term><listitem><simpara>
+            
+              One of system, application or
+              session.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>package_id</parameter>:</term><listitem><simpara>
+            
+              The package ID that caused the restart notifier.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction::Transaction"/>The Transaction signal</title><indexterm><primary>Transaction</primary><secondary>Transaction</secondary></indexterm><programlisting>Transaction ('s' old_tid,
+             's' timespec,
+             'b' succeeded,
+             's' role,
+             'u' duration,
+             's' data,
+             'u' uid,
+             's' cmdline)</programlisting></refsect2>
+          <para>
+            This signal is sent when more details are required about a specific transaction.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>old_tid</parameter>:</term><listitem><simpara>
+            
+              The transaction ID of the old transaction.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>timespec</parameter>:</term><listitem><simpara>
+            
+              The timespec of the old transaction in ISO8601 format.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>succeeded</parameter>:</term><listitem><simpara>
+            
+              If the transaction succeeded.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>role</parameter>:</term><listitem><simpara>
+            
+              The role enumerated type.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>duration</parameter>:</term><listitem><simpara>
+            
+              The duration of the transaction in milliseconds.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>data</parameter>:</term><listitem><simpara>
+            
+              Any data associated with the transaction.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>uid</parameter>:</term><listitem><simpara>
+            
+              The user ID of the user that scheduled the action.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>cmdline</parameter>:</term><listitem><simpara>
+            
+              The command line of the tool that scheduled the action, e.g.
+              /usr/bin/gpk-application.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction::UpdateDetail"/>The UpdateDetail signal</title><indexterm><primary>UpdateDetail</primary><secondary>Transaction</secondary></indexterm><programlisting>UpdateDetail ('s' package_id,
+              's' updates,
+              's' obsoletes,
+              's' vendor_url,
+              's' bugzilla_url,
+              's' cve_url,
+              's' restart,
+              's' update_text,
+              's' changelog,
+              's' state,
+              's' issued,
+              's' updated)</programlisting></refsect2>
+          <para>
+            This signal is sent when more details are required about a specific update.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>package_id</parameter>:</term><listitem><simpara>
+            
+              The package ID
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>updates</parameter>:</term><listitem><simpara>
+            
+              A list of package_id's that are to be updated, seporated by &amp;.
+              This odd delimited was chosen as \t is already being used in the
+              spawned backends, and &amp; is a banned character in a package_id.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>obsoletes</parameter>:</term><listitem><simpara>
+            
+              A list of package_id's that are to be obsoleted, separated by &amp;
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>vendor_url</parameter>:</term><listitem><simpara>
+            
+              A URL with more details on the update, e.g. a page with more
+              information on the update.
+              The format of this command should be
+              http://www.foo.org/page.html?4567;Update to SELinux
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>bugzilla_url</parameter>:</term><listitem><simpara>
+            
+              A bugzilla URL with more details on the update.
+              If no URL is available then this field should be left empty.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>cve_url</parameter>:</term><listitem><simpara>
+            
+              A CVE URL with more details on the security advisory.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>restart</parameter>:</term><listitem><simpara>
+            
+              A valid restart type, e.g. system.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>update_text</parameter>:</term><listitem><simpara>
+            
+              The update text describing the update.
+            
+            
+              If formatting is required, then markdown syntax should be used,
+              e.g. This is **critically** important
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>changelog</parameter>:</term><listitem><simpara>
+            
+              The ChangeLog text describing the changes since the last version.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>state</parameter>:</term><listitem><simpara>
+            
+              The state of the update, e.g. stable or
+              testing.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>issued</parameter>:</term><listitem><simpara>
+            
+              The ISO8601 encoded date that the update was issued.
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>updated</parameter>:</term><listitem><simpara>
+            
+              The ISO8601 encoded date that the update was updated.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction::DistroUpgrade"/>The DistroUpgrade signal</title><indexterm><primary>DistroUpgrade</primary><secondary>Transaction</secondary></indexterm><programlisting>DistroUpgrade ('s' type,
+               's' name,
+               's' summary)</programlisting></refsect2>
+          <para>
+            This signal allows the backend to communicate distribution
+            upgrades to the session.
+          </para>
+        <variablelist role="params"><varlistentry><term><parameter>type</parameter>:</term><listitem><simpara>
+            
+              A valid upgrade string enumerated type, e.g. stable
+              or unstable
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>name</parameter>:</term><listitem><simpara>
+            
+              The short name of the distribution, e.g. Fedora Core 10 RC1
+            
+          </simpara></listitem></varlistentry><varlistentry><term><parameter>summary</parameter>:</term><listitem><simpara>
+            
+              The multi-line description of the release.
+            
+          </simpara></listitem></varlistentry></variablelist><refsect2><title><anchor role="function" id="Transaction::Changed"/>The Changed signal</title><indexterm><primary>Changed</primary><secondary>Transaction</secondary></indexterm><programlisting>Changed ()</programlisting></refsect2>
+          <para>
+            This signal is emitted when a property on the interface changes.
+          </para>
+        <variablelist role="params"/><refsect2><title><anchor role="function" id="Transaction::Destroy"/>The Destroy signal</title><indexterm><primary>Destroy</primary><secondary>Transaction</secondary></indexterm><programlisting>Destroy ()</programlisting></refsect2>
+          <para>
+            This signal is sent when the transaction has been destroyed and is
+            no longer available for use.
+          </para>
+        <variablelist role="params"/></refsect1>
+  <refsect1 role="property_details"><title role="property_details.title">Property Details</title><refsect2><title><anchor role="function" id="Transaction:Role"/>The "Role" property</title><indexterm><primary>Role</primary><secondary>Transaction</secondary></indexterm><programlisting>'Role'  read      's'
+</programlisting></refsect2>
+          <para>
+            The transaction role, e.g. update-system.
+          </para>
+        <variablelist role="params"/><refsect2><title><anchor role="function" id="Transaction:Status"/>The "Status" property</title><indexterm><primary>Status</primary><secondary>Transaction</secondary></indexterm><programlisting>'Status'  read      's'
+</programlisting></refsect2>
+          <para>
+            The transaction status, e.g. downloading.
+          </para>
+        <variablelist role="params"/><refsect2><title><anchor role="function" id="Transaction:LastPackage"/>The "LastPackage" property</title><indexterm><primary>LastPackage</primary><secondary>Transaction</secondary></indexterm><programlisting>'LastPackage'  read      's'
+</programlisting></refsect2>
+          <para>
+            The last package_id that was processed, e.g. hal;0.1.2;i386;fedora.
+          </para>
+        <variablelist role="params"/><refsect2><title><anchor role="function" id="Transaction:Uid"/>The "Uid" property</title><indexterm><primary>Uid</primary><secondary>Transaction</secondary></indexterm><programlisting>'Uid'  read      'u'
+</programlisting></refsect2>
+          <para>
+            The uid of the user that started the transaction.
+          </para>
+        <variablelist role="params"/><refsect2><title><anchor role="function" id="Transaction:Percentage"/>The "Percentage" property</title><indexterm><primary>Percentage</primary><secondary>Transaction</secondary></indexterm><programlisting>'Percentage'  read      'u'
+</programlisting></refsect2>
+          <para>
+            The percentage complete of the transaction.
+          </para>
+          <para>
+            Backends should set this value to 101 if the amount complete cannot be calculated.
+          </para>
+        <variablelist role="params"/><refsect2><title><anchor role="function" id="Transaction:Subpercentage"/>The "Subpercentage" property</title><indexterm><primary>Subpercentage</primary><secondary>Transaction</secondary></indexterm><programlisting>'Subpercentage'  read      'u'
+</programlisting></refsect2>
+          <para>
+            The sub-percentage complete of the transaction.
+          </para>
+          <para>
+            Backends should set this value to 101 if the amount complete cannot be calculated.
+          </para>
+        <variablelist role="params"/><refsect2><title><anchor role="function" id="Transaction:AllowCancel"/>The "AllowCancel" property</title><indexterm><primary>AllowCancel</primary><secondary>Transaction</secondary></indexterm><programlisting>'AllowCancel'  read      'b'
+</programlisting></refsect2>
+          <para>
+            If the transaction can be cancelled.
+          </para>
+        <variablelist role="params"/><refsect2><title><anchor role="function" id="Transaction:CallerActive"/>The "CallerActive" property</title><indexterm><primary>CallerActive</primary><secondary>Transaction</secondary></indexterm><programlisting>'CallerActive'  read      'b'
+</programlisting></refsect2>
+          <para>
+            If the original caller of the method is still connected to the system bus.
+            This is usually an indication that the client can handle it's own error handling and
+            EULA callbacks rather than another program taking over.
+          </para>
+        <variablelist role="params"/><refsect2><title><anchor role="function" id="Transaction:ElapsedTime"/>The "ElapsedTime" property</title><indexterm><primary>ElapsedTime</primary><secondary>Transaction</secondary></indexterm><programlisting>'ElapsedTime'  read      'u'
+</programlisting></refsect2>
+          <para>
+            The amount of time elapsed during the transaction in seconds.
+          </para>
+        <variablelist role="params"/><refsect2><title><anchor role="function" id="Transaction:RemainingTime"/>The "RemainingTime" property</title><indexterm><primary>RemainingTime</primary><secondary>Transaction</secondary></indexterm><programlisting>'RemainingTime'  read      'u'
+</programlisting></refsect2>
+          <para>
+            The estimated time remaining of the transaction in seconds, or 0 if not known.
+          </para>
+        <variablelist role="params"/><refsect2><title><anchor role="function" id="Transaction:Speed"/>The "Speed" property</title><indexterm><primary>Speed</primary><secondary>Transaction</secondary></indexterm><programlisting>'Speed'  read      'u'
+</programlisting></refsect2>
+          <para>
+            The estimated speed of the transaction (copying, downloading, etc.) in bits per second, or 0 if not known.
+          </para>
+        <variablelist role="params"/></refsect1>
+</refentry>

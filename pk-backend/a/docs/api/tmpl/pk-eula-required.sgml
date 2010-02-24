@@ -1,0 +1,59 @@
+<!-- ##### SECTION Title ##### -->
+PkEulaRequired
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT PkEulaRequiredPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT PkEulaRequired ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG PkEulaRequired:eula-id ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG PkEulaRequired:license-agreement ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG PkEulaRequired:package-id ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG PkEulaRequired:vendor-name ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION pk_eula_required_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

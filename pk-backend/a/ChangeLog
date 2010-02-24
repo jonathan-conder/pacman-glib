@@ -1,0 +1,1456 @@
+commit b1785d40ec04ebde29d9fc0738773c9590ca658f
+Author: Richard Hughes <richard@hughsie.com>
+Date:   2010-02-01
+
+    Release version 0.6.1
+
+M	NEWS
+M	RELEASE
+M	configure.ac
+M	docs/html/pk-download.html
+
+commit 21799491268c94106a044ce5d2e42bc865fb5a06
+Author: Fabio Erculiani <lxnay@sabayon.org>
+Date:	2010-01-31
+
+    portage: fix compilation and port code to new API
+
+M	backends/portage/pk-backend-portage.c
+
+commit c032d12ab1a438fcc87ae1bc6cabfff734b04ea1
+Author: Scott Reeves <sreeves@novell.com>
+Date:	2010-01-29
+
+    zypp: add more features to repo_set_data.
+    patch from Ladislav Slezak
+
+M	backends/zypp/pk-backend-zypp.cpp
+
+commit 898fdce65df77d6380eba5b17fa4c0f3a85dd573
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-29
+
+    trivial: correct the email address in HACKING
+
+M	HACKING
+
+commit 4137be32d14188cf4fadea55a88fd575385fde63
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-28
+
+    trivial: Remove the compatibility defines for pk_package_sack() --
+    nothing outside of PackageKit uses them
+
+M	lib/packagekit-glib2/pk-package-sack.c
+M	lib/packagekit-glib2/pk-package-sack.h
+M	lib/packagekit-glib2/pk-task.c
+
+commit 8ac67b10c33287814465a2a2ae67cc1d76061ca3
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-28
+
+    Remove the glib2 functions pk_package_sack_get_size() and
+    pk_package_sack_get_index() as they are horribly inefficient for just
+    getting items from the sack. Just use pk_package_sack_get_array()
+    instead
+
+M	lib/packagekit-glib2/pk-package-sack.c
+M	lib/packagekit-glib2/pk-package-sack.h
+M	lib/packagekit-glib2/pk-task-wrapper.c
+
+commit b9894bff5a271d87dc571d41a4c371054f298756
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-28
+
+    Sort the packages by name in all pkcon results
+
+M	client/pk-console.c
+M	lib/packagekit-glib2/pk-package-sack.c
+M	lib/packagekit-glib2/pk-package-sack.h
+
+commit 2138430b21c71bf4ddb538db3fdc5843725f64d8
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-27
+
+    Update the Free Software Foundation address
+
+M	backends/alpm/pk-backend-alpm.c
+M	backends/apt/pk-backend-apt.c
+M	backends/apt/profiler.py
+M	backends/apt/tests.py
+M	backends/aptcc/apt-utils.cpp
+M	backends/aptcc/apt-utils.h
+M	backends/aptcc/pk-backend-aptcc.cpp
+M	backends/box/pk-backend-box.c
+M	backends/conary/conaryBackend.py
+M	backends/conary/conaryCallback.py
+M	backends/conary/conaryFilter.py
+M	backends/conary/conaryProgress.py
+M	backends/conary/pk-backend-conary.c
+M	backends/dummy/pk-backend-dummy.c
+M	backends/opkg/pk-backend-opkg.c
+M	backends/pisi/pisiBackend.py
+M	backends/pisi/pk-backend-pisi.c
+M	backends/poldek/pk-backend-poldek.c
+M	backends/portage/pk-backend-portage.c
+M	backends/portage/portageBackend.py
+M	backends/ports/pk-backend-ports.c
+M	backends/ports/portsBackend.rb
+M	backends/razor/pk-backend-razor.c
+M	backends/slapt/pk-backend-slapt.c
+M	backends/smart/pk-backend-smart.c
+M	backends/smart/smartBackend.py
+M	backends/test/pk-backend-test-fail.c
+M	backends/test/pk-backend-test-nop.c
+M	backends/test/pk-backend-test-spawn.c
+M	backends/test/pk-backend-test-succeed.c
+M	backends/test/pk-backend-test-thread.c
+M	backends/urpmi/pk-backend-urpmi.c
+M	backends/yum/pk-backend-yum.c
+M	backends/yum/yumBackend.py
+M	backends/yum/yumComps.py
+M	backends/yum/yumCompsTest.py
+M	backends/yum/yumFilter.py
+M	backends/yum/yumMediaManager.py
+M	backends/yum/yumMediaManagerDeviceKit.py
+M	backends/yum/yumMediaManagerGIO.py
+M	backends/yum/yumMediaManagerHAL.py
+M	backends/yum/yumMediaManagerOS.py
+M	backends/zypp/pk-backend-zypp.cpp
+M	backends/zypp/zypp-events.h
+M	backends/zypp/zypp-utils.cpp
+M	backends/zypp/zypp-utils.h
+M	client/pk-console.c
+M	client/pk-generate-pack.c
+M	client/pk-monitor.c
+M	client/pk-self-test.c
+M	contrib/browser-plugin/pk-main.c
+M	contrib/browser-plugin/pk-main.h
+M	contrib/browser-plugin/pk-plugin-install.c
+M	contrib/browser-plugin/pk-plugin-install.h
+M	contrib/browser-plugin/pk-plugin.c
+M	contrib/browser-plugin/pk-plugin.h
+M	contrib/command-not-found/pk-command-not-found.c
+M	contrib/debuginfo-install/pk-debuginfo-install.c
+M	contrib/device-rebind/pk-device-rebind.c
+M	contrib/gstreamer-plugin/pk-gstreamer-install.c
+M	contrib/gtk-module/pk-gtk-module.c
+M	data/tests/pk-spawn-dispatcher.py
+M	lib/packagekit-glib2/packagekit-private.h
+M	lib/packagekit-glib2/packagekit.h
+M	lib/packagekit-glib2/pk-bitfield.c
+M	lib/packagekit-glib2/pk-bitfield.h
+M	lib/packagekit-glib2/pk-catalog.c
+M	lib/packagekit-glib2/pk-catalog.h
+M	lib/packagekit-glib2/pk-category.c
+M	lib/packagekit-glib2/pk-category.h
+M	lib/packagekit-glib2/pk-client-sync.c
+M	lib/packagekit-glib2/pk-client-sync.h
+M	lib/packagekit-glib2/pk-client.c
+M	lib/packagekit-glib2/pk-client.h
+M	lib/packagekit-glib2/pk-common.c
+M	lib/packagekit-glib2/pk-common.h
+M	lib/packagekit-glib2/pk-console-shared.c
+M	lib/packagekit-glib2/pk-console-shared.h
+M	lib/packagekit-glib2/pk-control-sync.c
+M	lib/packagekit-glib2/pk-control-sync.h
+M	lib/packagekit-glib2/pk-control.c
+M	lib/packagekit-glib2/pk-control.h
+M	lib/packagekit-glib2/pk-desktop.c
+M	lib/packagekit-glib2/pk-desktop.h
+M	lib/packagekit-glib2/pk-details.c
+M	lib/packagekit-glib2/pk-details.h
+M	lib/packagekit-glib2/pk-distro-upgrade.c
+M	lib/packagekit-glib2/pk-distro-upgrade.h
+M	lib/packagekit-glib2/pk-enum.c
+M	lib/packagekit-glib2/pk-enum.h
+M	lib/packagekit-glib2/pk-error.c
+M	lib/packagekit-glib2/pk-error.h
+M	lib/packagekit-glib2/pk-eula-required.c
+M	lib/packagekit-glib2/pk-eula-required.h
+M	lib/packagekit-glib2/pk-files.c
+M	lib/packagekit-glib2/pk-files.h
+M	lib/packagekit-glib2/pk-media-change-required.c
+M	lib/packagekit-glib2/pk-media-change-required.h
+M	lib/packagekit-glib2/pk-message.c
+M	lib/packagekit-glib2/pk-message.h
+M	lib/packagekit-glib2/pk-package-id.c
+M	lib/packagekit-glib2/pk-package-id.h
+M	lib/packagekit-glib2/pk-package-ids.c
+M	lib/packagekit-glib2/pk-package-ids.h
+M	lib/packagekit-glib2/pk-package-sack-sync.c
+M	lib/packagekit-glib2/pk-package-sack-sync.h
+M	lib/packagekit-glib2/pk-package-sack.c
+M	lib/packagekit-glib2/pk-package-sack.h
+M	lib/packagekit-glib2/pk-package.c
+M	lib/packagekit-glib2/pk-package.h
+M	lib/packagekit-glib2/pk-progress-bar.c
+M	lib/packagekit-glib2/pk-progress-bar.h
+M	lib/packagekit-glib2/pk-progress.c
+M	lib/packagekit-glib2/pk-progress.h
+M	lib/packagekit-glib2/pk-repo-detail.c
+M	lib/packagekit-glib2/pk-repo-detail.h
+M	lib/packagekit-glib2/pk-repo-signature-required.c
+M	lib/packagekit-glib2/pk-repo-signature-required.h
+M	lib/packagekit-glib2/pk-require-restart.c
+M	lib/packagekit-glib2/pk-require-restart.h
+M	lib/packagekit-glib2/pk-results.c
+M	lib/packagekit-glib2/pk-results.h
+M	lib/packagekit-glib2/pk-self-test.c
+M	lib/packagekit-glib2/pk-service-pack.c
+M	lib/packagekit-glib2/pk-service-pack.h
+M	lib/packagekit-glib2/pk-source.c
+M	lib/packagekit-glib2/pk-source.h
+M	lib/packagekit-glib2/pk-task-sync.c
+M	lib/packagekit-glib2/pk-task-sync.h
+M	lib/packagekit-glib2/pk-task-text.c
+M	lib/packagekit-glib2/pk-task-text.h
+M	lib/packagekit-glib2/pk-task-wrapper.c
+M	lib/packagekit-glib2/pk-task-wrapper.h
+M	lib/packagekit-glib2/pk-task.c
+M	lib/packagekit-glib2/pk-task.h
+M	lib/packagekit-glib2/pk-transaction-list.c
+M	lib/packagekit-glib2/pk-transaction-list.h
+M	lib/packagekit-glib2/pk-transaction-past.c
+M	lib/packagekit-glib2/pk-transaction-past.h
+M	lib/packagekit-glib2/pk-update-detail.c
+M	lib/packagekit-glib2/pk-update-detail.h
+M	lib/packagekit-glib2/pk-version.h.in
+M	lib/python/packagekit/backend.py
+M	lib/python/packagekit/client.py
+M	lib/python/packagekit/filter.py
+M	lib/python/packagekit/frontend.py
+M	lib/python/packagekit/misc.py
+M	lib/python/packagekit/package.py
+M	lib/python/packagekit/pkdbus.py
+M	lib/python/packagekit/pkexceptions.py
+M	lib/python/packagekit/progress.py
+M	lib/python/pk-frontend-test.py
+M	lib/python/wrapper-test.py
+M	src/egg-dbus-monitor.c
+M	src/egg-dbus-monitor.h
+M	src/egg-debug.c
+M	src/egg-debug.h
+M	src/egg-string.c
+M	src/egg-string.h
+M	src/egg-test.c
+M	src/egg-test.h
+M	src/pk-backend-internal.h
+M	src/pk-backend-spawn.c
+M	src/pk-backend-spawn.h
+M	src/pk-backend.c
+M	src/pk-backend.h
+M	src/pk-cache.c
+M	src/pk-cache.h
+M	src/pk-conf.c
+M	src/pk-conf.h
+M	src/pk-dbus.c
+M	src/pk-dbus.h
+M	src/pk-engine.c
+M	src/pk-engine.h
+M	src/pk-file-monitor.c
+M	src/pk-file-monitor.h
+M	src/pk-inhibit.c
+M	src/pk-inhibit.h
+M	src/pk-lsof.c
+M	src/pk-lsof.h
+M	src/pk-main.c
+M	src/pk-network.c
+M	src/pk-network.h
+M	src/pk-notify.c
+M	src/pk-notify.h
+M	src/pk-polkit-action-lookup.c
+M	src/pk-proc.c
+M	src/pk-proc.h
+M	src/pk-self-test.c
+M	src/pk-shared.c
+M	src/pk-shared.h
+M	src/pk-spawn.c
+M	src/pk-spawn.h
+M	src/pk-store.c
+M	src/pk-store.h
+M	src/pk-sysdep.c
+M	src/pk-sysdep.h
+M	src/pk-syslog.c
+M	src/pk-syslog.h
+M	src/pk-time.c
+M	src/pk-time.h
+M	src/pk-transaction-db.c
+M	src/pk-transaction-db.h
+M	src/pk-transaction-extra.c
+M	src/pk-transaction-extra.h
+M	src/pk-transaction-list.c
+M	src/pk-transaction-list.h
+M	src/pk-transaction.c
+M	src/pk-transaction.h
+M	tools/pk-refresh-licenses.c
+
+commit 5b83b0e04fdcfc65457f92aa686659bd960b94b9
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-26
+
+    trivial: Modernize the configure.ac file
+
+M	configure.ac
+
+commit deb7b6d28284ccfc62760877699af2def50f01cf
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-26
+
+    Fix some trivial whitespace issues
+
+M	configure.ac
+M	lib/packagekit-glib2/pk-client.h
+
+commit 171bc15a9228b4bc90725e4b17ef6a57edc8cbb0
+Author: Daniel Nicoletti <dantti85-pk@yahoo.com.br>
+Date:	2010-01-26
+
+    * Add Kubuntu support for upgrade (using env var exported by
+    KPackageKit)
+    * Add KDialog support as alternative to zenity and xmessage for
+    the "system not recognized" message (also using env var exported
+    by KPackageKit)
+
+    Patch by (Harald Sitter <sitter.harald@gmail.com>)
+
+M	data/pk-upgrade-distro.sh
+
+commit 36ebf6ba02f249a6d1642a2353d0275db211689e
+Author: Scott Reeves <sreeves@novell.com>
+Date:	2010-01-25
+
+    zypp: partial support of multiple values for search params
+
+M	backends/zypp/pk-backend-zypp.cpp
+
+commit 251ce613af9c6e862e7999c735798723cd8c88e2
+Author: Anders F Bjorklund <afb@users.sourceforge.net>
+Date:	2010-01-25
+
+    ports: convert search params to array values
+
+M	backends/ports/pk-backend-ports.c
+
+commit fbef1027178ee1f1e66b1e68a4309cbbb7f77bc4
+Author: Scott Reeves <sreeves@novell.com>
+Date:	2010-01-23
+
+    zypp: work with packagekit-glib2
+
+M	backends/zypp/pk-backend-zypp.cpp
+M	backends/zypp/zypp-utils.cpp
+
+commit 05da249853df8afdf46c637bd367c0692380260c
+Author: warrink <warrink@fedoraproject.org>
+Date:	2010-01-21
+
+    Sending translation for Dutch
+
+M	po/nl.po
+
+commit 93bcd506293fb62b749fc1fae28d3cc1118891b1
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-20
+
+    yum: Ensure we look in all update notices for a security update. Fixes
+    rh#526279
+
+M	backends/yum/yumBackend.py
+
+commit 0cdd5afa6f1d6c9982a3185313cee9d57131c967
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-20
+
+    trivial: add brasero to the website example users
+
+A	docs/html/img/users-brasero.png
+M	docs/html/pk-users.html
+
+commit 46d04d92f6dcccbf0c04dd2a14fddfb75016a8e5
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-19
+
+    yum: emit a warning when a developer tries to use autoremove
+
+M	Makefile.am
+M	backends/yum/yumBackend.py
+
+commit af9ad19283e33704fa4ad1202e6e9055de0fc501
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-18
+
+    trivial: add 'Since: foo' lines to public methods and properties
+    in packagekit-glib2
+
+M	lib/packagekit-glib2/pk-bitfield.c
+M	lib/packagekit-glib2/pk-catalog.c
+M	lib/packagekit-glib2/pk-category.c
+M	lib/packagekit-glib2/pk-client-sync.c
+M	lib/packagekit-glib2/pk-client.c
+M	lib/packagekit-glib2/pk-common.c
+M	lib/packagekit-glib2/pk-control-sync.c
+M	lib/packagekit-glib2/pk-control.c
+M	lib/packagekit-glib2/pk-desktop.c
+M	lib/packagekit-glib2/pk-details.c
+M	lib/packagekit-glib2/pk-distro-upgrade.c
+M	lib/packagekit-glib2/pk-enum.c
+M	lib/packagekit-glib2/pk-error.c
+M	lib/packagekit-glib2/pk-eula-required.c
+M	lib/packagekit-glib2/pk-files.c
+M	lib/packagekit-glib2/pk-media-change-required.c
+M	lib/packagekit-glib2/pk-message.c
+M	lib/packagekit-glib2/pk-package-id.c
+M	lib/packagekit-glib2/pk-package-ids.c
+M	lib/packagekit-glib2/pk-package-sack-sync.c
+M	lib/packagekit-glib2/pk-package-sack.c
+M	lib/packagekit-glib2/pk-package.c
+M	lib/packagekit-glib2/pk-progress.c
+M	lib/packagekit-glib2/pk-repo-detail.c
+M	lib/packagekit-glib2/pk-repo-signature-required.c
+M	lib/packagekit-glib2/pk-require-restart.c
+M	lib/packagekit-glib2/pk-results.c
+M	lib/packagekit-glib2/pk-service-pack.c
+M	lib/packagekit-glib2/pk-source.c
+M	lib/packagekit-glib2/pk-task-sync.c
+M	lib/packagekit-glib2/pk-task.c
+M	lib/packagekit-glib2/pk-transaction-list.c
+M	lib/packagekit-glib2/pk-transaction-past.c
+M	lib/packagekit-glib2/pk-update-detail.c
+
+commit 713c7c2536ec430d3b839c5ddf4b98a4c67ff50b
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-15
+
+    trivial: enable introspection in the Fedora spec file
+
+M	contrib/PackageKit.spec.in
+
+commit c6d655f0647f7a3e476ea8212d4adf0448c34e14
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-15
+
+    feature: Enable initial introspection support in PackageKit-glib2
+
+M	Makefile.am
+M	configure.ac
+M	lib/packagekit-glib2/Makefile.am
+
+commit 39f1afae5bbd9ae790c0505ede4467f5eac6dfe7
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-17
+
+    trivial: use g_set_error() in more places
+
+M	lib/packagekit-glib2/pk-console-shared.c
+M	lib/packagekit-glib2/pk-desktop.c
+M	lib/packagekit-glib2/pk-package.c
+M	lib/packagekit-glib2/pk-service-pack.c
+M	src/pk-transaction-extra.c
+M	src/pk-transaction-list.c
+M	src/pk-transaction.c
+
+commit f509d262b464ca1fd069927af4478113ecea8199
+Author: elsupergomez <elsupergomez@fedoraproject.org>
+Date:	2010-01-15
+
+    Sending translation for Spanish
+
+M	po/es.po
+
+commit 0975a1a8b31a1551b712f6358b12e3b5bfc266ef
+Author: raven <raven@fedoraproject.org>
+Date:	2010-01-14
+
+    Sending translation for Polish
+
+M	po/pl.po
+
+commit 149252ee88454eb602a98ed43869a5f0fb70dafb
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-14
+
+    trivial: add install-local to the bash autocompletion rules
+
+M	contrib/pk-completion.bash
+
+commit 4b71f550ec7dd3dd639ea14784697680e9ddbe94
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-14
+
+    If the user uses 'pkcon install dave.rpm' then give a useful error
+    message
+
+M	client/pk-console.c
+
+commit 2bbc11bc42373310604992f961061ea6201b3ec9
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-14
+
+    Ensure that pkgenpack generates filenames without ';' embedded in them
+
+M	client/pk-generate-pack.c
+
+commit bc6218abc7d52f4af04c4ad06a84cfa96a23786f
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-14
+
+    Show the translated role and status when using pkgenpack
+
+M	client/pk-generate-pack.c
+
+commit 0f3b83cf400e1f7eaf33758088488297ccea6438
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-12
+
+    trivial: rename foo_[to|from]_text to foo_[to|from}_string functions,
+    to fit in more with coding standards
+
+    Also add in compatibility defines for applications using
+    packagekit-glib2.
+    This looks like a large commit, but it's actually just a
+    search-replace script.
+
+M	backends/apt/pk-backend-apt.c
+M	backends/aptcc/pk-backend-aptcc.cpp
+M	backends/conary/pk-backend-conary.c
+M	backends/opkg/pk-backend-opkg.c
+M	backends/pisi/pk-backend-pisi.c
+M	backends/poldek/pk-backend-poldek.c
+M	backends/portage/pk-backend-portage.c
+M	backends/ports/pk-backend-ports.c
+M	backends/slapt/pk-backend-slapt.c
+M	backends/smart/pk-backend-smart.c
+M	backends/test/pk-backend-test-spawn.c
+M	backends/test/pk-backend-test-thread.c
+M	backends/urpmi/pk-backend-urpmi.c
+M	backends/yum/pk-backend-yum.c
+M	backends/zypp/pk-backend-zypp.cpp
+M	client/pk-console.c
+M	client/pk-generate-pack.c
+M	client/pk-monitor.c
+M	contrib/browser-plugin/pk-plugin-install.c
+M	contrib/command-not-found/pk-command-not-found.c
+M	contrib/debuginfo-install/pk-debuginfo-install.c
+M	lib/packagekit-glib2/pk-bitfield.c
+M	lib/packagekit-glib2/pk-bitfield.h
+M	lib/packagekit-glib2/pk-catalog.c
+M	lib/packagekit-glib2/pk-client.c
+M	lib/packagekit-glib2/pk-console-shared.c
+M	lib/packagekit-glib2/pk-control.c
+M	lib/packagekit-glib2/pk-enum.c
+M	lib/packagekit-glib2/pk-enum.h
+M	lib/packagekit-glib2/pk-package-ids.c
+M	lib/packagekit-glib2/pk-package-ids.h
+M	lib/packagekit-glib2/pk-progress.c
+M	lib/packagekit-glib2/pk-results.c
+M	lib/packagekit-glib2/pk-service-pack.c
+M	lib/packagekit-glib2/pk-task-text.c
+M	lib/packagekit-glib2/pk-task-wrapper.c
+M	lib/packagekit-glib2/pk-task.c
+M	lib/packagekit-glib2/pk-transaction-list.c
+M	lib/packagekit-sharp/packagekit-api.raw
+M	lib/packagekit-sharp/packagekit-api.xml
+M	lib/python/packagekit/backend.py
+M	src/pk-backend-spawn.c
+M	src/pk-backend.c
+M	src/pk-backend.h
+M	src/pk-engine.c
+M	src/pk-lsof.c
+M	src/pk-network-stack-connman.c
+M	src/pk-network-stack-nm.c
+M	src/pk-network-stack-unix.c
+M	src/pk-network.c
+M	src/pk-polkit-action-lookup.c
+M	src/pk-shared.c
+M	src/pk-shared.h
+M	src/pk-spawn.c
+M	src/pk-transaction-db.c
+M	src/pk-transaction-extra.c
+M	src/pk-transaction-list.c
+M	src/pk-transaction.c
+
+commit 5879cb55b16ae3f67b5908dd1a5558fcaf887b2e
+Merge: df73a39 08d1917
+Author: Daniel Nicoletti <dantti85-pk@yahoo.com.br>
+Date:	2010-01-11
+
+    Merge branch 'master' of
+    git+ssh://git.packagekit.org/srv/git/PackageKit
+
+commit df73a39e466d273fb95a5a428503e7f45dc97e5f
+Author: Daniel Nicoletti <dantti85-pk@yahoo.com.br>
+Date:	2010-01-11
+
+    aptcc: impoved search file
+
+M	backends/aptcc/apt.cpp
+
+commit 08d19175bb9f809294325578593fe42e5e0bbb24
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-10
+
+    Add sync versions of the PkPackageSack functions
+
+M	lib/packagekit-glib2/Makefile.am
+M	lib/packagekit-glib2/packagekit.h
+A	lib/packagekit-glib2/pk-package-sack-sync.c
+A	lib/packagekit-glib2/pk-package-sack-sync.h
+
+commit 7316eee6cfe90959e55896564f2caaac74b26775
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-10
+
+    trivial: rename a couple of functions to be more like the PkClient API
+
+    Nothing yet use these new functions, so the API break is okay.
+
+M	lib/packagekit-glib2/pk-package-sack.c
+M	lib/packagekit-glib2/pk-package-sack.h
+
+commit ee394e8c505a7cd56fdd7fa4749df2217b4c1a2c
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-10
+
+    trivial: add a self check to ensure that PK_INFO_ENUM_FINISHED
+    packages cannot be added
+
+M	lib/packagekit-glib2/pk-results.c
+
+commit 45d66375e4328d68c6d3aabd643e21069495a2cb
+Author: gml520 <gml520@fedoraproject.org>
+Date:	2010-01-09
+
+    Sending translation for Chinese (Simplified)
+
+M	po/zh_CN.po
+
+commit 48d4b071ec699afbb488635c2e906082d2b9dd20
+Author: Tim Waugh <twaugh@redhat.com>
+Date:	2010-01-08
+
+    bugfix: fixed packagekit.client.install_packages() in Python bindings.
+
+M	lib/python/packagekit/client.py
+
+commit 20bb7039c02e0d6088676588671b6889fd5e3aa7
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-08
+
+    trivial: reduce the verbosity of the debugging in PkProc
+
+M	src/pk-proc.c
+
+commit f0296a8a3503fc4322184a6e50be7a51fae5920b
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-08
+
+    bugfix: when adopting a transaction ensure we set the role on the
+    PkResults object
+
+    This fixes the require-restart icon in gnome-packagekit as it filters
+    on the role after adopting
+
+M	lib/packagekit-glib2/pk-client.c
+
+commit 0405e7bb50af874cd864d4c38c9865f4a2bc6a5c
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-08
+
+    trivial: remove some superflurious debugging in PkTransactionExtra
+
+M	src/pk-transaction-extra.c
+
+commit ba70f9ca039fe9a1c0f9d8fb537002bdfe020e59
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-08
+
+    trivial: relax the make check parameters in PkDesktop so that it
+    works on Fedora 13
+
+M	lib/packagekit-glib2/pk-desktop.c
+
+commit 7e02d09f397fbdfc6c9cda2840acfdd60f34c27b
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-08
+
+    trivial: fix up make check as now the daemon can send a cancelled
+    error message
+
+M	lib/packagekit-glib2/pk-client.c
+
+commit 99a53be9027eefbb0a8bc35294b2fdd04f330191
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-08
+
+    Ensure PkProgress sends ::notify signals when properties change
+
+M	lib/packagekit-glib2/pk-progress.c
+
+commit 22958d80ddf50573006eef06a3c5f1636df4cc7d
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-08
+
+    trivial: remove two warning statements left in by accident
+
+M	lib/packagekit-glib2/pk-transaction-list.c
+
+commit 663cb489e20132964301cdf3fb8c69e66074583d
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-08
+
+    trivial: be more resilient to internal errors and simply warn instead
+
+M	lib/packagekit-glib2/pk-catalog.c
+M	lib/packagekit-glib2/pk-client.c
+M	lib/packagekit-glib2/pk-results.c
+M	lib/packagekit-glib2/pk-task.c
+
+commit c32a26c8997962ac21d1937b1b7bcf0357a7fc1b
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-08
+
+    bugfix: Ensure we set an error when the transaction is cancelled
+
+    This fixes a bug where old versions of the glib2 library would
+    assert when
+    the transaction does not exit with success and an error is expected
+
+M	src/pk-backend.c
+
+commit cc995557f05520a97ea7b195b4c2765227780d00
+Author: Valeriy Lyasotskiy <onestep@ukr.net>
+Date:	2010-01-08
+
+    alpm: added autoremove and HoldPkg functionality (thanks to
+    PirateJonno); changed search functions to allow multiple search values
+
+M	backends/alpm/pk-backend-alpm.c
+
+commit 2761bc5470786fb175b7b58585b2b8ee42eaf223
+Author: Valeriy Lyasotskiy <onestep@ukr.net>
+Date:	2010-01-08
+
+    Cache autoremove too in transaction_remove_packages
+
+M	src/pk-transaction.c
+
+commit f946bf10b000fba96101c7bf44be5810876c7aa5
+Author: Valeriy Lyasotskiy <onestep@ukr.net>
+Date:	2010-01-08
+
+    alpm: understand more config options (thanks to PirateJonno)
+
+M	backends/alpm/pk-backend-alpm.c
+
+commit 27d423cb37ff1afee75480c76d5c8227979575f8
+Author: Valeriy Lyasotskiy <onestep@ukr.net>
+Date:	2010-01-08
+
+    alpm: more formatting (thanks to PirateJonno)
+
+M	backends/alpm/pk-backend-alpm.c
+
+commit 27016056c90c85b9c9c2e432cbf562d4636e3d97
+Author: Valeriy Lyasotskiy <onestep@ukr.net>
+Date:	2010-01-08
+
+    alpm: handle ILoveCandy config option (thanks to PirateJonno)
+
+M	backends/alpm/pk-backend-alpm.c
+
+commit 3669f7d8b529e91f063e90f9597cc6f0191dbebb
+Author: Aurelien Lefebvre <alkh@mandriva.org>
+Date:	2010-01-07
+
+    urpmi: fix backend api
+
+M	backends/urpmi/pk-backend-urpmi.c
+
+commit 97803b3fbe46dfbef1bf2b83ad7dc9bff27ed89e
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-07
+
+    trivial: install pk-source.h so that client tools can use it
+
+M	lib/packagekit-glib2/Makefile.am
+
+commit 189e754db6d71483026231d1fcdb4d6c9f433f87
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-07
+
+    glib2: Add a parent object to all the source objects to track the
+    source role and transacton id
+
+M	lib/packagekit-glib2/Makefile.am
+M	lib/packagekit-glib2/pk-category.c
+M	lib/packagekit-glib2/pk-category.h
+M	lib/packagekit-glib2/pk-client.c
+M	lib/packagekit-glib2/pk-client.h
+M	lib/packagekit-glib2/pk-details.c
+M	lib/packagekit-glib2/pk-details.h
+M	lib/packagekit-glib2/pk-distro-upgrade.c
+M	lib/packagekit-glib2/pk-distro-upgrade.h
+M	lib/packagekit-glib2/pk-error.c
+M	lib/packagekit-glib2/pk-error.h
+M	lib/packagekit-glib2/pk-eula-required.c
+M	lib/packagekit-glib2/pk-eula-required.h
+M	lib/packagekit-glib2/pk-files.c
+M	lib/packagekit-glib2/pk-files.h
+M	lib/packagekit-glib2/pk-media-change-required.c
+M	lib/packagekit-glib2/pk-media-change-required.h
+M	lib/packagekit-glib2/pk-message.c
+M	lib/packagekit-glib2/pk-message.h
+M	lib/packagekit-glib2/pk-package.c
+M	lib/packagekit-glib2/pk-package.h
+M	lib/packagekit-glib2/pk-repo-detail.c
+M	lib/packagekit-glib2/pk-repo-detail.h
+M	lib/packagekit-glib2/pk-repo-signature-required.c
+M	lib/packagekit-glib2/pk-repo-signature-required.h
+M	lib/packagekit-glib2/pk-require-restart.c
+M	lib/packagekit-glib2/pk-require-restart.h
+A	lib/packagekit-glib2/pk-source.c
+C061	lib/packagekit-glib2/pk-files.h lib/packagekit-glib2/pk-source.h
+M	lib/packagekit-glib2/pk-transaction-past.c
+M	lib/packagekit-glib2/pk-transaction-past.h
+M	lib/packagekit-glib2/pk-update-detail.c
+M	lib/packagekit-glib2/pk-update-detail.h
+
+commit 1b254465105d0e171ae693be80f0f73c18c43058
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-07
+
+    yum: use repo-for-developers-only when enabling rawhide
+
+M	backends/yum/yumBackend.py
+
+commit d36fbccad0242e6a7111cfeee4a1ebf002460473
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-07
+
+    Add a new message enum 'repo-for-developers-only' for repos that
+    should not be used by users
+
+M	lib/packagekit-glib2/pk-enum.c
+M	lib/packagekit-glib2/pk-enum.h
+
+commit 487b0c63abaf471ba8b8ab4cc64ca77ba801c543
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-07
+
+    trivial: update a script not glib has been removed
+
+M	tools/add-error-enum.sh
+
+commit 84d6e16d274f55dc8cebb611c61689ae20102b2f
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-06
+
+    Add support for the 'interactive' hint in the daemon, and also sent
+    it to the backend
+
+M	lib/packagekit-glib2/pk-common.h
+M	lib/python/packagekit/backend.py
+M	src/pk-backend-spawn.c
+M	src/pk-backend.c
+M	src/pk-backend.h
+M	src/pk-shared.c
+M	src/pk-shared.h
+M	src/pk-transaction.c
+
+commit 23db0214ffa5ea07e0e45b9c4f31cb879e57f827
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-06
+
+    bugfix: Ensure we enter SETUP before we run the pre-transaction checks
+
+    This fixes a warning from the daemon and the random 'Waiting in
+    queue..' message from cnf.
+
+M	src/pk-transaction.c
+
+commit a063ce8a90f5585eefc7982c69396e57c21f1f56
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-05
+
+    yum: include PackageKit in the list of essential packages
+
+M	backends/yum/yumBackend.py
+
+commit aa7a41e1e9bde3848885c07c9feb59325c229743
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-05
+
+    yum: show a message to the user if the repo could not be
+    reached. Fixes rh#531838
+
+M	backends/yum/yumBackend.py
+
+commit e589dee9c9dea85530f5c9c702b482a2c2efd67e
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:	2010-01-05
+
+    Fix a trivial translation typo
+
+    Signed-off-by: Richard Hughes <richard@hughsie.com>
+
+M	po/de.po
+
+commit d353f63653d4c1ccf91c55e30e5257cce321ea29
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-04
+
+    trivial: post release version bump
+
+M	RELEASE
+M	configure.ac
+
+commit de041cb65ef8cd45d9387bec530d183a83c7eaf5
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-04
+
+    Release version 0.6.0
+
+M	NEWS
+M	RELEASE
+M	configure.ac
+M	docs/html/pk-download.html
+
+commit aabf47e3eec7b1cc9ba72514864843b11bb173d9
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-04
+
+    trivial: fix up some NULL/FALSE typos
+
+M	contrib/browser-plugin/pk-plugin.c
+M	src/pk-backend.c
+
+commit 7b97a642e09bd070e6f815acfe98be0298cb2878
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2010-01-04
+
+    trivial: fix up some simple errors that prevent make check from
+    completing
+
+M	src/pk-backend.c
+M	src/pk-engine.c
+M	src/pk-transaction-list.c
+
+commit f63d34d602db8cb551edc88308f73aebb05a49a9
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-30
+
+    trivial: fix up fedora spec file
+
+M	contrib/PackageKit.spec.in
+
+commit f2d95df7b7bdd674eefd7023e312db8410ad386e
+Author: Daniel Nicoletti <dantti85-pk@yahoo.com.br>
+Date:	2009-12-28
+
+    packagekit-qt: Improved and fixed transaction handling so does not
+    crash kded module anymore
+
+M	lib/packagekit-qt/src/client.cpp
+M	lib/packagekit-qt/src/client.h
+M	lib/packagekit-qt/src/clientprivate.cpp
+M	lib/packagekit-qt/src/clientprivate.h
+M	lib/packagekit-qt/src/transaction.cpp
+M	lib/packagekit-qt/src/transaction.h
+M	lib/packagekit-qt/src/transactionprivate.cpp
+M	lib/packagekit-qt/src/transactionprivate.h
+
+commit 3e265e65df0a9b88a7c646190e3959b23c4f28fd
+Author: Daniel Nicoletti <dantti85-pk@yahoo.com.br>
+Date:	2009-12-28
+
+    packagekit-qt: forgot the cpp files from last commit
+
+M	lib/packagekit-qt/src/client.cpp
+
+commit fa58f8d6f70836dacffde71e87070dd7d347ce73
+Author: Daniel Nicoletti <dantti85-pk@yahoo.com.br>
+Date:	2009-12-28
+
+    packagekit-qt: fixed the naming of the conviniece functions to match
+    the same function
+
+M	lib/packagekit-qt/src/client.h
+M	lib/packagekit-qt/src/transaction.h
+
+commit aed83722e45cd71a45e5aa2f74117def338bbfaa
+Author: vpv <vpv@fedoraproject.org>
+Date:	2009-12-23
+
+    Sending translation for Finnish
+
+M	po/fi.po
+
+commit 41d49c55f205f09c5d003f010fa15c3cd74e1d5c
+Author: troubi51 <troubi51@fedoraproject.org>
+Date:	2009-12-22
+
+    Sending translation for French
+
+M	po/fr.po
+
+commit d24e91f9bf310c593e775e665d9d3251bcf51630
+Author: Scott Reeves <sreeves@novell.com>
+Date:	2009-12-16
+
+    bugfix: allow the inhibit call to go through even if cancel is
+    not implemented
+
+M	src/pk-backend.c
+
+commit 8e1b478f84b955ff080152a266538bfeea848a6c
+Author: perplex <perplex@fedoraproject.org>
+Date:	2009-12-16
+
+    Sending translation for Italian
+
+M	po/it.po
+
+commit cd729f54d00b473259d67cc50021c54fb3ba37d6
+Author: Anders F Bjorklund <afb@users.sourceforge.net>
+Date:	2009-12-16
+
+    smart: convert search params to array values
+
+M	backends/smart/pk-backend-smart.c
+
+commit 3cb32ad40af3a38456e09baf1b29b046d82c587e
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-16
+
+    Add functionality to check if certain running applications should
+    prevent an update
+
+M	src/pk-transaction-extra.c
+M	src/pk-transaction-extra.h
+M	src/pk-transaction.c
+
+commit f17608f3bf05cf844c4e48f710e6a96e7752e6ad
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-16
+
+    trivial: add a file to the dummy backend for testing
+
+M	backends/dummy/pk-backend-dummy.c
+
+commit 66d3fc26054abd528ee18017d9c67edb6400f239
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-15
+
+    Add a new config file entry, NoUpdateProcessList that specifies
+    processes that should not be updated when running
+
+M	etc/PackageKit.conf.in
+
+commit 22196a4af0ca470d518e51cf315da7472d892b6f
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-15
+
+    trivial: Add a helper pk_conf_get_strv() for getting string arrays
+
+M	src/pk-conf.c
+M	src/pk-conf.h
+
+commit 379532488a639774905f864d742bb3bb0f136dd0
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-15
+
+    trivial: use the PkProc shared functionality rather than the hacked
+    up version in PkTransactionExtra
+
+M	src/pk-transaction-extra.c
+
+commit 43f5ceb1a241534679d47843a534509391007997
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-15
+
+    Fix a crash where the extra library check file callbacks had the
+    wrong signature
+
+M	src/pk-transaction-extra.c
+
+commit e36715c98cd6993a650c0bfcd9d5d1b459dea64c
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-15
+
+    trivial: add functionality to PkProc to get the uid, and add two
+    public functions
+
+M	src/pk-proc.c
+M	src/pk-proc.h
+
+commit c866f2a80eee6757c0b093313b8b54f99c731088
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-15
+
+    trivial: use g_ptr_array_new_with_free_func() in PkTransactionExtra
+
+M	src/pk-transaction-extra.c
+
+commit 4f001b20e5ca2e4f46ad5e6425fc6ccf0a4222a5
+Author: troubi51 <troubi51@fedoraproject.org>
+Date:	2009-12-15
+
+    Sending translation for French
+
+M	po/fr.po
+
+commit 8047a940a78d055d7360163d7d51b3fbff53a819
+Author: leahliu <leahliu@fedoraproject.org>
+Date:	2009-12-14
+
+    Sending translation for Chinese (Simplified)
+
+M	po/zh_CN.po
+
+commit ddf8a1545a494671e99c36c3be13abdd282a06e2
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-11
+
+    Add a new error enum 'failed-due-to-running-process' for future code
+
+M	lib/packagekit-glib2/pk-enum.c
+M	lib/packagekit-glib2/pk-enum.h
+
+commit 43f80a9b26dad6b2db105e86925c39e640cdf5ec
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-11
+
+    Add PkProc, to monitor the running applications on the system for
+    future functionality
+
+M	src/Makefile.am
+A	src/pk-proc.c
+A	src/pk-proc.h
+M	src/pk-self-test.c
+
+commit 9f2645de4b58c37b11165a0f03d8f9f6acb25c0d
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-11
+
+    trivial: correct a warning message in PkTransactionExtra
+
+M	src/pk-transaction-extra.c
+
+commit 58e91563952e853ac64b2c555fa3a43376229677
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-11
+
+    trivial: use g_ptr_array_unref() in PkLsof
+
+M	src/pk-lsof.c
+
+commit de5b58b5bbe1b956892ad657c78131131ae8109a
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-09
+
+    trivial: fix a warning when building pk-device-rebind
+
+M	contrib/device-rebind/pk-device-rebind.c
+
+commit 4635f723ea9be747f6fcc23d64ba7f1d992cdae1
+Author: amitakhya <amitakhya@fedoraproject.org>
+Date:	2009-12-11
+
+    Sending translation for Assamese
+
+M	po/as.po
+
+commit a798c28cb1c9e829e15ad1ed9d241baf6e99699c
+Author: shanky <shanky@fedoraproject.org>
+Date:	2009-12-10
+
+    Sending translation for Kannada
+
+M	po/kn.po
+
+commit 58a2690bc2d4c66e3377cd1e394c85e4af5de145
+Author: khasida <khasida@fedoraproject.org>
+Date:	2009-12-10
+
+    Sending translation for Japanese
+
+M	po/ja.po
+
+commit d94610850b7f6e370b10e38eef5b58aaf7e66252
+Author: snowlet <snowlet@fedoraproject.org>
+Date:	2009-12-10
+
+    Sending translation for Chinese (Traditional)
+
+M	po/zh_TW.po
+
+commit 991ff162ed8758c9fca86e4ac7141ff67ffaa42a
+Author: sandeeps <sandeeps@fedoraproject.org>
+Date:	2009-12-09
+
+    Sending translation for Marathi
+
+M	po/mr.po
+
+commit 508e4d195c7310bce2202b7431d99f2c82593dcd
+Author: ifelix <ifelix@fedoraproject.org>
+Date:	2009-12-09
+
+    Sending translation for Tamil
+
+M	po/ta.po
+
+commit 1cbe1ea5b65c73d78a10a8645ae8dc100bf28af6
+Author: anipeter <anipeter@fedoraproject.org>
+Date:	2009-12-09
+
+    Sending translation for Malayalam
+
+M	po/ml.po
+
+commit 127d67cbdade00675bd0fed0af54de7522df31f8
+Author: ypoyarko <ypoyarko@fedoraproject.org>
+Date:	2009-12-09
+
+    Sending translation for Russian
+
+M	po/ru.po
+
+commit 25ea95d544fe4c2ec00dcce4b0a5e553e4fd64c6
+Author: hedda <hedda@fedoraproject.org>
+Date:	2009-12-09
+
+    Sending translation for German
+
+M	po/de.po
+
+commit 9a528010e74b4b6e0bd2f5eb86ca5bae22947b51
+Author: igor <igor@fedoraproject.org>
+Date:	2009-12-08
+
+    Sending translation for Brazilian Portuguese
+
+M	po/pt_BR.po
+
+commit eb82b59219daecea0e0a9b94c5fbf6c21cc4945e
+Merge: 83046c9 18e26ca
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-08
+
+    Merge branch 'master' of
+    git+ssh://git.packagekit.org/srv/git/PackageKit
+
+commit 83046c937903e0af117c25d90122781ae3b20978
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-08
+
+    cnf: ensure we send error messages to stderr, not stdout. Fxes
+    rh#545220
+
+M	contrib/command-not-found/pk-command-not-found.c
+
+commit 18e26cacf5c5bb27ba8cc980a4de0864788d1b59
+Author: kkrothap <kkrothap@fedoraproject.org>
+Date:	2009-12-08
+
+    Sending translation for Telugu
+
+M	po/te.po
+
+commit 6bce2991ede7cbbcea20edeedae159c81c6e8485
+Author: runab <runab@fedoraproject.org>
+Date:	2009-12-08
+
+    Sending translation for Bengali (India)
+
+M	po/bn_IN.po
+
+commit a4529c66f5fac5a121333e1678b84e1e0ecdd73a
+Author: jassy <jassy@fedoraproject.org>
+Date:	2009-12-08
+
+    Sending translation for Punjabi
+
+M	po/pa.po
+
+commit 7ea1be283c8c9577eeb74c55a1ba06cb3708147e
+Author: rajesh <rajesh@fedoraproject.org>
+Date:	2009-12-08
+
+    Sending translation for Hindi
+
+M	po/hi.po
+
+commit b073ad764ad92ff8bb768df897b2c1c6dc105dfe
+Author: Daniel Nicoletti <dantti85-pk@yahoo.com.br>
+Date:	2009-12-07
+
+    aptcc: Updated searchNames, files and groups.
+
+M	backends/aptcc/apt.cpp
+M	backends/aptcc/apt.h
+M	backends/aptcc/pk-backend-aptcc.cpp
+
+commit e4f47b7c42f9ee5c3f6f0510d9b2b3f67d53094a
+Author: Daniel Nicoletti <dantti85-pk@yahoo.com.br>
+Date:	2009-12-07
+
+    packagekit-qt: Added searchNames, searchFiles and searchGroups
+
+M	lib/packagekit-qt/src/client.cpp
+M	lib/packagekit-qt/src/client.h
+M	lib/packagekit-qt/src/transactionproxy.h
+
+commit b9204f08e2df864bd2aaebbc6d0515c1db872e3f
+Author: Daniel Nicoletti <dantti85-pk@yahoo.com.br>
+Date:	2009-12-07
+
+    packagekit-qt: removed deprecated methods
+
+M	lib/packagekit-qt/src/client.cpp
+M	lib/packagekit-qt/src/client.h
+M	lib/packagekit-qt/src/clientprivate.cpp
+M	lib/packagekit-qt/src/clientprivate.h
+M	lib/packagekit-qt/src/transaction.cpp
+M	lib/packagekit-qt/src/transaction.h
+M	lib/packagekit-qt/src/transactionprivate.cpp
+M	lib/packagekit-qt/src/transactionprivate.h
+M	lib/packagekit-qt/src/transactionproxy.h
+
+commit 54a57ae752acd0cbf41d1bfe665414402136dbf4
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-07
+
+    glib2: remove the deprecated pk_control_get_network_state_async()
+
+M	lib/packagekit-glib2/pk-control.c
+
+commit dd9da9d5f00f7a67cbee6fa928a9487fea93fafe
+Author: warrink <warrink@fedoraproject.org>
+Date:	2009-12-07
+
+    Sending translation for Dutch
+
+M	po/nl.po
+
+commit 95a49ba1dcff1c2bf438d49c8a1c9e946eedfd5a
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-07
+
+    Break internal and external API to support OR queries
+
+    SearchFile() -> SearchFiles()
+    SearchGroup() -> SearchGroups()
+    SearchName() -> SearchNames()
+
+    Note: applications using PackageKit-glib2 just need recompiling,
+    as this API has been already forward-converted
+
+M	backends/dummy/pk-backend-dummy.c
+M	backends/test/pk-backend-test-fail.c
+M	backends/test/pk-backend-test-nop.c
+M	backends/test/pk-backend-test-spawn.c
+M	backends/test/pk-backend-test-succeed.c
+M	backends/test/pk-backend-test-thread.c
+M	backends/yum/pk-backend-yum.c
+M	lib/packagekit-glib2/pk-client.c
+M	src/org.freedesktop.PackageKit.Transaction.xml
+M	src/pk-backend-internal.h
+M	src/pk-backend.c
+M	src/pk-backend.h
+M	src/pk-transaction-extra.c
+M	src/pk-transaction.c
+M	src/pk-transaction.h
+
+commit d9485ff282d2edb1c557c8a9dcdc5be6549899b4
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-07
+
+    Update the version number post-branch
+
+M	configure.ac
+
+commit d4c319ed2a6d635effffc956d6fd1cff16c8ff8e
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-07
+
+    Remove the deprecated DBus methods from the daemon
+
+M	src/org.freedesktop.PackageKit.Transaction.xml
+M	src/org.freedesktop.PackageKit.xml
+M	src/pk-engine.c
+M	src/pk-engine.h
+M	src/pk-transaction.c
+M	src/pk-transaction.h
+
+commit 5f9397ca0db8e3d258b2804f7cfbe825fc9d461b
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2009-12-07
+
+    Remove the deprecated glib library
+
+M	client/egg-string.c
+M	client/egg-string.h
+M	client/egg-test.c
+M	client/egg-test.h
+M	configure.ac
+M	lib/Makefile.am
+D	lib/packagekit-glib/.gitignore
+D	lib/packagekit-glib/Makefile.am
+D	lib/packagekit-glib/egg-debug.c
+D	lib/packagekit-glib/egg-debug.h
+D	lib/packagekit-glib/egg-string.c
+D	lib/packagekit-glib/egg-string.h
+D	lib/packagekit-glib/egg-test.c
+D	lib/packagekit-glib/egg-test.h
+D	lib/packagekit-glib/packagekit-glib.pc.in
+D	lib/packagekit-glib/packagekit.h
+D	lib/packagekit-glib/pk-bitfield.c
+D	lib/packagekit-glib/pk-bitfield.h
+D	lib/packagekit-glib/pk-catalog.c
+D	lib/packagekit-glib/pk-catalog.h
+D	lib/packagekit-glib/pk-category-obj.c
+D	lib/packagekit-glib/pk-category-obj.h
+D	lib/packagekit-glib/pk-client-pool.c
+D	lib/packagekit-glib/pk-client-pool.h
+D	lib/packagekit-glib/pk-client.c
+D	lib/packagekit-glib/pk-client.h
+D	lib/packagekit-glib/pk-common.c
+D	lib/packagekit-glib/pk-common.h
+D	lib/packagekit-glib/pk-connection.c
+D	lib/packagekit-glib/pk-connection.h
+D	lib/packagekit-glib/pk-control.c
+D	lib/packagekit-glib/pk-control.h
+D	lib/packagekit-glib/pk-desktop.c
+D	lib/packagekit-glib/pk-desktop.h
+D	lib/packagekit-glib/pk-details-obj.c
+D	lib/packagekit-glib/pk-details-obj.h
+D	lib/packagekit-glib/pk-distro-upgrade-obj.c
+D	lib/packagekit-glib/pk-distro-upgrade-obj.h
+D	lib/packagekit-glib/pk-enum.c
+D	lib/packagekit-glib/pk-enum.h
+D	lib/packagekit-glib/pk-marshal.list
+D	lib/packagekit-glib/pk-obj-list.c
+D	lib/packagekit-glib/pk-obj-list.h
+D	lib/packagekit-glib/pk-package-id.c
+D	lib/packagekit-glib/pk-package-id.h
+D	lib/packagekit-glib/pk-package-ids.c
+D	lib/packagekit-glib/pk-package-ids.h
+D	lib/packagekit-glib/pk-package-list.c
+D	lib/packagekit-glib/pk-package-list.h
+D	lib/packagekit-glib/pk-package-obj.c
+D	lib/packagekit-glib/pk-package-obj.h
+D	lib/packagekit-glib/pk-require-restart-obj.c
+D	lib/packagekit-glib/pk-require-restart-obj.h
+D	lib/packagekit-glib/pk-self-test.c
+D	lib/packagekit-glib/pk-service-pack.c
+D	lib/packagekit-glib/pk-service-pack.h
+D	lib/packagekit-glib/pk-task-list.c
+D	lib/packagekit-glib/pk-task-list.h
+D	lib/packagekit-glib/pk-transaction-obj.c
+D	lib/packagekit-glib/pk-transaction-obj.h
+D	lib/packagekit-glib/pk-update-detail-obj.c
+D	lib/packagekit-glib/pk-update-detail-obj.h
+D	lib/packagekit-glib/pk-version.h.in
+M	lib/packagekit-glib2/pk-marshal.list

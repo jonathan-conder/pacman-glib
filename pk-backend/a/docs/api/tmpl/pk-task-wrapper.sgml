@@ -1,0 +1,55 @@
+<!-- ##### SECTION Title ##### -->
+PkTaskWrapper
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT PkTaskWrapperPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT PkTaskWrapper ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION pk_task_wrapper_error_quark ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_task_wrapper_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_task_wrapper_test ##### -->
+<para>
+
+</para>
+
+@user_data: 
+
+

@@ -1,0 +1,79 @@
+<!-- ##### SECTION Title ##### -->
+PkRepoSignatureRequired
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT PkRepoSignatureRequiredPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT PkRepoSignatureRequired ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG PkRepoSignatureRequired:key-fingerprint ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG PkRepoSignatureRequired:key-id ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG PkRepoSignatureRequired:key-timestamp ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG PkRepoSignatureRequired:key-url ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG PkRepoSignatureRequired:key-userid ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG PkRepoSignatureRequired:package-id ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG PkRepoSignatureRequired:repository-name ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG PkRepoSignatureRequired:type ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION pk_repo_signature_required_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

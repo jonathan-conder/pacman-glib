@@ -1,0 +1,54 @@
+<!-- ##### SECTION Title ##### -->
+PkMediaChangeRequired
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT PkMediaChangeRequiredPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT PkMediaChangeRequired ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG PkMediaChangeRequired:media-id ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG PkMediaChangeRequired:media-text ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG PkMediaChangeRequired:media-type ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION pk_media_change_required_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

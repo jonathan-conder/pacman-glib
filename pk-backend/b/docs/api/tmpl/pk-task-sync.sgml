@@ -1,0 +1,90 @@
+<!-- ##### SECTION Title ##### -->
+pk-task-sync
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION pk_task_remove_packages_sync ##### -->
+<para>
+
+</para>
+
+@task: 
+@package_ids: 
+@allow_deps: 
+@autoremove: 
+@cancellable: 
+@progress_callback: 
+@progress_user_data: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_task_install_packages_sync ##### -->
+<para>
+
+</para>
+
+@task: 
+@package_ids: 
+@cancellable: 
+@progress_callback: 
+@progress_user_data: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_task_update_packages_sync ##### -->
+<para>
+
+</para>
+
+@task: 
+@package_ids: 
+@cancellable: 
+@progress_callback: 
+@progress_user_data: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_task_install_files_sync ##### -->
+<para>
+
+</para>
+
+@task: 
+@files: 
+@cancellable: 
+@progress_callback: 
+@progress_user_data: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_task_update_system_sync ##### -->
+<para>
+
+</para>
+
+@task: 
+@cancellable: 
+@progress_callback: 
+@progress_user_data: 
+@error: 
+@Returns: 
+
+

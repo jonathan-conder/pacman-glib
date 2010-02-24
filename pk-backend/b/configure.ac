@@ -1,0 +1,915 @@
+# Copyright (C) 2007-2009 Richard Hughes <richard@hughsie.com>
+AC_PREREQ(2.65)
+
+m4_define([pk_major_version], [0])
+m4_define([pk_minor_version], [6])
+m4_define([pk_micro_version], [1])
+m4_define([pk_version],
+          [pk_major_version.pk_minor_version.pk_micro_version])
+
+AC_INIT([PackageKit],[pk_version],[richard@hughsie.com],[PackageKit])
+AC_CONFIG_SRCDIR(src)
+AM_INIT_AUTOMAKE([1.9 tar-ustar dist-bzip2])
+AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_MACRO_DIR([m4])
+
+GOBJECT_INTROSPECTION_CHECK([0.6.7])
+
+# enable nice build output on automake1.11
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+
+PK_MAJOR_VERSION=pk_major_version
+PK_MINOR_VERSION=pk_minor_version
+PK_MICRO_VERSION=pk_micro_version
+PK_VERSION=pk_version
+AC_SUBST(PK_MAJOR_VERSION)
+AC_SUBST(PK_MINOR_VERSION)
+AC_SUBST(PK_MICRO_VERSION)
+AC_SUBST(PK_VERSION)
+
+# libtool versioning - this applies to libpackagekit
+#
+# See http://sources.redhat.com/autobook/autobook/autobook_91.html#SEC91 for details
+#
+# increment;
+# CURRENT	If the API or ABI interface has changed (reset REVISION to 0)
+# REVISION	If the API and ABI remains the same, but bugs are fixed.
+# AGE		If libpackagekit can be linked into executables which can be
+# 		built with previous versions of this library. Don't use.
+LT_CURRENT=13
+LT_REVISION=1
+LT_AGE=0
+AC_SUBST(LT_CURRENT)
+AC_SUBST(LT_REVISION)
+AC_SUBST(LT_AGE)
+
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_INSTALL
+AC_SEARCH_LIBS([strerror],[cposix])
+AC_HEADER_STDC
+LT_INIT
+AM_PROG_CC_C_O
+
+# Internationalisation
+IT_PROG_INTLTOOL([0.35.0])
+GETTEXT_PACKAGE=PackageKit
+AC_SUBST([GETTEXT_PACKAGE])
+AM_GLIB_GNU_GETTEXT
+AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["$GETTEXT_PACKAGE"],[gettext domain])
+
+# set up gtk-doc
+GTK_DOC_CHECK(1.9)
+
+AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
+
+AM_PATH_PYTHON
+PYTHON_PACKAGE_DIR=${pythondir}/packagekit
+AC_SUBST(PYTHON_PACKAGE_DIR)
+
+
+dnl ---------------------------------------------------------------------------
+dnl - Extra verbose warning switches
+dnl ---------------------------------------------------------------------------
+CPPFLAGS="$CPPFLAGS -DG_DISABLE_SINGLE_INCLUDES -DGTK_DISABLE_SINGLE_INCLUDES"
+CPPFLAGS="$CPPFLAGS -DG_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED"
+CPPFLAGS="$CPPFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE"
+CPPFLAGS="$CPPFLAGS -DGSEAL_ENABLE"
+
+dnl ---------------------------------------------------------------------------
+dnl - Use strict options (default enabled for devs, disabled in releases)
+dnl ---------------------------------------------------------------------------
+dnl if .git directory is present, considering we are working in the repository
+if test -d ".git"; then
+	default_strict=yes
+else
+	default_strict=no
+fi
+
+AC_ARG_ENABLE(strict, AS_HELP_STRING([--enable-strict],[Enable strict compilation options]), enable_strict=$enableval,
+							enable_strict=$default_strict)
+if test x$enable_strict != xno; then
+	if test "$GCC" = "yes"; then
+		WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Werror"
+	fi
+fi
+
+if test "$GCC" = "yes"; then
+	# work both in C and C++
+	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wall"
+	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wcast-align -Wno-uninitialized"
+	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wmissing-declarations"
+#	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wredundant-decls"
+	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wpointer-arith"
+	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wcast-align"
+	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wwrite-strings"
+	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Winit-self"
+	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wreturn-type"
+	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wformat-nonliteral"
+	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wformat-security"
+	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wmissing-include-dirs"
+	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wmissing-format-attribute"
+#	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wclobbered"
+#	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wempty-body"
+#	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wignored-qualifiers"
+	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wsign-compare"
+#	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wtype-limits"
+	WARNINGFLAGS_CPP="$WARNINGFLAGS_CPP -Wuninitialized"
+
+	# work only in C
+	WARNINGFLAGS_C="$WARNINGFLAGS_CPP"
+	WARNINGFLAGS_C="$WARNINGFLAGS_C -Waggregate-return"
+	WARNINGFLAGS_C="$WARNINGFLAGS_C -Wdeclaration-after-statement"
+	WARNINGFLAGS_C="$WARNINGFLAGS_C -Wshadow"
+	WARNINGFLAGS_C="$WARNINGFLAGS_C -Wno-strict-aliasing"
+	WARNINGFLAGS_C="$WARNINGFLAGS_C -Winline"
+#	WARNINGFLAGS_C="$WARNINGFLAGS_C -Wmissing-parameter-type"
+#	WARNINGFLAGS_C="$WARNINGFLAGS_C -Woverride-init"
+else
+	WARNINGFLAGS_C=""
+	WARNINGFLAGS_CPP=""
+fi
+AC_SUBST(WARNINGFLAGS_C)
+AC_SUBST(WARNINGFLAGS_CPP)
+
+dnl ---------------------------------------------------------------------------
+dnl - gettext stuff
+dnl ---------------------------------------------------------------------------
+GETTEXT_PACKAGE=PackageKit
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Name of default gettext domain])
+
+AM_GLIB_GNU_GETTEXT
+
+dnl ---------------------------------------------------------------------------
+dnl - Library dependencies
+dnl ---------------------------------------------------------------------------
+GLIB_REQUIRED=2.22.0
+GIO_REQUIRED=2.16.1
+DBUS_REQUIRED=1.1.1
+DBUS_GLIB_REQUIRED=0.74
+LIBNM_GLIB_REQUIRED=0.6.4
+POLKIT_GOBJECT_REQUIRED=0.92
+QTCORE_REQUIRED=4.4.0
+QTDBUS_REQUIRED=4.4.0
+QTSQL_REQUIRED=4.4.0
+QTXML_REQUIRED=4.4.0
+
+dnl ---------------------------------------------------------------------------
+dnl - Check library dependencies
+dnl ---------------------------------------------------------------------------
+PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0)
+AC_SUBST(GLIB_CFLAGS)
+AC_SUBST(GLIB_LIBS)
+
+PKG_CHECK_MODULES(GMODULE, gmodule-2.0)
+AC_SUBST(GMODULE_CFLAGS)
+AC_SUBST(GMODULE_LIBS)
+
+PKG_CHECK_MODULES(SQLITE, sqlite3)
+AC_SUBST(SQLITE_CFLAGS)
+AC_SUBST(SQLITE_LIBS)
+
+PKG_CHECK_MODULES(DBUS, \
+ dbus-glib-1 >= $DBUS_GLIB_REQUIRED \
+ dbus-1 >= $DBUS_REQUIRED \
+ gthread-2.0)
+AC_SUBST(DBUS_CFLAGS)
+AC_SUBST(DBUS_LIBS)
+
+PKG_CHECK_MODULES(GIO, \
+ gio-2.0 >= $GIO_REQUIRED \
+ gio-unix-2.0 >= $GIO_REQUIRED)
+AC_SUBST(GIO_CFLAGS)
+AC_SUBST(GIO_LIBS)
+
+dnl ---------------------------------------------------------------------------
+dnl - Build PackageKit-Qt
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(qt, AS_HELP_STRING([--enable-qt],[Build PackageKit-Qt]),
+	      enable_qt=$enableval,enable_qt=yes)
+if test x$enable_qt = xyes; then
+	PKG_CHECK_MODULES(QTCORE, QtCore >= $QTCORE_REQUIRED)
+	AC_SUBST(QTCORE_CFLAGS)
+	AC_SUBST(QTCORE_LIBS)
+
+	PKG_CHECK_MODULES(QTDBUS, QtDBus >= $QTDBUS_REQUIRED)
+	AC_SUBST(QTDBUS_CFLAGS)
+	AC_SUBST(QTDBUS_LIBS)
+
+	PKG_CHECK_MODULES(QTSQL, QtSql >= $QTSQL_REQUIRED)
+	AC_SUBST(QTSQL_CFLAGS)
+	AC_SUBST(QTSQL_LIBS)
+
+	PKG_CHECK_MODULES(QTXML, QtXml >= $QTXML_REQUIRED)
+	AC_SUBST(QTXML_CFLAGS)
+	AC_SUBST(QTXML_LIBS)
+
+	# look for MOC
+	AC_PATH_PROG(MOC, moc-qt4)
+	if test ! -x "$MOC"; then
+		AC_PATH_PROG(MOC, moc)
+		if test ! -x "$MOC"; then
+			AC_MSG_ERROR([MOC hasn't been found])
+		fi
+	fi
+	build_qt=yes
+else
+	build_qt=no
+fi
+AM_CONDITIONAL(PK_BUILD_QT, test $build_qt = "yes")
+
+dnl ---------------------------------------------------------------------------
+dnl - Build packageKit-sharp
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(managed, AS_HELP_STRING([--enable-managed],[Build PackageKit-Sharp]),
+	      enable_managed=$enableval,enable_managed=false)
+if test x$enable_managed = xyes; then
+	PKG_CHECK_MODULES(GLIBSHARP, glib-sharp-2.0)
+	AC_SUBST(GLIBSHARP_CFLAGS)
+	AC_SUBST(GLIBSHARP_LIBS)
+
+	# for gapi2-parser, gapi2-fixup and gapi2-codegen (only at build time)
+	PKG_CHECK_MODULES(GAPISHARP, gapi-2.0)
+
+	AC_PATH_PROG(MCS, mcs)
+	CS="C#"
+	if test ! -x "$MCS"; then
+		AC_PATH_PROG(MCS, gmcs)
+		if test ! -x "$MCS"; then
+			AC_MSG_ERROR([No $CS compiler found])
+		fi
+	fi
+
+	build_managed=yes
+else
+	build_managed=no
+fi
+AM_CONDITIONAL(PK_BUILD_MANAGED, test $build_managed = "yes")
+
+dnl ---------------------------------------------------------------------------
+dnl - Service Packs (default enabled)
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(service-packs, AS_HELP_STRING([--disable-service-packs],[Disable Service Packs support]), enable_servicepacks=$enableval)
+if test x$enable_servicepacks != xno; then
+	AC_CHECK_HEADERS(archive.h,
+			 HAVE_ARCHIVE_H="yes",
+			 HAVE_ARCHIVE_H="no")
+	if test "x$HAVE_ARCHIVE_H" = "xyes"; then
+			AC_DEFINE(HAVE_ARCHIVE_H)
+			ARCHIVE_LIBS=-larchive
+			AC_SUBST(ARCHIVE_LIBS)
+	else
+		if test x$enable_servicepacks = xyes; then
+			AC_MSG_ERROR([Service Packs support need libarchive])
+		fi
+	fi
+else
+	HAVE_ARCHIVE_H="no"
+fi
+
+AM_CONDITIONAL(HAVE_ARCHIVE_H, test x$HAVE_ARCHIVE_H = xyes)
+
+dnl ---------------------------------------------------------------------------
+dnl - FreeBSD compatibility
+dnl ---------------------------------------------------------------------------
+AC_CHECK_HEADERS([execinfo.h])
+AC_CHECK_FUNCS(clearenv)
+AC_PATH_PROG(GMSGFMT, msgfmt, msgfmt)
+
+# unix networking stack always available
+networking_apis="unix"
+
+dnl ---------------------------------------------------------------------------
+dnl - NetworkManager (default enabled)
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(networkmanager, AS_HELP_STRING([--disable-networkmanager],[Disable NetworkManager support]),
+		enable_networkmanager=$enableval)
+if test x$enable_networkmanager != xno; then
+	PKG_CHECK_MODULES(LIBNM, libnm-glib >= $LIBNM_GLIB_REQUIRED, PK_BUILD_NETWORKMANAGER="yes", PK_BUILD_NETWORKMANAGER="no")
+	# look for the old name for the library too
+	if test "x$PK_BUILD_NETWORKMANAGER" = "xno"; then
+		PKG_CHECK_MODULES(LIBNM, libnm_glib >= $LIBNM_GLIB_REQUIRED, PK_BUILD_NETWORKMANAGER="yes", PK_BUILD_NETWORKMANAGER="no")
+	fi
+	if test "x$PK_BUILD_NETWORKMANAGER" = "xyes"; then
+		networking_apis="${networking_apis},NetworkManager"
+		AC_DEFINE(PK_BUILD_NETWORKMANAGER, 1, [define if NetworkManager is installed])
+	else
+		if test x$enable_networkmanager = xyes; then
+			AC_MSG_ERROR([NetworkManager enabled but not found])
+		fi
+	fi
+else
+	PK_BUILD_NETWORKMANAGER=no
+fi
+
+AM_CONDITIONAL(PK_BUILD_NETWORKMANAGER, test x$PK_BUILD_NETWORKMANAGER = xyes)
+AC_SUBST(LIBNM_CFLAGS)
+AC_SUBST(LIBNM_LIBS)
+
+dnl ---------------------------------------------------------------------------
+dnl - ConnMan (default enabled)
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(connman, AS_HELP_STRING([--disable-connman],[Disable ConnMan support]), enable_connman=$enableval)
+if test x$enable_connman != xno; then
+	PKG_CHECK_MODULES(CONNMAN, connman, PK_BUILD_CONNMAN="yes", PK_BUILD_CONNMAN="no")
+	if test "x$PK_BUILD_CONNMAN" = "xyes"; then
+		networking_apis="${networking_apis},ConnMan"
+		AC_DEFINE(PK_BUILD_CONNMAN, 1, [define if Connection Manager is installed])
+	else
+		if test x$enable_connman = xyes; then
+			AC_MSG_ERROR([Connman enabled but not found])
+		fi
+	fi
+else
+	PK_BUILD_CONNMAN=no
+fi
+
+AM_CONDITIONAL(PK_BUILD_CONNMAN, test x$PK_BUILD_CONNMAN = xyes)
+AC_SUBST(CONNMAN_CFLAGS)
+AC_SUBST(CONNMAN_LIBS)
+
+dnl ---------------------------------------------------------------------------
+dnl - Check if ConsoleKit is installed, otherwise, warn the user at the end
+dnl ---------------------------------------------------------------------------
+AC_PATH_PROG(CONSOLEKIT_DAEMON, console-kit-daemon, [], [/usr/sbin$PATH_SEPARATOR/sbin$PATH_SEPARATOR$PATH])
+
+dnl ---------------------------------------------------------------------------
+dnl - Generate man pages ? (default enabled)
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(man_pages, AS_HELP_STRING([--disable-man-pages],[Disable man pages generation]), enable_man_pages=$enableval)
+if test x$enable_man_pages != xno; then
+	AC_PATH_PROG(XSLTPROC, xsltproc, no)
+	if test x$enable_man_pages = xyes; then
+		if test "$XSLTPROC" = "no" ; then
+			AC_MSG_ERROR([xsltproc not found, it's needod to build man pages])
+		fi
+	fi
+else
+	XSLTPROC=no
+fi
+AM_CONDITIONAL(HAVE_XSLTPROC, [test "$XSLTPROC" != "no"])
+
+dnl ---------------------------------------------------------------------------
+dnl - Make paths available for source files
+dnl ---------------------------------------------------------------------------
+AC_SUBST(SYSCONFDIR, $sysconfdir)
+AC_SUBST(LIBDIR, $libdir)
+AC_SUBST(LIBEXECDIR, $libexecdir)
+AC_SUBST(DATADIR, $datadir)
+AC_SUBST(BINDIR, $bindir)
+AC_SUBST(SBINDIR, $sbindir)
+AC_SUBST(LOCALSTATEDIR, $localstatedir)
+
+AC_ARG_WITH([packagekit_user],
+	    AS_HELP_STRING([--with-packagekit-user=<user>],
+			   [User for running the PackageKit daemon (root)]))
+if test -z "$with_packagekit_user" ; then
+	PACKAGEKIT_USER=root
+else
+	PACKAGEKIT_USER=$with_packagekit_user
+fi
+AC_SUBST(PACKAGEKIT_USER)
+AC_DEFINE_UNQUOTED(PACKAGEKIT_USER,"$PACKAGEKIT_USER", [User for running the PackageKit daemon])
+
+dnl ---------------------------------------------------------------------------
+dnl - Build self tests
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(tests, AS_HELP_STRING([--enable-tests],[enable unit test code]),
+	      enable_tests=$enableval,enable_tests=yes)
+AM_CONDITIONAL(EGG_BUILD_TESTS, test x$enable_tests = xyes)
+if test x$enable_tests = xyes; then
+	AC_DEFINE(EGG_BUILD_TESTS,1,[Build test code])
+
+	# packagekit-qt needs cppunit and QtGui for tests
+	if test x$build_qt = xyes; then
+		PKG_CHECK_MODULES(CPPUNIT, cppunit)
+		AC_SUBST(CPPUNIT_CFLAGS)
+		AC_SUBST(CPPUNIT_LIBS)
+
+		PKG_CHECK_MODULES(QTGUI, QtGui >= 4.4.0)
+		AC_SUBST(QTGUI_CFLAGS)
+		AC_SUBST(QTGUI_LIBS)
+	fi
+fi
+
+dnl ---------------------------------------------------------------------------
+dnl - Able to run from a checkout?
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(local, AS_HELP_STRING([--enable-local],[enable running in local checkout]),
+	      enable_local=$enableval,enable_local=no)
+AM_CONDITIONAL(PK_BUILD_LOCAL, test x$enable_local = xyes)
+if test x$enable_local = xyes; then
+	AC_DEFINE(PK_BUILD_LOCAL,1,[Build local code])
+fi
+
+dnl ---------------------------------------------------------------------------
+dnl - Able to build browser plugin
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(browser_plugin, AS_HELP_STRING([--enable-browser-plugin],[Build browser plugin functionality]),
+	      enable_browser_plugin=$enableval,enable_browser_plugin=yes)
+if test x$enable_browser_plugin = xyes; then
+	PKG_CHECK_MODULES(PK_BROWSER_PLUGIN,	\
+			  mozilla-plugin	\
+			  gio-unix-2.0		\
+			  nspr \
+			  cairo			\
+			  pango			\
+			  gtk+-2.0 >= 2.14.0	\
+			  dbus-glib-1,
+			  build_browser_plugin=yes, build_browser_plugin=no)
+	AC_SUBST(PK_BROWSER_PLUGIN_CFLAGS)
+	AC_SUBST(PK_BROWSER_PLUGIN_LIBS)
+	if test $build_browser_plugin = "yes"; then
+
+		# check we have xulrunner headers
+		packagekit_save_CPPFLAGS="$CPPFLAGS"
+		packagekit_save_LDFLAGS="$LDFLAGS"
+		CPPFLAGS="$CPPFLAGS $PK_BROWSER_PLUGIN_CFLAGS"
+		LDFLAGS="$CPPFLAGS $PK_BROWSER_PLUGIN_LIBS"
+		AC_CHECK_HEADER(npfunctions.h, have_xulrunner_npfunctions=yes, have_xulrunner_npfunctions=no)
+		CPPFLAGS="$packagekit_save_CPPFLAGS"
+		LDFLAGS="$packagekit_save_LDFLAGS"
+
+		# Are we specifying a different mozilla plugin directory?
+		AC_ARG_WITH(mozilla-plugin-dir, [AS_HELP_STRING([--with-mozilla-plugin-dir=<dir>],[where to put the mozilla plugin])])
+		if ! test -z "$with_mozilla_plugin_dir" ; then
+			MOZILLA_PLUGIN_DIR="$with_mozilla_plugin_dir"
+		else
+			MOZILLA_PLUGIN_DIR="$LIBDIR/mozilla/plugins"
+		fi
+		AC_SUBST(MOZILLA_PLUGIN_DIR)
+
+		# not got headers
+		if test $have_xulrunner_npfunctions = "no"; then
+			build_browser_plugin=no
+		fi
+	fi
+else
+	build_browser_plugin=no
+fi
+AM_CONDITIONAL(PK_BUILD_BROWSER_PLUGIN, test $build_browser_plugin = "yes")
+
+dnl ---------------------------------------------------------------------------
+dnl - Able to build gstreamer plugin
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(gstreamer_plugin, AS_HELP_STRING([--enable-gstreamer-plugin],[Build gstreamer plugin functionality]),
+	      enable_gstreamer_plugin=$enableval,enable_gstreamer_plugin=yes)
+if test x$enable_gstreamer_plugin = xyes; then
+	PKG_CHECK_MODULES(PK_GSTREAMER_PLUGIN, gstreamer-0.10 gstreamer-plugins-base-0.10 glib-2.0 dbus-glib-1,
+	                  build_gstreamer_plugin=yes, build_gstreamer_plugin=no)
+	AC_SUBST(PK_GSTREAMER_PLUGIN_CFLAGS)
+	AC_SUBST(PK_GSTREAMER_PLUGIN_LIBS)
+else
+	build_gstreamer_plugin=no
+fi
+AM_CONDITIONAL(PK_BUILD_GSTREAMER_PLUGIN, test $build_gstreamer_plugin = "yes")
+
+dnl ---------------------------------------------------------------------------
+dnl - Able to build GTK module
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(gtk_module, AS_HELP_STRING([--enable-gtk-module],[Build GTK module functionality]),
+	      enable_gtk_module=$enableval,enable_gtk_module=yes)
+if test x$enable_gtk_module = xyes; then
+	PKG_CHECK_MODULES(PK_GTK_MODULE, gtk+-2.0 >= 2.14.0 pangoft2 fontconfig dbus-glib-1,
+	                  build_gtk_module=yes, build_gtk_module=no)
+	AC_SUBST(PK_GTK_MODULE_CFLAGS)
+	AC_SUBST(PK_GTK_MODULE_LIBS)
+else
+	build_gtk_module=no
+fi
+AM_CONDITIONAL(PK_BUILD_GTK_MODULE, test $build_gtk_module = "yes")
+
+dnl ---------------------------------------------------------------------------
+dnl - Able to build BASH command-not-found functionality
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(command_not_found, AS_HELP_STRING([--enable-command-not-found],[Build BASH command-not-found functionality]),
+	      build_command_not_found=$enableval,build_command_not_found=yes)
+AM_CONDITIONAL(PK_BUILD_COMMAND_NOT_FOUND, test $build_command_not_found = "yes")
+
+dnl ---------------------------------------------------------------------------
+dnl - Able to build cron background functionality
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(cron, AS_HELP_STRING([--enable-cron],[Build cron background functionality]),
+	      build_cron=$enableval,build_cron=yes)
+AM_CONDITIONAL(PK_BUILD_CRON, test $build_cron = "yes")
+
+dnl ---------------------------------------------------------------------------
+dnl - Able to build debuginfo-install functionality
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(debuginfo-install, AS_HELP_STRING([--enable-debuginfo-install],[Build debuginfo-install functionality]),
+	      build_debuginfo_install=$enableval,build_debuginfo_install=yes)
+AM_CONDITIONAL(PK_BUILD_DEBUGINFO_INSTALL, test $build_debuginfo_install = "yes")
+
+dnl ---------------------------------------------------------------------------
+dnl - Able to use device rebind functionality
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(device-rebind, AS_HELP_STRING([--enable-device-rebind],[Build device rebind functionality]),
+	      build_device_rebind=$enableval,build_device_rebind=yes)
+if test x$build_device_rebind = xyes; then
+	PKG_CHECK_MODULES(GUDEV, gudev-1.0,
+			  build_device_rebind=yes, build_device_rebind=no)
+else
+	build_device_rebind=no
+fi
+AM_CONDITIONAL(PK_BUILD_DEVICE_REBIND, test $build_device_rebind = "yes")
+
+dnl ---------------------------------------------------------------------------
+dnl - Able to build pm-utils script functionality
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(pm_utils, AS_HELP_STRING([--enable-pm-utils],[Build pm-utils script functionality]),
+	      build_pm_utils=$enableval,build_pm_utils=yes)
+if test x$build_pm_utils = xyes; then
+	PKG_CHECK_MODULES(PM_UTILS, pm-utils,
+	                  build_pm_utils=yes, build_pm_utils=no)
+else
+	build_pm_utils=no
+fi
+AM_CONDITIONAL(PK_BUILD_PM_UTILS, test $build_pm_utils = "yes")
+
+dnl ---------------------------------------------------------------------------
+dnl - Build ruck (a rug-like interface for PackageKit)
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(ruck, AS_HELP_STRING([--enable-ruck],[Build ruck client]),
+	      build_ruck=$enableval,build_ruck=yes)
+AM_CONDITIONAL(PK_BUILD_RUCK, test $build_ruck = "yes")
+
+# backends
+AC_ARG_ENABLE(alpm, AS_HELP_STRING([--enable-alpm],[use the ALPM backend]),enable_alpm=$enableval,enable_alpm=no)
+AC_ARG_ENABLE(apt, AS_HELP_STRING([--enable-apt],[use the APT backend]),enable_apt=$enableval,enable_apt=no)
+AC_ARG_ENABLE(aptcc, AS_HELP_STRING([--enable-aptcc],[use the APTcc backend]),enable_aptcc=$enableval,enable_aptcc=no)
+AC_ARG_ENABLE(box, AS_HELP_STRING([--enable-box],[use the BOX backend]),enable_box=$enableval,enable_box=no)
+AC_ARG_ENABLE(conary, AS_HELP_STRING([--enable-conary],[use the CONARY backend]),enable_conary=$enableval,enable_conary=no)
+AC_ARG_ENABLE(dummy, AS_HELP_STRING([--enable-dummy],[use the dummy backend]),enable_dummy=$enableval,enable_dummy=yes)
+AC_ARG_ENABLE(opkg, AS_HELP_STRING([--enable-opkg],[use the OPKG backend]),enable_opkg=$enableval,enable_opkg=no)
+AC_ARG_ENABLE(pisi, AS_HELP_STRING([--enable-pisi],[use the PiSi backend]),enable_pisi=$enableval,enable_pisi=no)
+AC_ARG_ENABLE(poldek, AS_HELP_STRING([--enable-poldek],[use the poldek backend]),enable_poldek=$enableval,enable_poldek=no)
+AC_ARG_ENABLE(portage, AS_HELP_STRING([--enable-portage],[use the portage backend]),enable_portage=$enableval,enable_portage=no)
+AC_ARG_ENABLE(ports, AS_HELP_STRING([--enable-ports],[use the ports backend]),enable_ports=$enableval,enable_ports=no)
+AC_ARG_ENABLE(razor, AS_HELP_STRING([--enable-razor],[use the razor backend]),enable_razor=$enableval,enable_razor=no)
+AC_ARG_ENABLE(slapt, AS_HELP_STRING([--enable-slapt],[use the slapt backend]),enable_slapt=$enableval,enable_slapt=no)
+AC_ARG_ENABLE(smart, AS_HELP_STRING([--enable-smart],[use the SMART backend]),enable_smart=$enableval,enable_smart=no)
+AC_ARG_ENABLE(urpmi, AS_HELP_STRING([--enable-urpmi],[use the URPMI backend]),enable_urpmi=$enableval,enable_urpmi=no)
+AC_ARG_ENABLE(yum, AS_HELP_STRING([--enable-yum],[use the YUM backend]),enable_yum=$enableval,enable_yum=no)
+AC_ARG_ENABLE(zypp, AS_HELP_STRING([--enable-zypp],[use the Zypp backend]),enable_zypp=$enableval,enable_zypp=no)
+
+# export to Makefile.am's
+AM_CONDITIONAL(BACKEND_TYPE_ALPM, [test x$enable_alpm = xyes])
+AM_CONDITIONAL(BACKEND_TYPE_APT, [test x$enable_apt = xyes])
+AM_CONDITIONAL(BACKEND_TYPE_APTCC, [test x$enable_aptcc = xyes])
+AM_CONDITIONAL(BACKEND_TYPE_BOX, [test x$enable_box = xyes])
+AM_CONDITIONAL(BACKEND_TYPE_CONARY, [test x$enable_conary = xyes])
+AM_CONDITIONAL(BACKEND_TYPE_DUMMY, [test x$enable_dummy = xyes])
+AM_CONDITIONAL(BACKEND_TYPE_OPKG, [test x$enable_opkg = xyes])
+AM_CONDITIONAL(BACKEND_TYPE_PISI, [test x$enable_pisi = xyes])
+AM_CONDITIONAL(BACKEND_TYPE_POLDEK, [test x$enable_poldek = xyes])
+AM_CONDITIONAL(BACKEND_TYPE_PORTAGE, [test x$enable_portage = xyes])
+AM_CONDITIONAL(BACKEND_TYPE_PORTS, [test x$enable_ports = xyes])
+AM_CONDITIONAL(BACKEND_TYPE_RAZOR, [test x$enable_razor = xyes])
+AM_CONDITIONAL(BACKEND_TYPE_SLAPT, [test x$enable_slapt = xyes])
+AM_CONDITIONAL(BACKEND_TYPE_SMART, [test x$enable_smart = xyes])
+AM_CONDITIONAL(BACKEND_TYPE_URPMI, [test x$enable_urpmi = xyes])
+AM_CONDITIONAL(BACKEND_TYPE_YUM, [test x$enable_yum = xyes])
+AM_CONDITIONAL(BACKEND_TYPE_ZYPP, [test x$enable_zypp = xyes])
+
+dnl ---------------------------------------------------------------------------
+dnl - Are we specifying a different dbus root ?
+dnl ---------------------------------------------------------------------------
+AC_ARG_WITH(dbus-sys,
+	      [AS_HELP_STRING([--with-dbus-sys=<dir>],[where D-BUS system.d directory is])])
+AC_ARG_WITH(dbus-services,
+	      [AS_HELP_STRING([--with-dbus-services=<dir>],[where D-BUS system-services directory is])])
+if ! test -z "$with_dbus_sys" ; then
+	DBUS_SYS_DIR="$with_dbus_sys"
+else
+	DBUS_SYS_DIR="$SYSCONFDIR/dbus-1/system.d"
+fi
+if ! test -z "$with_dbus_services" ; then
+	DBUS_SERVICES_DIR="$with_dbus_services"
+else
+	DBUS_SERVICES_DIR="$DATADIR/dbus-1/system-services"
+fi
+AC_SUBST(DBUS_SYS_DIR)
+AC_SUBST(DBUS_SERVICES_DIR)
+
+dnl ---------------------------------------------------------------------------
+dnl - Compile time default choice of security framework
+dnl ---------------------------------------------------------------------------
+AC_ARG_WITH([security_framework],
+	    AS_HELP_STRING([--with-security-framework=<option>],
+			   [Default security framework to use polkit,dummy]))
+# try and guess this if nothing is listed
+if test x$with_security_framework = x; then
+	if test -f /usr/bin/pkaction ; then
+		with_security_framework=polkit
+	else
+		AC_MSG_ERROR([--with-security-framework explicitly required when not using PolicyKit or RBAC])
+	fi
+fi
+
+AC_DEFINE_UNQUOTED(security_framework, "$with_security_framework", [default security framework])
+AC_SUBST(security_framework, "$with_security_framework")
+
+if test x$with_security_framework = xpolkit; then
+	PKG_CHECK_MODULES(POLKIT, \
+			  polkit-backend-1 \
+			  polkit-gobject-1 >= $POLKIT_GOBJECT_REQUIRED)
+	AC_SUBST(POLKIT_CFLAGS)
+	AC_SUBST(POLKIT_LIBS)
+	AC_DEFINE(USE_SECURITY_POLKIT, 1, [if we should use PolicyKit])
+elif test x$with_security_framework = xdummy; then
+	AC_DEFINE(USE_SECURITY_DUMMY, 1, [if we should use a dummy security framework])
+else
+	AC_MSG_ERROR([No valid security framework specified])
+fi
+
+AM_CONDITIONAL(SECURITY_TYPE_DUMMY, [test x$with_security_framework = xdummy])
+AM_CONDITIONAL(SECURITY_TYPE_POLKIT, [test x$with_security_framework = xpolkit])
+
+dnl ---------------------------------------------------------------------------
+dnl - Compile time default choice of backend
+dnl ---------------------------------------------------------------------------
+AC_ARG_WITH([default_backend],
+	    AS_HELP_STRING([--with-default-backend=<option>],
+			   [Default backend to use
+                           alpm,apt,aptcc,box,conary,dummy,opkg,pisi,portage,ports,razor,slapt,smart,urpmi,yum,zypp (dummy)]))
+# default to a sane option for the installed tool
+if test x$with_default_backend = x; then
+	if test -f /usr/bin/yum ; then
+		with_default_backend=yum
+	elif test -f /usr/lib/libgpacman.so; then
+		with_default_backend=alpm
+	elif test -f /usr/bin/apt-get ; then
+		with_default_backend=apt
+	elif test -f /usr/bin/conary ; then
+		with_default_backend=conary
+	elif test -f /usr/bin/box-repos ; then
+		with_default_backend=box
+	elif test -f /usr/sbin/slapt-get ; then
+		with_default_backend=slapt
+	elif test -f /usr/bin/smart ; then
+		with_default_backend=smart
+	elif test -f /usr/bin/pisi ; then
+		with_default_backend=pisi
+	elif test -f /usr/bin/razor ; then
+		with_default_backend=razor
+	elif test -f /usr/bin/poldek ; then
+		with_default_backend=poldek
+	elif test -f /usr/bin/urpmq ; then
+		with_default_backend=urpmi
+	elif test -f /usr/bin/zypper ; then
+		with_default_backend=zypp
+	elif test -f /usr/bin/emerge ; then
+		with_default_backend=portage
+	elif test -f /usr/local/sbin/portupgrade ; then
+		with_default_backend=ports
+	else
+		with_default_backend=dummy
+	fi
+fi
+
+AC_DEFINE_UNQUOTED(DEFAULT_BACKEND, "$with_default_backend", [default backend prefix])
+AC_SUBST(DEFAULT_BACKEND, "$with_default_backend")
+
+if test x$enable_apt = xyes; then
+	PY_CHECK_MOD([apt_pkg],,,AC_MSG_ERROR([Apt backend needs python-apt]))
+	PY_CHECK_MOD([UpdateManager.Core.MetaRelease],,
+		     AC_DEFINE(HAVE_PYTHON_META_RELEASE, 1,
+			       "Meta release is available"), 
+		     AC_MSG_WARN([Distro upgrade notification not supported]))
+	PY_CHECK_MOD([softwareproperties.SoftwareProperties],,
+		     AC_DEFINE(HAVE_PYTHON_SOFTWARE_PROPERTIES, 1,
+			       "Python software properties is available"),
+		     AC_MSG_WARN([Repository handling not supported]))
+fi
+
+if test x$enable_aptcc = xyes; then
+	dnl Use C++
+	AC_LANG([C++])
+
+	AC_CHECK_LIB(apt-pkg, main, , [AC_MSG_ERROR([Can't find the APT libraries -- please install libapt-pkg-dev])])
+	AC_CHECK_HEADER(apt-pkg/init.h, , [AC_MSG_ERROR([Can't find the APT header files -- please install libapt-pkg-dev])])
+
+	AC_SUBST(APTCC_CFLAGS)
+	AC_SUBST(APTCC_LIBS)
+
+	AC_CHECK_LIB([gstreamer-0.10], [gst_init], AC_SUBST([GST_LIBS], [`pkg-config –libs gstreamer-0.10`]), AC_MSG_ERROR([Gstreamer-0.10 not found], [2]))
+
+	AC_MSG_CHECKING([whether apt includes the automatic dependency removal patch (required)])
+
+	AC_COMPILE_IFELSE(AC_LANG_PROGRAM([[#include <apt-pkg/depcache.h>]],
+					  [[extern pkgDepCache::ActionGroup d;]]),
+			  AC_MSG_RESULT([yes]),
+			  AC_MSG_FAILURE([need libapt-pkg 0.7 or later]))
+
+	AC_MSG_CHECKING([whether apt supports ddtp]) 
+
+	AC_COMPILE_IFELSE(AC_LANG_PROGRAM([[#include <apt-pkg/pkgcache.h>]],
+					  [[pkgCache::DescIterator d;]]),
+			  AC_MSG_RESULT([yes])
+			  AC_DEFINE([HAVE_DDTP], [], [Set to true if apt is DDTP-enabled]),
+			  AC_MSG_RESULT([no]))
+fi
+
+if test x$enable_box = xyes; then
+	PKG_CHECK_MODULES(BOX, libbox >= 0.1.4 )
+	AC_SUBST(BOX_CFLAGS)
+	AC_SUBST(BOX_LIBS)
+fi
+
+if test x$enable_opkg = xyes; then
+	PKG_CHECK_MODULES(OPKG, libopkg >= 0.1.5)
+	AC_SUBST(OPKG_CFLAGS)
+	AC_SUBST(OPKG_LIBS)
+fi
+
+if test x$enable_alpm = xyes; then
+	PKG_CHECK_MODULES(PACMAN, gpacman >= 3.3.0)
+	AC_SUBST(PACMAN_CFLAGS)
+	AC_SUBST(PACMAN_LIBS)
+fi
+
+if test x$enable_poldek = xyes; then
+	POLDEK_CFLAGS="-I/usr/include/poldek"
+	POLDEK_LIBS="-lpoclidek -lpoldek"
+	AC_SUBST(POLDEK_CFLAGS)
+	AC_SUBST(POLDEK_LIBS)
+fi
+
+if test x$enable_zypp = xyes; then
+	PKG_CHECK_MODULES(ZYPP, libzypp >= 5.20.0)
+	AC_SUBST(ZYPP_CFLAGS)
+	AC_SUBST(ZYPP_LIBS)
+fi
+
+if test x$enable_razor = xyes; then
+	PKG_CHECK_MODULES(RAZOR, razor >= 0.1)
+	AC_SUBST(RAZOR_CFLAGS)
+	AC_SUBST(RAZOR_LIBS)
+fi
+
+if test x$enable_slapt = xyes; then
+	with_default_backend=dummy
+	AC_CHECK_HEADER([slapt.h],
+			[with_default_backend=slapt],
+			[AC_MSG_WARN([No slapt headers found - falling back to dummy backend])])
+	AC_CHECK_LIB(curl, curl_version, [
+	    CURL_CFLAGS="`curl-config --cflags`"
+	    CURL_LIBS="`curl-config --libs`"
+	    ], [AC_MSG_ERROR([Can't find curl])])
+	AC_CHECK_LIB(gpgme, gpgme_check_version, [
+		AC_DEFINE(SLAPT_HAS_GPGME, 1, [Define to 1 if GPGME is available to Slapt])
+	    GPGME_CFLAGS="`gpgme-config --cflags`"
+	    GPGME_LIBS="`gpgme-config --libs`"
+	    ], [AC_MSG_WARN([Can't find gpgme])])
+	SLAPT_CFLAGS="$CURL_CFLAGS $GPGME_CFLAGS"
+	SLAPT_LIBS="$CURL_LIBS $GPGME_LIBS -lslapt"
+	AC_SUBST(SLAPT_CFLAGS)
+	AC_SUBST(SLAPT_LIBS)
+fi
+
+AC_SUBST(PK_CONF_DIR, "\$(sysconfdir)/PackageKit")
+AC_SUBST(PK_YUM_PLUGIN_DIR, "\$(prefix)/lib/yum-plugins")
+AC_SUBST(PK_DB_DIR, "\$(localstatedir)/lib/PackageKit")
+AC_SUBST(PK_LOG_DIR, "\$(localstatedir)/log")
+AC_SUBST(PK_PLUGIN_DIR, "\$(libdir)/packagekit-backend")
+AC_SUBST(PK_PLUGIN_CFLAGS, "-I\$(top_srcdir)/src -I\$(top_srcdir)/lib -DPK_COMPILATION $GLIB_CFLAGS $DBUS_CFLAGS $GMODULE_CFLAGS")
+AC_SUBST(PK_PLUGIN_LIBS, "$GLIB_LIBS $DBUS_LIBS $GMODULE_LIBS")
+
+dnl ---------------------------------------------------------------------------
+dnl - Makefiles, etc.
+dnl ---------------------------------------------------------------------------
+AC_CONFIG_FILES([
+Makefile
+etc/Makefile
+docs/Makefile
+docs/html/Makefile
+docs/html/img/Makefile
+docs/html/img/thumbnails/Makefile
+docs/html/videos/Makefile
+docs/api/Makefile
+docs/api/dbus/Makefile
+docs/api/version.xml
+contrib/Makefile
+contrib/browser-plugin/Makefile
+contrib/gstreamer-plugin/Makefile
+contrib/gtk-module/Makefile
+contrib/yum-packagekit/Makefile
+contrib/command-not-found/Makefile
+contrib/cron/Makefile
+contrib/debuginfo-install/Makefile
+contrib/device-rebind/Makefile
+contrib/pm-utils/Makefile
+contrib/ruck/Makefile
+contrib/ruck/src/Makefile
+backends/Makefile
+backends/alpm/Makefile
+backends/apt/Makefile
+backends/aptcc/Makefile
+backends/box/Makefile
+backends/conary/Makefile
+backends/dummy/Makefile
+backends/opkg/Makefile
+backends/slapt/Makefile
+backends/smart/Makefile
+backends/test/Makefile
+backends/test/helpers/Makefile
+backends/urpmi/Makefile
+backends/urpmi/helpers/Makefile
+backends/urpmi/helpers/perl_packagekit/Makefile
+backends/urpmi/helpers/urpmi_backend/Makefile
+backends/razor/Makefile
+backends/yum/Makefile
+backends/pisi/Makefile
+backends/poldek/Makefile
+backends/portage/Makefile
+backends/ports/Makefile
+backends/ports/ruby_packagekit/Makefile
+backends/zypp/Makefile
+data/Makefile
+data/org.freedesktop.PackageKit.conf
+data/tests/Makefile
+lib/Makefile
+lib/packagekit-glib2/pk-version.h
+lib/packagekit-glib2/Makefile
+lib/packagekit-glib2/packagekit-glib2.pc
+lib/packagekit-qt/Makefile
+lib/packagekit-qt/modules/Makefile
+lib/packagekit-qt/src/Makefile
+lib/packagekit-qt/test/Makefile
+lib/packagekit-qt/packagekit-qt.pc
+lib/packagekit-sharp/Makefile
+lib/packagekit-sharp/samples/Makefile
+lib/python/Makefile
+lib/python/packagekit/Makefile
+policy/Makefile
+src/Makefile
+client/Makefile
+tools/Makefile
+po/Makefile.in
+])
+AC_OUTPUT
+
+dnl ==========================================================================
+echo "
+                    PackageKit $VERSION
+                  ====================
+
+        prefix:                    ${prefix}
+        datadir:                   ${datadir}
+        compiler:                  ${CC}
+        cflags:                    ${CFLAGS}
+        cppflags:                  ${CPPFLAGS}
+        Building unit tests:       ${enable_tests}
+        Able to run locally:       ${enable_local}
+        Security framework:        ${with_security_framework}
+        Networking stacks:         ${networking_apis}
+        Browser plugin:            ${build_browser_plugin}
+        GStreamer plugin:          ${build_gstreamer_plugin}
+        Pango module:              ${build_gtk_module}
+        BASH Command not found:    ${build_command_not_found}
+        Cron scripts:              ${build_cron}
+        debuginfo-install:         ${build_debuginfo_install}
+        device-rebind:             ${build_device_rebind}
+        pm-utils scripts:          ${build_pm_utils}
+        RUCK client:               ${build_ruck}
+        QT library:                ${build_qt}
+        Managed bindings:          ${build_managed}
+
+        Backends:
+        ALPM backend:              ${enable_alpm}
+        APT backend:               ${enable_apt}
+        APTcc backend:             ${enable_aptcc}
+        BOX backend:               ${enable_box}
+        CONARY backend:            ${enable_conary}
+        dummy backend:             ${enable_dummy}
+        OPKG backend:              ${enable_opkg}
+        Razor backend:             ${enable_razor}
+        PiSi backend:              ${enable_pisi}
+        poldek backend:            ${enable_poldek}
+        Portage backend:           ${enable_portage}
+        Ports backend:             ${enable_ports}
+        Slapt backend:             ${enable_slapt}
+        SMART backend:             ${enable_smart}
+        URPMI backend:             ${enable_urpmi}
+        YUM backend:               ${enable_yum}
+        Zypp backend:              ${enable_zypp}
+        Default backend:           ${with_default_backend}
+"
+
+if test ! -x "$CONSOLEKIT_DAEMON"; then
+	echo "**********************************************************************"
+	echo "** ConsoleKit doesn't look to be installed (it's a running dependency)"
+	echo "** You will be able to run PackageKit without ConsoleKit"
+	echo "** but it is not supported nor recommended."
+	echo "**********************************************************************"
+	echo ""
+fi
+
+# warn that dummy is basically broken
+if test x$with_security_framework = xdummy; then
+	echo "*******************************************************************"
+	echo "** YOU ARE NOT USING A SECURE DAEMON. ALL USERS CAN DO ANYTHING! **"
+	echo "*******************************************************************"
+fi
+

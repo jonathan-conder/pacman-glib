@@ -1,0 +1,454 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>PkServicePack</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="PackageKit Reference Manual">
+<link rel="up" href="libpackagekit-gobject.html" title="libpackagekit GObjects">
+<link rel="prev" href="PkResults.html" title="PkResults">
+<link rel="next" href="PkTask.html" title="PkTask">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="reference" href="specification.html" title="PackageKit Specification">
+<link rel="chapter" href="introduction.html" title="PackageKit Introduction">
+<link rel="chapter" href="concepts.html" title="Important Concepts">
+<link rel="chapter" href="backend-compiled.html" title="Compiled Backends">
+<link rel="chapter" href="backend-spawn.html" title="Spawned Backends">
+<link rel="reference" href="api-reference.html" title="D-Bus API Reference">
+<link rel="reference" href="libpackagekit-gobject.html" title="libpackagekit GObjects">
+<link rel="reference" href="libpackagekit-helpers.html" title="libpackagekit glib helpers">
+<link rel="reference" href="faq.html" title="Frequently asked questions">
+<link rel="chapter" href="developer-faq.html" title="Developer FAQ">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="PkResults.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="libpackagekit-gobject.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">PackageKit Reference Manual</th>
+<td><a accesskey="n" href="PkTask.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#PkServicePack.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#PkServicePack.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#PkServicePack.object-hierarchy" class="shortcut">Object Hierarchy</a>
+</td></tr>
+</table>
+<div class="refentry" title="PkServicePack">
+<a name="PkServicePack"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="PkServicePack.top_of_page"></a>PkServicePack</span></h2>
+<p>PkServicePack — Functionality for creating and reading service packs</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="PkServicePack.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">#define             <a class="link" href="PkServicePack.html#PK-SERVICE-PACK-ERROR:CAPS" title="PK_SERVICE_PACK_ERROR">PK_SERVICE_PACK_ERROR</a>
+#define             <a class="link" href="PkServicePack.html#PK-SERVICE-PACK-TYPE-ERROR:CAPS" title="PK_SERVICE_PACK_TYPE_ERROR">PK_SERVICE_PACK_TYPE_ERROR</a>
+#define             <a class="link" href="PkServicePack.html#PK-SERVICE-PACK-FILE-EXTENSION:CAPS" title="PK_SERVICE_PACK_FILE_EXTENSION">PK_SERVICE_PACK_FILE_EXTENSION</a>
+enum                <a class="link" href="PkServicePack.html#PkServicePackError" title="enum PkServicePackError">PkServicePackError</a>;
+                    <a class="link" href="PkServicePack.html#PkServicePackPrivate" title="PkServicePackPrivate">PkServicePackPrivate</a>;
+                    <a class="link" href="PkServicePack.html#PkServicePack-struct" title="PkServicePack">PkServicePack</a>;
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="returnvalue">GQuark</span></a>              <a class="link" href="PkServicePack.html#pk-service-pack-error-quark" title="pk_service_pack_error_quark ()">pk_service_pack_error_quark</a>         (void);
+<a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>               <a class="link" href="PkServicePack.html#pk-service-pack-get-type" title="pk_service_pack_get_type ()">pk_service_pack_get_type</a>            (void);
+<a class="link" href="PkServicePack.html" title="PkServicePack"><span class="returnvalue">PkServicePack</span></a> *     <a class="link" href="PkServicePack.html#pk-service-pack-new" title="pk_service_pack_new ()">pk_service_pack_new</a>                 (void);
+<span class="returnvalue">void</span>                <a class="link" href="PkServicePack.html#pk-service-pack-test" title="pk_service_pack_test ()">pk_service_pack_test</a>                (<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="PkServicePack.html#pk-service-pack-check-valid" title="pk_service_pack_check_valid ()">pk_service_pack_check_valid</a>         (<a class="link" href="PkServicePack.html" title="PkServicePack"><span class="returnvalue">PkServicePack</span></a> *pack,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *filename,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="PkServicePack.html#pk-service-pack-set-temp-directory" title="pk_service_pack_set_temp_directory ()">pk_service_pack_set_temp_directory</a>  (<a class="link" href="PkServicePack.html" title="PkServicePack"><span class="returnvalue">PkServicePack</span></a> *pack,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *directory);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="PkServicePack.html#pk-service-pack-generic-finish" title="pk_service_pack_generic_finish ()">pk_service_pack_generic_finish</a>      (<a class="link" href="PkServicePack.html" title="PkServicePack"><span class="returnvalue">PkServicePack</span></a> *pack,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);
+<span class="returnvalue">void</span>                <a class="link" href="PkServicePack.html#pk-service-pack-create-for-package-ids-async" title="pk_service_pack_create_for_package_ids_async ()">pk_service_pack_create_for_package_ids_async</a>
+                                                        (<a class="link" href="PkServicePack.html" title="PkServicePack"><span class="returnvalue">PkServicePack</span></a> *pack,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *filename,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **package_ids,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **package_ids_exclude,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a class="link" href="PkProgress.html#PkProgressCallback" title="PkProgressCallback ()"><span class="returnvalue">PkProgressCallback</span></a> progress_callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> progress_user_data,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);
+<span class="returnvalue">void</span>                <a class="link" href="PkServicePack.html#pk-service-pack-create-for-updates-async" title="pk_service_pack_create_for_updates_async ()">pk_service_pack_create_for_updates_async</a>
+                                                        (<a class="link" href="PkServicePack.html" title="PkServicePack"><span class="returnvalue">PkServicePack</span></a> *pack,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *filename,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **package_ids_exclude,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a class="link" href="PkProgress.html#PkProgressCallback" title="PkProgressCallback ()"><span class="returnvalue">PkProgressCallback</span></a> progress_callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> progress_user_data,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);
+</pre>
+</div>
+<div class="refsect1" title="Object Hierarchy">
+<a name="PkServicePack.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----PkServicePack
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="PkServicePack.description"></a><h2>Description</h2>
+<p>
+Clients can use this GObject for reading and writing service packs.</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="PkServicePack.details"></a><h2>Details</h2>
+<div class="refsect2" title="PK_SERVICE_PACK_ERROR">
+<a name="PK-SERVICE-PACK-ERROR:CAPS"></a><h3>PK_SERVICE_PACK_ERROR</h3>
+<pre class="programlisting">#define PK_SERVICE_PACK_ERROR	 	(pk_service_pack_error_quark ())
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="PK_SERVICE_PACK_TYPE_ERROR">
+<a name="PK-SERVICE-PACK-TYPE-ERROR:CAPS"></a><h3>PK_SERVICE_PACK_TYPE_ERROR</h3>
+<pre class="programlisting">#define PK_SERVICE_PACK_TYPE_ERROR (pk_service_pack_error_get_type ())
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="PK_SERVICE_PACK_FILE_EXTENSION">
+<a name="PK-SERVICE-PACK-FILE-EXTENSION:CAPS"></a><h3>PK_SERVICE_PACK_FILE_EXTENSION</h3>
+<pre class="programlisting">#define PK_SERVICE_PACK_FILE_EXTENSION "servicepack"
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkServicePackError">
+<a name="PkServicePackError"></a><h3>enum PkServicePackError</h3>
+<pre class="programlisting">typedef enum
+{
+	PK_SERVICE_PACK_ERROR_FAILED_SETUP,
+	PK_SERVICE_PACK_ERROR_FAILED_DOWNLOAD,
+	PK_SERVICE_PACK_ERROR_FAILED_EXTRACTION,
+	PK_SERVICE_PACK_ERROR_FAILED_CREATE,
+	PK_SERVICE_PACK_ERROR_NOTHING_TO_DO,
+	PK_SERVICE_PACK_ERROR_NOT_COMPATIBLE
+} PkServicePackError;
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="PkServicePackPrivate">
+<a name="PkServicePackPrivate"></a><h3>PkServicePackPrivate</h3>
+<pre class="programlisting">typedef struct _PkServicePackPrivate PkServicePackPrivate;</pre>
+<p>
+Private <a class="link" href="PkServicePack.html" title="PkServicePack"><span class="type">PkServicePack</span></a> data</p>
+</div>
+<hr>
+<div class="refsect2" title="PkServicePack">
+<a name="PkServicePack-struct"></a><h3>PkServicePack</h3>
+<pre class="programlisting">typedef struct _PkServicePack PkServicePack;</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_service_pack_error_quark ()">
+<a name="pk-service-pack-error-quark"></a><h3>pk_service_pack_error_quark ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="returnvalue">GQuark</span></a>              pk_service_pack_error_quark         (void);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Our personal error quark.
+
+</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_service_pack_get_type ()">
+<a name="pk-service-pack-get-type"></a><h3>pk_service_pack_get_type ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>               pk_service_pack_get_type            (void);</pre>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="pk_service_pack_new ()">
+<a name="pk-service-pack-new"></a><h3>pk_service_pack_new ()</h3>
+<pre class="programlisting"><a class="link" href="PkServicePack.html" title="PkServicePack"><span class="returnvalue">PkServicePack</span></a> *     pk_service_pack_new                 (void);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> A new service_pack class instance.
+
+</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_service_pack_test ()">
+<a name="pk-service-pack-test"></a><h3>pk_service_pack_test ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                pk_service_pack_test                (<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);</pre>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="pk_service_pack_check_valid ()">
+<a name="pk-service-pack-check-valid"></a><h3>pk_service_pack_check_valid ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            pk_service_pack_check_valid         (<a class="link" href="PkServicePack.html" title="PkServicePack"><span class="returnvalue">PkServicePack</span></a> *pack,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *filename,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);</pre>
+<p>
+Checks to see if a service pack file is valid, and usable with this system.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pack</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkServicePack.html" title="PkServicePack"><span class="type">PkServicePack</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td> the filename of the pack to check
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td> a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><code class="literal">GError</code></a> to put the error code and message in, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the service pack is valid
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_service_pack_set_temp_directory ()">
+<a name="pk-service-pack-set-temp-directory"></a><h3>pk_service_pack_set_temp_directory ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            pk_service_pack_set_temp_directory  (<a class="link" href="PkServicePack.html" title="PkServicePack"><span class="returnvalue">PkServicePack</span></a> *pack,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *directory);</pre>
+<p>
+Sets the directory to use when decompressing the service pack</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pack</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkServicePack.html" title="PkServicePack"><span class="type">PkServicePack</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>directory</code></em> :</span></p></td>
+<td> the directory to use, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to use the default
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the directory was set
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_service_pack_generic_finish ()">
+<a name="pk-service-pack-generic-finish"></a><h3>pk_service_pack_generic_finish ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            pk_service_pack_generic_finish      (<a class="link" href="PkServicePack.html" title="PkServicePack"><span class="returnvalue">PkServicePack</span></a> *pack,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);</pre>
+<p>
+Gets the result from the asynchronous function.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pack</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkServicePack.html" title="PkServicePack"><span class="type">PkServicePack</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>res</code></em> :</span></p></td>
+<td> the <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="type">GAsyncResult</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td> A <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for success
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_service_pack_create_for_package_ids_async ()">
+<a name="pk-service-pack-create-for-package-ids-async"></a><h3>pk_service_pack_create_for_package_ids_async ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                pk_service_pack_create_for_package_ids_async
+                                                        (<a class="link" href="PkServicePack.html" title="PkServicePack"><span class="returnvalue">PkServicePack</span></a> *pack,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *filename,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **package_ids,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **package_ids_exclude,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a class="link" href="PkProgress.html#PkProgressCallback" title="PkProgressCallback ()"><span class="returnvalue">PkProgressCallback</span></a> progress_callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> progress_user_data,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);</pre>
+<p>
+Create a service pack for the specified Package IDs</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pack</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkServicePack.html" title="PkServicePack"><span class="type">PkServicePack</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td> the filename of the service pack
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>package_ids</code></em> :</span></p></td>
+<td> a null terminated array of package_id structures such as "hal;0.0.1;i386;fedora"
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>package_ids_exclude</code></em> :</span></p></td>
+<td> An array of packages to exclude, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
+<td> a <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="type">GCancellable</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>progress_callback</code></em> :</span></p></td>
+<td> the function to run when the progress changes
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>progress_user_data</code></em> :</span></p></td>
+<td> data to pass to <em class="parameter"><code>progress_callback</code></em>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
+<td> the function to run on completion
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td> the data to pass to <em class="parameter"><code>callback</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_service_pack_create_for_updates_async ()">
+<a name="pk-service-pack-create-for-updates-async"></a><h3>pk_service_pack_create_for_updates_async ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                pk_service_pack_create_for_updates_async
+                                                        (<a class="link" href="PkServicePack.html" title="PkServicePack"><span class="returnvalue">PkServicePack</span></a> *pack,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *filename,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **package_ids_exclude,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a class="link" href="PkProgress.html#PkProgressCallback" title="PkProgressCallback ()"><span class="returnvalue">PkProgressCallback</span></a> progress_callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> progress_user_data,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);</pre>
+<p>
+Create a service pack for the specified Package IDs</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pack</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkServicePack.html" title="PkServicePack"><span class="type">PkServicePack</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td> the filename of the service pack
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>package_ids_exclude</code></em> :</span></p></td>
+<td> An array of packages to exclude, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
+<td> a <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="type">GCancellable</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>progress_callback</code></em> :</span></p></td>
+<td> the function to run when the progress changes
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>progress_user_data</code></em> :</span></p></td>
+<td> data to pass to <em class="parameter"><code>progress_callback</code></em>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
+<td> the function to run on completion
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td> the data to pass to <em class="parameter"><code>callback</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.13</div>
+</body>
+</html>

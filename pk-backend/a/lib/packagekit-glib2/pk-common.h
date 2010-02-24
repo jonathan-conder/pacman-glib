@@ -1,0 +1,87 @@
+/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
+ *
+ * Copyright (C) 2007-2008 Richard Hughes <richard@hughsie.com>
+ *
+ * Licensed under the GNU General Public License Version 2
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+#if !defined (__PACKAGEKIT_H_INSIDE__) && !defined (PK_COMPILATION)
+#error "Only <packagekit.h> can be included directly."
+#endif
+
+#ifndef __PK_COMMON_H
+#define __PK_COMMON_H
+
+#include <glib.h>
+
+#include "pk-enum.h"
+
+G_BEGIN_DECLS
+
+/**
+ * PK_DBUS_SERVICE:
+ *
+ * The SYSTEM service DBUS name
+ */
+#define	PK_DBUS_SERVICE			"org.freedesktop.PackageKit"
+
+/**
+ * PK_DBUS_PATH:
+ *
+ * The DBUS path
+ */
+#define	PK_DBUS_PATH			"/org/freedesktop/PackageKit"
+
+/**
+ * PK_DBUS_INTERFACE:
+ *
+ * The DBUS interface
+ */
+#define	PK_DBUS_INTERFACE		"org.freedesktop.PackageKit"
+
+/**
+ * PK_DBUS_INTERFACE_TRANSACTION:
+ *
+ * The DBUS interface for the transactions
+ */
+#define	PK_DBUS_INTERFACE_TRANSACTION	"org.freedesktop.PackageKit.Transaction"
+
+/**
+ * PK_SERVICE_PACK_GROUP_NAME:
+ *
+ * The group name of the Service Pack config file
+ */
+#define	PK_SERVICE_PACK_GROUP_NAME	"PackageKit Service Pack"
+
+/**
+ * PK_PACKAGE_LIST_FILENAME:
+ *
+ * The default location of the package list
+ */
+#define	PK_SYSTEM_PACKAGE_LIST_FILENAME	"/var/lib/PackageKit/system.package-list"
+
+void		 pk_common_test				(gpointer	 user_data);
+gchar		**pk_ptr_array_to_strv			(GPtrArray	*array)
+							 G_GNUC_WARN_UNUSED_RESULT;
+gchar		*pk_iso8601_present			(void)
+							 G_GNUC_WARN_UNUSED_RESULT;
+gchar		*pk_iso8601_from_date			(const GDate	*date);
+GDate		*pk_iso8601_to_date			(const gchar	*iso_date);
+
+G_END_DECLS
+
+#endif /* __PK_COMMON_H */

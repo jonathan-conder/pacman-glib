@@ -1,0 +1,10 @@
+#!/bin/bash
+
+cd "$(dirname "$0")"
+diff -ru a b > gpacman.patch
+
+OLDMD5="$(md5sum packagekit/gpacman.patch | cut -d' ' -f1)"
+NEWMD5="$(md5sum gpacman.patch | cut -d' ' -f1)"
+
+cd packagekit
+sed -re "s/$OLDMD5/$NEWMD5/" -i PKGBUILD && makepkg "$@"

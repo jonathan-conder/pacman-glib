@@ -1,0 +1,82 @@
+<!-- ##### SECTION Title ##### -->
+pk-progress-bar
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF PkProgressBarPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION pk_progress_bar_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_progress_bar_set_size ##### -->
+<para>
+
+</para>
+
+@progress_bar: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_progress_bar_set_padding ##### -->
+<para>
+
+</para>
+
+@progress_bar: 
+@padding: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_progress_bar_set_percentage ##### -->
+<para>
+
+</para>
+
+@progress_bar: 
+@percentage: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_progress_bar_start ##### -->
+<para>
+
+</para>
+
+@progress_bar: 
+@text: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_progress_bar_end ##### -->
+<para>
+
+</para>
+
+@progress_bar: 
+@Returns: 
+
+

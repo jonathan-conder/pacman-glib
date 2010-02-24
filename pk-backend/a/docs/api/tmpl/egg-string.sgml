@@ -1,0 +1,87 @@
+<!-- ##### SECTION Title ##### -->
+egg-string
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION egg_strlen ##### -->
+<para>
+
+</para>
+
+@text: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION egg_strzero ##### -->
+<para>
+
+</para>
+
+@text: 
+@Returns: 
+
+
+<!-- ##### FUNCTION egg_strvequal ##### -->
+<para>
+
+</para>
+
+@id1: 
+@id2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION egg_strtoint ##### -->
+<para>
+
+</para>
+
+@text: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION egg_strtouint ##### -->
+<para>
+
+</para>
+
+@text: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION egg_strreplace ##### -->
+<para>
+
+</para>
+
+@text: 
+@find: 
+@replace: 
+@Returns: 
+
+
+<!-- ##### FUNCTION egg_string_test ##### -->
+<para>
+
+</para>
+
+@user_data: 
+
+

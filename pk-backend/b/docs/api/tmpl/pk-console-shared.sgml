@@ -1,0 +1,107 @@
+<!-- ##### SECTION Title ##### -->
+pk-console-shared
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION pk_console_test ##### -->
+<para>
+
+</para>
+
+@user_data: 
+
+
+<!-- ##### FUNCTION pk_console_get_number ##### -->
+<para>
+
+</para>
+
+@question: 
+@maxnum: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_console_get_prompt ##### -->
+<para>
+
+</para>
+
+@question: 
+@defaultyes: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_console_resolve_package ##### -->
+<para>
+
+</para>
+
+@client: 
+@filter: 
+@package: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_console_resolve_packages ##### -->
+<para>
+
+</para>
+
+@client: 
+@filter: 
+@packages: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_status_enum_to_localised_text ##### -->
+<para>
+
+</para>
+
+@status: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_info_enum_to_localised_past ##### -->
+<para>
+
+</para>
+
+@info: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_info_enum_to_localised_present ##### -->
+<para>
+
+</para>
+
+@info: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_role_enum_to_localised_present ##### -->
+<para>
+
+</para>
+
+@role: 
+@Returns: 
+
+

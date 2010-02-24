@@ -1,0 +1,1095 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>PkControl</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="PackageKit Reference Manual">
+<link rel="up" href="libpackagekit-gobject.html" title="libpackagekit GObjects">
+<link rel="prev" href="PkClient.html" title="PkClient">
+<link rel="next" href="PkDesktop.html" title="PkDesktop">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="reference" href="specification.html" title="PackageKit Specification">
+<link rel="chapter" href="introduction.html" title="PackageKit Introduction">
+<link rel="chapter" href="concepts.html" title="Important Concepts">
+<link rel="chapter" href="backend-compiled.html" title="Compiled Backends">
+<link rel="chapter" href="backend-spawn.html" title="Spawned Backends">
+<link rel="reference" href="api-reference.html" title="D-Bus API Reference">
+<link rel="reference" href="libpackagekit-gobject.html" title="libpackagekit GObjects">
+<link rel="reference" href="libpackagekit-helpers.html" title="libpackagekit glib helpers">
+<link rel="reference" href="faq.html" title="Frequently asked questions">
+<link rel="chapter" href="developer-faq.html" title="Developer FAQ">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="PkClient.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="libpackagekit-gobject.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">PackageKit Reference Manual</th>
+<td><a accesskey="n" href="PkDesktop.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#PkControl.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#PkControl.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#PkControl.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#PkControl.properties" class="shortcut">Properties</a>
+                   | 
+                  <a href="#PkControl.signals" class="shortcut">Signals</a>
+</td></tr>
+</table>
+<div class="refentry" title="PkControl">
+<a name="PkControl"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="PkControl.top_of_page"></a>PkControl</span></h2>
+<p>PkControl — For querying data about PackageKit</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="PkControl.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">#define             <a class="link" href="PkControl.html#PK-CONTROL-ERROR:CAPS" title="PK_CONTROL_ERROR">PK_CONTROL_ERROR</a>
+#define             <a class="link" href="PkControl.html#PK-CONTROL-TYPE-ERROR:CAPS" title="PK_CONTROL_TYPE_ERROR">PK_CONTROL_TYPE_ERROR</a>
+                    <a class="link" href="PkControl.html#PkControlPrivate" title="PkControlPrivate">PkControlPrivate</a>;
+enum                <a class="link" href="PkControl.html#PkControlError" title="enum PkControlError">PkControlError</a>;
+                    <a class="link" href="PkControl.html#PkControl-struct" title="PkControl">PkControl</a>;
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="returnvalue">GQuark</span></a>              <a class="link" href="PkControl.html#pk-control-error-quark" title="pk_control_error_quark ()">pk_control_error_quark</a>              (void);
+<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *         <a class="link" href="PkControl.html#pk-control-new" title="pk_control_new ()">pk_control_new</a>                      (void);
+<span class="returnvalue">void</span>                <a class="link" href="PkControl.html#pk-control-test" title="pk_control_test ()">pk_control_test</a>                     (<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);
+<span class="returnvalue">void</span>                <a class="link" href="PkControl.html#pk-control-get-tid-async" title="pk_control_get_tid_async ()">pk_control_get_tid_async</a>            (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="PkControl.html#pk-control-get-tid-finish" title="pk_control_get_tid_finish ()">pk_control_get_tid_finish</a>           (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);
+<span class="returnvalue">void</span>                <a class="link" href="PkControl.html#pk-control-get-daemon-state-async" title="pk_control_get_daemon_state_async ()">pk_control_get_daemon_state_async</a>   (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="PkControl.html#pk-control-get-daemon-state-finish" title="pk_control_get_daemon_state_finish ()">pk_control_get_daemon_state_finish</a>  (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);
+<span class="returnvalue">void</span>                <a class="link" href="PkControl.html#pk-control-set-proxy-async" title="pk_control_set_proxy_async ()">pk_control_set_proxy_async</a>          (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *proxy_http,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *proxy_ftp,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="PkControl.html#pk-control-set-proxy-finish" title="pk_control_set_proxy_finish ()">pk_control_set_proxy_finish</a>         (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);
+<span class="returnvalue">void</span>                <a class="link" href="PkControl.html#pk-control-get-network-state-async" title="pk_control_get_network_state_async ()">pk_control_get_network_state_async</a>  (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);
+<a class="link" href="PackageKit-pk-enum.html#PkNetworkEnum" title="enum PkNetworkEnum"><span class="returnvalue">PkNetworkEnum</span></a>       <a class="link" href="PkControl.html#pk-control-get-network-state-finish" title="pk_control_get_network_state_finish ()">pk_control_get_network_state_finish</a> (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);
+<span class="returnvalue">void</span>                <a class="link" href="PkControl.html#pk-control-get-time-since-action-async" title="pk_control_get_time_since_action_async ()">pk_control_get_time_since_action_async</a>
+                                                        (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a class="link" href="PackageKit-pk-enum.html#PkRoleEnum" title="enum PkRoleEnum"><span class="returnvalue">PkRoleEnum</span></a> role,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="PkControl.html#pk-control-get-time-since-action-finish" title="pk_control_get_time_since_action_finish ()">pk_control_get_time_since_action_finish</a>
+                                                        (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);
+<span class="returnvalue">void</span>                <a class="link" href="PkControl.html#pk-control-get-transaction-list-async" title="pk_control_get_transaction_list_async ()">pk_control_get_transaction_list_async</a>
+                                                        (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **            <a class="link" href="PkControl.html#pk-control-get-transaction-list-finish" title="pk_control_get_transaction_list_finish ()">pk_control_get_transaction_list_finish</a>
+                                                        (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);
+<span class="returnvalue">void</span>                <a class="link" href="PkControl.html#pk-control-can-authorize-async" title="pk_control_can_authorize_async ()">pk_control_can_authorize_async</a>      (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *action_id,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);
+<a class="link" href="PackageKit-pk-enum.html#PkAuthorizeEnum" title="enum PkAuthorizeEnum"><span class="returnvalue">PkAuthorizeEnum</span></a>     <a class="link" href="PkControl.html#pk-control-can-authorize-finish" title="pk_control_can_authorize_finish ()">pk_control_can_authorize_finish</a>     (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);
+<span class="returnvalue">void</span>                <a class="link" href="PkControl.html#pk-control-get-properties-async" title="pk_control_get_properties_async ()">pk_control_get_properties_async</a>     (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="PkControl.html#pk-control-get-properties-finish" title="pk_control_get_properties_finish ()">pk_control_get_properties_finish</a>    (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);
+</pre>
+</div>
+<div class="refsect1" title="Object Hierarchy">
+<a name="PkControl.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----PkControl
+</pre>
+</div>
+<div class="refsect1" title="Properties">
+<a name="PkControl.properties"></a><h2>Properties</h2>
+<pre class="synopsis">
+  "<a class="link" href="PkControl.html#PkControl--backend-author" title='The "backend-author" property'>backend-author</a>"           <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+  "<a class="link" href="PkControl.html#PkControl--backend-description" title='The "backend-description" property'>backend-description</a>"      <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+  "<a class="link" href="PkControl.html#PkControl--backend-name" title='The "backend-name" property'>backend-name</a>"             <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+  "<a class="link" href="PkControl.html#PkControl--connected" title='The "connected" property'>connected</a>"                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write
+  "<a class="link" href="PkControl.html#PkControl--distro-id" title='The "distro-id" property'>distro-id</a>"                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+  "<a class="link" href="PkControl.html#PkControl--filters" title='The "filters" property'>filters</a>"                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a>               : Read / Write
+  "<a class="link" href="PkControl.html#PkControl--groups" title='The "groups" property'>groups</a>"                   <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a>               : Read / Write
+  "<a class="link" href="PkControl.html#PkControl--locked" title='The "locked" property'>locked</a>"                   <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write
+  "<a class="link" href="PkControl.html#PkControl--mime-types" title='The "mime-types" property'>mime-types</a>"               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+  "<a class="link" href="PkControl.html#PkControl--network-state" title='The "network-state" property'>network-state</a>"            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write
+  "<a class="link" href="PkControl.html#PkControl--roles" title='The "roles" property'>roles</a>"                    <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a>               : Read / Write
+  "<a class="link" href="PkControl.html#PkControl--version-major" title='The "version-major" property'>version-major</a>"            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read
+  "<a class="link" href="PkControl.html#PkControl--version-micro" title='The "version-micro" property'>version-micro</a>"            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read
+  "<a class="link" href="PkControl.html#PkControl--version-minor" title='The "version-minor" property'>version-minor</a>"            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read
+</pre>
+</div>
+<div class="refsect1" title="Signals">
+<a name="PkControl.signals"></a><h2>Signals</h2>
+<pre class="synopsis">
+  "<a class="link" href="PkControl.html#PkControl-repo-list-changed" title='The "repo-list-changed" signal'>repo-list-changed</a>"                              : Run Last
+  "<a class="link" href="PkControl.html#PkControl-restart-schedule" title='The "restart-schedule" signal'>restart-schedule</a>"                               : Run Last
+  "<a class="link" href="PkControl.html#PkControl-transaction-list-changed" title='The "transaction-list-changed" signal'>transaction-list-changed</a>"                       : Run Last
+  "<a class="link" href="PkControl.html#PkControl-updates-changed" title='The "updates-changed" signal'>updates-changed</a>"                                : Run Last
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="PkControl.description"></a><h2>Description</h2>
+<p>
+A GObject to use for accessing PackageKit asynchronously.</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="PkControl.details"></a><h2>Details</h2>
+<div class="refsect2" title="PK_CONTROL_ERROR">
+<a name="PK-CONTROL-ERROR:CAPS"></a><h3>PK_CONTROL_ERROR</h3>
+<pre class="programlisting">#define PK_CONTROL_ERROR (pk_control_error_quark ())
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="PK_CONTROL_TYPE_ERROR">
+<a name="PK-CONTROL-TYPE-ERROR:CAPS"></a><h3>PK_CONTROL_TYPE_ERROR</h3>
+<pre class="programlisting">#define PK_CONTROL_TYPE_ERROR (pk_control_error_get_type ())
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="PkControlPrivate">
+<a name="PkControlPrivate"></a><h3>PkControlPrivate</h3>
+<pre class="programlisting">typedef struct _PkControlPrivate PkControlPrivate;</pre>
+<p>
+Private <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> data</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkControlError">
+<a name="PkControlError"></a><h3>enum PkControlError</h3>
+<pre class="programlisting">typedef enum
+{
+	PK_CONTROL_ERROR_FAILED,
+	PK_CONTROL_ERROR_CANNOT_START_DAEMON
+} PkControlError;
+</pre>
+<p>
+Errors that can be thrown</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="PK-CONTROL-ERROR-FAILED:CAPS"></a><span class="term"><code class="literal">PK_CONTROL_ERROR_FAILED</code></span></p></td>
+<td> the transaction failed for an unknown reason
+</td>
+</tr>
+<tr>
+<td><p><a name="PK-CONTROL-ERROR-CANNOT-START-DAEMON:CAPS"></a><span class="term"><code class="literal">PK_CONTROL_ERROR_CANNOT_START_DAEMON</code></span></p></td>
+<td>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="PkControl">
+<a name="PkControl-struct"></a><h3>PkControl</h3>
+<pre class="programlisting">typedef struct _PkControl PkControl;</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_error_quark ()">
+<a name="pk-control-error-quark"></a><h3>pk_control_error_quark ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="returnvalue">GQuark</span></a>              pk_control_error_quark              (void);</pre>
+<p>
+We are a GObject that sets errors</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Our personal error quark.
+
+</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_new ()">
+<a name="pk-control-new"></a><h3>pk_control_new ()</h3>
+<pre class="programlisting"><a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *         pk_control_new                      (void);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new PkControl object.
+
+</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_test ()">
+<a name="pk-control-test"></a><h3>pk_control_test ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                pk_control_test                     (<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);</pre>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_get_tid_async ()">
+<a name="pk-control-get-tid-async"></a><h3>pk_control_get_tid_async ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                pk_control_get_tid_async            (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);</pre>
+<p>
+Gets a transacton ID from the daemon.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
+<td> a <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="type">GCancellable</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
+<td> the function to run on completion
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td> the data to pass to <em class="parameter"><code>callback</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_get_tid_finish ()">
+<a name="pk-control-get-tid-finish"></a><h3>pk_control_get_tid_finish ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             pk_control_get_tid_finish           (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);</pre>
+<p>
+Gets the result from the asynchronous function.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>res</code></em> :</span></p></td>
+<td> the <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="type">GAsyncResult</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td> A <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the ID, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if unset, free with <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_get_daemon_state_async ()">
+<a name="pk-control-get-daemon-state-async"></a><h3>pk_control_get_daemon_state_async ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                pk_control_get_daemon_state_async   (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);</pre>
+<p>
+Gets the debugging state from the daemon.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
+<td> a <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="type">GCancellable</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
+<td> the function to run on completion
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td> the data to pass to <em class="parameter"><code>callback</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_get_daemon_state_finish ()">
+<a name="pk-control-get-daemon-state-finish"></a><h3>pk_control_get_daemon_state_finish ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             pk_control_get_daemon_state_finish  (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);</pre>
+<p>
+Gets the result from the asynchronous function.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>res</code></em> :</span></p></td>
+<td> the <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="type">GAsyncResult</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td> A <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the ID, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if unset, free with <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_set_proxy_async ()">
+<a name="pk-control-set-proxy-async"></a><h3>pk_control_set_proxy_async ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                pk_control_set_proxy_async          (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *proxy_http,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *proxy_ftp,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);</pre>
+<p>
+Set a proxy on the PK daemon</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>proxy_http</code></em> :</span></p></td>
+<td> a HTTP proxy string such as "username:password<em class="parameter"><code>server.lan</code></em>:8080"
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>proxy_ftp</code></em> :</span></p></td>
+<td> a FTP proxy string such as "server.lan:8080"
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
+<td> a <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="type">GCancellable</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
+<td> the function to run on completion
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td> the data to pass to <em class="parameter"><code>callback</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_set_proxy_finish ()">
+<a name="pk-control-set-proxy-finish"></a><h3>pk_control_set_proxy_finish ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            pk_control_set_proxy_finish         (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);</pre>
+<p>
+Gets the result from the asynchronous function.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>res</code></em> :</span></p></td>
+<td> the <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="type">GAsyncResult</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td> A <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if we set the proxy successfully
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_get_network_state_async ()">
+<a name="pk-control-get-network-state-async"></a><h3>pk_control_get_network_state_async ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                pk_control_get_network_state_async  (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);</pre>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
+<td>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
+<td>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_get_network_state_finish ()">
+<a name="pk-control-get-network-state-finish"></a><h3>pk_control_get_network_state_finish ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkNetworkEnum" title="enum PkNetworkEnum"><span class="returnvalue">PkNetworkEnum</span></a>       pk_control_get_network_state_finish (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);</pre>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>res</code></em> :</span></p></td>
+<td>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_get_time_since_action_async ()">
+<a name="pk-control-get-time-since-action-async"></a><h3>pk_control_get_time_since_action_async ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                pk_control_get_time_since_action_async
+                                                        (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a class="link" href="PackageKit-pk-enum.html#PkRoleEnum" title="enum PkRoleEnum"><span class="returnvalue">PkRoleEnum</span></a> role,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);</pre>
+<p>
+We may want to know how long it has been since we refreshed the cache or
+retrieved the update list.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>role</code></em> :</span></p></td>
+<td> the role enum, e.g. <code class="literal">PK_ROLE_ENUM_GET_UPDATES</code>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
+<td> a <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="type">GCancellable</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
+<td> the function to run on completion
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td> the data to pass to <em class="parameter"><code>callback</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_get_time_since_action_finish ()">
+<a name="pk-control-get-time-since-action-finish"></a><h3>pk_control_get_time_since_action_finish ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               pk_control_get_time_since_action_finish
+                                                        (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);</pre>
+<p>
+Gets the result from the asynchronous function.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>res</code></em> :</span></p></td>
+<td> the <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="type">GAsyncResult</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td> A <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the daemon serviced the request
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_get_transaction_list_async ()">
+<a name="pk-control-get-transaction-list-async"></a><h3>pk_control_get_transaction_list_async ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                pk_control_get_transaction_list_async
+                                                        (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);</pre>
+<p>
+Gets the transactions currently running in the daemon.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
+<td> a <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="type">GCancellable</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
+<td> the function to run on completion
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td> the data to pass to <em class="parameter"><code>callback</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_get_transaction_list_finish ()">
+<a name="pk-control-get-transaction-list-finish"></a><h3>pk_control_get_transaction_list_finish ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **            pk_control_get_transaction_list_finish
+                                                        (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);</pre>
+<p>
+Gets the result from the asynchronous function.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>res</code></em> :</span></p></td>
+<td> the <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="type">GAsyncResult</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td> A <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> A GStrv list of transaction ID's, free with <a href="http://library.gnome.org/devel/glib/unstable/glib-String-Utility-Functions.html#g-strfreev"><code class="function">g_strfreev()</code></a>
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_can_authorize_async ()">
+<a name="pk-control-can-authorize-async"></a><h3>pk_control_can_authorize_async ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                pk_control_can_authorize_async      (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *action_id,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);</pre>
+<p>
+We may want to know before we run a method if we are going to be denied,
+accepted or challenged for authentication.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>action_id</code></em> :</span></p></td>
+<td> The action ID, for instance "org.freedesktop.PackageKit.install-untrusted"
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
+<td> a <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="type">GCancellable</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
+<td> the function to run on completion
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td> the data to pass to <em class="parameter"><code>callback</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_can_authorize_finish ()">
+<a name="pk-control-can-authorize-finish"></a><h3>pk_control_can_authorize_finish ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkAuthorizeEnum" title="enum PkAuthorizeEnum"><span class="returnvalue">PkAuthorizeEnum</span></a>     pk_control_can_authorize_finish     (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);</pre>
+<p>
+Gets the result from the asynchronous function.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>res</code></em> :</span></p></td>
+<td> the <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="type">GAsyncResult</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td> A <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the <a class="link" href="PackageKit-pk-enum.html#PkAuthorizeEnum" title="enum PkAuthorizeEnum"><code class="literal">PkAuthorizeEnum</code></a> or <code class="literal">PK_AUTHORIZE_ENUM_UNKNOWN</code> if the method failed
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_get_properties_async ()">
+<a name="pk-control-get-properties-async"></a><h3>pk_control_get_properties_async ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                pk_control_get_properties_async     (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="returnvalue">GCancellable</span></a> *cancellable,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html#GAsyncReadyCallback"><span class="returnvalue">GAsyncReadyCallback</span></a> callback,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);</pre>
+<p>
+Gets global properties from the daemon.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
+<td> a <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="type">GCancellable</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
+<td> the function to run on completion
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td> the data to pass to <em class="parameter"><code>callback</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_control_get_properties_finish ()">
+<a name="pk-control-get-properties-finish"></a><h3>pk_control_get_properties_finish ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            pk_control_get_properties_finish    (<a class="link" href="PkControl.html" title="PkControl"><span class="returnvalue">PkControl</span></a> *control,
+                                                         <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="returnvalue">GAsyncResult</span></a> *res,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);</pre>
+<p>
+Gets the result from the asynchronous function.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>res</code></em> :</span></p></td>
+<td> the <a href="http://library.gnome.org/devel/gio/unstable/GAsyncResult.html"><span class="type">GAsyncResult</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td> A <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if we set the proxy successfully
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.2</p>
+</div>
+</div>
+<div class="refsect1" title="Property Details">
+<a name="PkControl.property-details"></a><h2>Property Details</h2>
+<div class="refsect2" title='The "backend-author" property'>
+<a name="PkControl--backend-author"></a><h3>The <code class="literal">"backend-author"</code> property</h3>
+<pre class="programlisting">  "backend-author"           <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p></p>
+<p>Default value: NULL</p>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title='The "backend-description" property'>
+<a name="PkControl--backend-description"></a><h3>The <code class="literal">"backend-description"</code> property</h3>
+<pre class="programlisting">  "backend-description"      <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p></p>
+<p>Default value: NULL</p>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title='The "backend-name" property'>
+<a name="PkControl--backend-name"></a><h3>The <code class="literal">"backend-name"</code> property</h3>
+<pre class="programlisting">  "backend-name"             <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p></p>
+<p>Default value: NULL</p>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title='The "connected" property'>
+<a name="PkControl--connected"></a><h3>The <code class="literal">"connected"</code> property</h3>
+<pre class="programlisting">  "connected"                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write</pre>
+<p></p>
+<p>Default value: FALSE</p>
+<p class="since">Since 0.5.3</p>
+</div>
+<hr>
+<div class="refsect2" title='The "distro-id" property'>
+<a name="PkControl--distro-id"></a><h3>The <code class="literal">"distro-id"</code> property</h3>
+<pre class="programlisting">  "distro-id"                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p></p>
+<p>Default value: NULL</p>
+<p class="since">Since 0.5.5</p>
+</div>
+<hr>
+<div class="refsect2" title='The "filters" property'>
+<a name="PkControl--filters"></a><h3>The <code class="literal">"filters"</code> property</h3>
+<pre class="programlisting">  "filters"                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a>               : Read / Write</pre>
+<p></p>
+<p>Default value: 0</p>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title='The "groups" property'>
+<a name="PkControl--groups"></a><h3>The <code class="literal">"groups"</code> property</h3>
+<pre class="programlisting">  "groups"                   <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a>               : Read / Write</pre>
+<p></p>
+<p>Default value: 0</p>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title='The "locked" property'>
+<a name="PkControl--locked"></a><h3>The <code class="literal">"locked"</code> property</h3>
+<pre class="programlisting">  "locked"                   <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write</pre>
+<p></p>
+<p>Default value: FALSE</p>
+<p class="since">Since 0.5.3</p>
+</div>
+<hr>
+<div class="refsect2" title='The "mime-types" property'>
+<a name="PkControl--mime-types"></a><h3>The <code class="literal">"mime-types"</code> property</h3>
+<pre class="programlisting">  "mime-types"               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p></p>
+<p>Default value: NULL</p>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title='The "network-state" property'>
+<a name="PkControl--network-state"></a><h3>The <code class="literal">"network-state"</code> property</h3>
+<pre class="programlisting">  "network-state"            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write</pre>
+<p></p>
+<p>Default value: 6</p>
+<p class="since">Since 0.5.3</p>
+</div>
+<hr>
+<div class="refsect2" title='The "roles" property'>
+<a name="PkControl--roles"></a><h3>The <code class="literal">"roles"</code> property</h3>
+<pre class="programlisting">  "roles"                    <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a>               : Read / Write</pre>
+<p></p>
+<p>Default value: 0</p>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title='The "version-major" property'>
+<a name="PkControl--version-major"></a><h3>The <code class="literal">"version-major"</code> property</h3>
+<pre class="programlisting">  "version-major"            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read</pre>
+<p></p>
+<p>Default value: 0</p>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title='The "version-micro" property'>
+<a name="PkControl--version-micro"></a><h3>The <code class="literal">"version-micro"</code> property</h3>
+<pre class="programlisting">  "version-micro"            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read</pre>
+<p></p>
+<p>Default value: 0</p>
+<p class="since">Since 0.5.2</p>
+</div>
+<hr>
+<div class="refsect2" title='The "version-minor" property'>
+<a name="PkControl--version-minor"></a><h3>The <code class="literal">"version-minor"</code> property</h3>
+<pre class="programlisting">  "version-minor"            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read</pre>
+<p></p>
+<p>Default value: 0</p>
+<p class="since">Since 0.5.2</p>
+</div>
+</div>
+<div class="refsect1" title="Signal Details">
+<a name="PkControl.signal-details"></a><h2>Signal Details</h2>
+<div class="refsect2" title='The "repo-list-changed" signal'>
+<a name="PkControl-repo-list-changed"></a><h3>The <code class="literal">"repo-list-changed"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> *control,
+                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>   user_data)      : Run Last</pre>
+<p>
+The ::repo-list-changed signal is emitted when the repo list may have
+changed and the control program may have to update some UI.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> the <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance that emitted the signal
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title='The "restart-schedule" signal'>
+<a name="PkControl-restart-schedule"></a><h3>The <code class="literal">"restart-schedule"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> *control,
+                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>   user_data)      : Run Last</pre>
+<p>
+The ::restart_schedule signal is emitted when the packagekitd service
+has been restarted because it has been upgraded.
+Client programs should reload themselves when it is convenient to
+do so, as old client tools may not be compatable with the new daemon.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> the <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance that emitted the signal
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title='The "transaction-list-changed" signal'>
+<a name="PkControl-transaction-list-changed"></a><h3>The <code class="literal">"transaction-list-changed"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> *control,
+                                                        <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Boxed-Types.html#GStrv"><span class="type">GStrv</span></a>     *arg1,
+                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>   user_data)      : Run Last</pre>
+<p>
+The ::transaction-list-changed signal is emitted when the list
+of transactions handled by the daemon is changed.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> the <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance that emitted the signal
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title='The "updates-changed" signal'>
+<a name="PkControl-updates-changed"></a><h3>The <code class="literal">"updates-changed"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> *control,
+                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>   user_data)      : Run Last</pre>
+<p>
+The ::updates-changed signal is emitted when the update list may have
+changed and the control program may have to update some UI.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>control</code></em> :</span></p></td>
+<td> the <a class="link" href="PkControl.html" title="PkControl"><span class="type">PkControl</span></a> instance that emitted the signal
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.13</div>
+</body>
+</html>

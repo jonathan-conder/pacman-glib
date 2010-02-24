@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>PkError</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="PackageKit Reference Manual">
+<link rel="up" href="libpackagekit-gobject.html" title="libpackagekit GObjects">
+<link rel="prev" href="PkDistroUpgrade.html" title="PkDistroUpgrade">
+<link rel="next" href="PkEulaRequired.html" title="PkEulaRequired">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="reference" href="specification.html" title="PackageKit Specification">
+<link rel="chapter" href="introduction.html" title="PackageKit Introduction">
+<link rel="chapter" href="concepts.html" title="Important Concepts">
+<link rel="chapter" href="backend-compiled.html" title="Compiled Backends">
+<link rel="chapter" href="backend-spawn.html" title="Spawned Backends">
+<link rel="reference" href="api-reference.html" title="D-Bus API Reference">
+<link rel="reference" href="libpackagekit-gobject.html" title="libpackagekit GObjects">
+<link rel="reference" href="libpackagekit-helpers.html" title="libpackagekit glib helpers">
+<link rel="reference" href="faq.html" title="Frequently asked questions">
+<link rel="chapter" href="developer-faq.html" title="Developer FAQ">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="PkDistroUpgrade.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="libpackagekit-gobject.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">PackageKit Reference Manual</th>
+<td><a accesskey="n" href="PkEulaRequired.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#PkError.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#PkError.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#PkError.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#PkError.properties" class="shortcut">Properties</a>
+</td></tr>
+</table>
+<div class="refentry" title="PkError">
+<a name="PkError"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="PkError.top_of_page"></a>PkError</span></h2>
+<p>PkError — ErrorCode object</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="PkError.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">                    <a class="link" href="PkError.html#PkErrorPrivate" title="PkErrorPrivate">PkErrorPrivate</a>;
+                    <a class="link" href="PkError.html#PkError-struct" title="PkError">PkError</a>;
+<a class="link" href="PkError.html" title="PkError"><span class="returnvalue">PkError</span></a> *           <a class="link" href="PkError.html#pk-error-new" title="pk_error_new ()">pk_error_new</a>                        (void);
+<a class="link" href="PackageKit-pk-enum.html#PkErrorEnum" title="enum PkErrorEnum"><span class="returnvalue">PkErrorEnum</span></a>         <a class="link" href="PkError.html#pk-error-get-code" title="pk_error_get_code ()">pk_error_get_code</a>                   (<a class="link" href="PkError.html" title="PkError"><span class="returnvalue">PkError</span></a> *error_code);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PkError.html#pk-error-get-details" title="pk_error_get_details ()">pk_error_get_details</a>                (<a class="link" href="PkError.html" title="PkError"><span class="returnvalue">PkError</span></a> *error_code);
+</pre>
+</div>
+<div class="refsect1" title="Object Hierarchy">
+<a name="PkError.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----PkSource
+         +----PkError
+</pre>
+</div>
+<div class="refsect1" title="Properties">
+<a name="PkError.properties"></a><h2>Properties</h2>
+<pre class="synopsis">
+  "<a class="link" href="PkError.html#PkError--code" title='The "code" property'>code</a>"                     <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write
+  "<a class="link" href="PkError.html#PkError--details" title='The "details" property'>details</a>"                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="PkError.description"></a><h2>Description</h2>
+<p>
+This GObject represents a error_code from a transaction.
+These objects represent single items of data from the transaction, and are
+often present in lists (<a class="link" href="PkResults.html" title="PkResults"><span class="type">PkResults</span></a>) or just refcounted in client programs.</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="PkError.details"></a><h2>Details</h2>
+<div class="refsect2" title="PkErrorPrivate">
+<a name="PkErrorPrivate"></a><h3>PkErrorPrivate</h3>
+<pre class="programlisting">typedef struct _PkErrorPrivate PkErrorPrivate;</pre>
+<p>
+Private <a class="link" href="PkError.html" title="PkError"><span class="type">PkError</span></a> data</p>
+</div>
+<hr>
+<div class="refsect2" title="PkError">
+<a name="PkError-struct"></a><h3>PkError</h3>
+<pre class="programlisting">typedef struct _PkError PkError;</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_error_new ()">
+<a name="pk-error-new"></a><h3>pk_error_new ()</h3>
+<pre class="programlisting"><a class="link" href="PkError.html" title="PkError"><span class="returnvalue">PkError</span></a> *           pk_error_new                        (void);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new PkError object.
+
+</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 0.5.5</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_error_get_code ()">
+<a name="pk-error-get-code"></a><h3>pk_error_get_code ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkErrorEnum" title="enum PkErrorEnum"><span class="returnvalue">PkErrorEnum</span></a>         pk_error_get_code                   (<a class="link" href="PkError.html" title="PkError"><span class="returnvalue">PkError</span></a> *error_code);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_code</code></em> :</span></p></td>
+<td>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.5</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_error_get_details ()">
+<a name="pk-error-get-details"></a><h3>pk_error_get_details ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_error_get_details                (<a class="link" href="PkError.html" title="PkError"><span class="returnvalue">PkError</span></a> *error_code);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_code</code></em> :</span></p></td>
+<td>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.5</p>
+</div>
+</div>
+<div class="refsect1" title="Property Details">
+<a name="PkError.property-details"></a><h2>Property Details</h2>
+<div class="refsect2" title='The "code" property'>
+<a name="PkError--code"></a><h3>The <code class="literal">"code"</code> property</h3>
+<pre class="programlisting">  "code"                     <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write</pre>
+<p></p>
+<p>Default value: 0</p>
+<p class="since">Since 0.5.5</p>
+</div>
+<hr>
+<div class="refsect2" title='The "details" property'>
+<a name="PkError--details"></a><h3>The <code class="literal">"details"</code> property</h3>
+<pre class="programlisting">  "details"                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p></p>
+<p>Default value: NULL</p>
+<p class="since">Since 0.5.5</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.13</div>
+</body>
+</html>

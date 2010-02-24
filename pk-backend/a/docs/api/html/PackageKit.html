@@ -1,0 +1,585 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>org.freedesktop.PackageKit</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="PackageKit Reference Manual">
+<link rel="up" href="api-reference.html" title="D-Bus API Reference">
+<link rel="prev" href="api-reference.html" title="D-Bus API Reference">
+<link rel="next" href="Transaction.html" title="org.freedesktop.PackageKit.Transaction">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="reference" href="specification.html" title="PackageKit Specification">
+<link rel="chapter" href="introduction.html" title="PackageKit Introduction">
+<link rel="chapter" href="concepts.html" title="Important Concepts">
+<link rel="chapter" href="backend-compiled.html" title="Compiled Backends">
+<link rel="chapter" href="backend-spawn.html" title="Spawned Backends">
+<link rel="reference" href="api-reference.html" title="D-Bus API Reference">
+<link rel="reference" href="libpackagekit-gobject.html" title="libpackagekit GObjects">
+<link rel="reference" href="libpackagekit-helpers.html" title="libpackagekit glib helpers">
+<link rel="reference" href="faq.html" title="Frequently asked questions">
+<link rel="chapter" href="developer-faq.html" title="Developer FAQ">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="api-reference.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="api-reference.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">PackageKit Reference Manual</th>
+<td><a accesskey="n" href="Transaction.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#PackageKit.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#PackageKit.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#PackageKit.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+                   | 
+                  <a href="#PackageKit.properties" class="shortcut">Properties</a>
+                   | 
+                  <a href="#PackageKit.signals" class="shortcut">Signals</a>
+</td></tr>
+</table>
+<div class="refentry" title="org.freedesktop.PackageKit">
+<a name="PackageKit"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle">org.freedesktop.PackageKit</span></h2>
+<p>org.freedesktop.PackageKit — PackageKit interface</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Methods">
+<h2>Methods</h2>
+<pre class="synopsis"><a class="link" href="PackageKit.html#PackageKit.CanAuthorize">CanAuthorize</a>       (in  's'  action_id,
+                    out 's'  result)
+<a class="link" href="PackageKit.html#PackageKit.GetTid">GetTid</a>             (out 's'  tid)
+<a class="link" href="PackageKit.html#PackageKit.GetTimeSinceAction">GetTimeSinceAction</a> (in  's'  role,
+                    out 'u'  seconds)
+<a class="link" href="PackageKit.html#PackageKit.GetTransactionList">GetTransactionList</a> (out 'as' transactions)
+<a class="link" href="PackageKit.html#PackageKit.StateHasChanged">StateHasChanged</a>    (in  's'  reason)
+<a class="link" href="PackageKit.html#PackageKit.SuggestDaemonQuit">SuggestDaemonQuit</a>  ()
+<a class="link" href="PackageKit.html#PackageKit.GetDaemonState">GetDaemonState</a>     (out 's'  state)
+<a class="link" href="PackageKit.html#PackageKit.SetProxy">SetProxy</a>           (in  's'  proxy_http,
+                    in  's'  proxy_ftp)
+</pre>
+</div>
+<div class="refsect1" title="Signals">
+<a name="id2912822"></a><h2>Signals</h2>
+<pre class="synopsis"><a class="link" href="PackageKit.html#PackageKit::TransactionListChanged">TransactionListChanged</a> ('as' transactions)
+<a class="link" href="PackageKit.html#PackageKit::RestartSchedule">RestartSchedule</a>        ()
+<a class="link" href="PackageKit.html#PackageKit::RepoListChanged">RepoListChanged</a>        ()
+<a class="link" href="PackageKit.html#PackageKit::UpdatesChanged">UpdatesChanged</a>         ()
+<a class="link" href="PackageKit.html#PackageKit::Changed">Changed</a>                ()
+</pre>
+</div>
+<div class="refsect1" title="Implemented Interfaces">
+<a name="id2929740"></a><h2>Implemented Interfaces</h2>
+<p>org.freedesktop.PackageKit implements
+    org.freedesktop.DBus.Introspectable,
+    org.freedesktop.DBus.Properties
+    </p>
+</div>
+<div class="refsect1" title="Properties">
+<a name="id2929758"></a><h2>Properties</h2>
+<pre class="synopsis"><a class="link" href="PackageKit.html#PackageKit:VersionMajor">'VersionMajor'</a>       read      'u'
+<a class="link" href="PackageKit.html#PackageKit:VersionMinor">'VersionMinor'</a>       read      'u'
+<a class="link" href="PackageKit.html#PackageKit:VersionMicro">'VersionMicro'</a>       read      'u'
+<a class="link" href="PackageKit.html#PackageKit:BackendName">'BackendName'</a>        read      's'
+<a class="link" href="PackageKit.html#PackageKit:BackendDescription">'BackendDescription'</a> read      's'
+<a class="link" href="PackageKit.html#PackageKit:BackendAuthor">'BackendAuthor'</a>      read      's'
+<a class="link" href="PackageKit.html#PackageKit:Roles">'Roles'</a>              read      's'
+<a class="link" href="PackageKit.html#PackageKit:Groups">'Groups'</a>             read      's'
+<a class="link" href="PackageKit.html#PackageKit:Filters">'Filters'</a>            read      's'
+<a class="link" href="PackageKit.html#PackageKit:MimeTypes">'MimeTypes'</a>          read      's'
+<a class="link" href="PackageKit.html#PackageKit:Locked">'Locked'</a>             read      'b'
+<a class="link" href="PackageKit.html#PackageKit:NetworkState">'NetworkState'</a>       read      's'
+<a class="link" href="PackageKit.html#PackageKit:DistroId">'DistroId'</a>           read      's'
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="id2948751"></a><h2>Description</h2>
+<p>
+      
+        </p>
+<p>
+          The root interface is used for interacting with the daemon.
+        </p>
+<p>
+      
+    </p>
+</div>
+<div class="refsect1" title="Details">
+<a name="id2959055"></a><h2>Details</h2>
+<div class="refsect2" title="CanAuthorize ()">
+<a name="id2959062"></a><h3>
+<a name="PackageKit.CanAuthorize"></a>CanAuthorize ()</h3>
+<pre class="programlisting">CanAuthorize (in  's' action_id,
+              out 's' result)</pre>
+</div>
+<p>
+            Allows a client to find out if it would be allowed to authorize an action.
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>action_id</code></em>:</span></p></td>
+<td>
+            
+              The action ID, e.g. org.freedesktop.packagekit.system-network-proxy-configure
+            
+          </td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>result</code></em>:</span></p></td>
+<td>
+            
+              The result, either yes, no or interactive.
+            
+          </td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<div class="refsect2" title="GetTid ()">
+<a name="id2959122"></a><h3>
+<a name="PackageKit.GetTid"></a>GetTid ()</h3>
+<pre class="programlisting">GetTid (out 's' tid)</pre>
+</div>
+<p>
+            Gets a new transaction ID from the daemon
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>tid</code></em>:</span></p></td>
+<td>
+            
+              The tid, e.g. 45_dafeca_checkpoint32
+            
+          </td>
+</tr></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title="GetTimeSinceAction ()">
+<a name="id2916936"></a><h3>
+<a name="PackageKit.GetTimeSinceAction"></a>GetTimeSinceAction ()</h3>
+<pre class="programlisting">GetTimeSinceAction (in  's' role,
+                    out 'u' seconds)</pre>
+</div>
+<p>
+            This method allows us to query how long since an action has successfully completed.
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>role</code></em>:</span></p></td>
+<td>
+            
+              The role, e.g. update-system
+            
+          </td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>seconds</code></em>:</span></p></td>
+<td>
+            
+              The amount of time in seconds
+            
+          </td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<div class="refsect2" title="GetTransactionList ()">
+<a name="id2959648"></a><h3>
+<a name="PackageKit.GetTransactionList"></a>GetTransactionList ()</h3>
+<pre class="programlisting">GetTransactionList (out 'as' transactions)</pre>
+</div>
+<p>
+            Gets the transaction list of any transactions that are in progress
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>transactions</code></em>:</span></p></td>
+<td>
+            
+              A list of transaction ID's
+            
+          </td>
+</tr></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title="StateHasChanged ()">
+<a name="id2959692"></a><h3>
+<a name="PackageKit.StateHasChanged"></a>StateHasChanged ()</h3>
+<pre class="programlisting">StateHasChanged (in  's' reason)</pre>
+</div>
+<p>
+            This method suggests to PackageKit that the package backend state may have changed.
+            This allows plugins to the native package manager to suggest that PackageKit drops
+            it's caches.
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>reason</code></em>:</span></p></td>
+<td>
+            
+              The reason of the state change. Valid reasons are resume or
+              posttrans.
+              Resume is given a lower priority than posttrans.
+            
+          </td>
+</tr></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title="SuggestDaemonQuit ()">
+<a name="id2962840"></a><h3>
+<a name="PackageKit.SuggestDaemonQuit"></a>SuggestDaemonQuit ()</h3>
+<pre class="programlisting">SuggestDaemonQuit ()</pre>
+</div>
+<p>
+            Suggests to the daemon that it should quit as soon as possible, for instance if a native
+            package management tool is waiting to be used.
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title="GetDaemonState ()">
+<a name="id2962874"></a><h3>
+<a name="PackageKit.GetDaemonState"></a>GetDaemonState ()</h3>
+<pre class="programlisting">GetDaemonState (out 's' state)</pre>
+</div>
+<p>
+            Gets the debugging state from the daemon.
+            No secure state will be shown, and all information is for reference only.
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>state</code></em>:</span></p></td>
+<td>
+            
+              The state of the dameon at this specific moment.
+            
+          </td>
+</tr></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title="SetProxy ()">
+<a name="id2943973"></a><h3>
+<a name="PackageKit.SetProxy"></a>SetProxy ()</h3>
+<pre class="programlisting">SetProxy (in  's' proxy_http,
+          in  's' proxy_ftp)</pre>
+</div>
+<p>
+            Sets the proxy used by the dameon.
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>proxy_http</code></em>:</span></p></td>
+<td>
+            
+              The HTTP proxy, e.g. username:password@server:port.
+            
+          </td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>proxy_ftp</code></em>:</span></p></td>
+<td>
+            
+              The FTP proxy, e.g. username:password@server:port.
+            
+          </td>
+</tr>
+</tbody>
+</table></div>
+<p class="permission">Callers need the org.freedesktop.packagekit.set-proxy</p>
+</div>
+<div class="refsect1" title="Signal Details">
+<a name="id2944039"></a><h2>Signal Details</h2>
+<div class="refsect2" title="The TransactionListChanged signal">
+<a name="id2944047"></a><h3>
+<a name="PackageKit::TransactionListChanged"></a>The TransactionListChanged signal</h3>
+<pre class="programlisting">TransactionListChanged ('as' transactions)</pre>
+</div>
+<p>
+            The transaction list has changed, because either a transaction has finished or a new
+            transaction created.
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>transactions</code></em>:</span></p></td>
+<td>
+            
+              A list of transaction ID's.
+            
+          </td>
+</tr></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title="The RestartSchedule signal">
+<a name="id2928256"></a><h3>
+<a name="PackageKit::RestartSchedule"></a>The RestartSchedule signal</h3>
+<pre class="programlisting">RestartSchedule ()</pre>
+</div>
+<p>
+            A system restart has been sceduled
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title="The RepoListChanged signal">
+<a name="id2928287"></a><h3>
+<a name="PackageKit::RepoListChanged"></a>The RepoListChanged signal</h3>
+<pre class="programlisting">RepoListChanged ()</pre>
+</div>
+<p>
+            This signal is emitted when the repository list has changed
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title="The UpdatesChanged signal">
+<a name="id2933360"></a><h3>
+<a name="PackageKit::UpdatesChanged"></a>The UpdatesChanged signal</h3>
+<pre class="programlisting">UpdatesChanged ()</pre>
+</div>
+<p>
+            This signal is emitted when the number of updates has changed
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title="The Changed signal">
+<a name="id2933391"></a><h3>
+<a name="PackageKit::Changed"></a>The Changed signal</h3>
+<pre class="programlisting">Changed ()</pre>
+</div>
+<p>
+            This signal is emitted when a property on the interface changes.
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+</div>
+<div class="refsect1" title="Property Details">
+<a name="id2933425"></a><h2>Property Details</h2>
+<div class="refsect2" title='The "VersionMajor" property'>
+<a name="id2933433"></a><h3>
+<a name="PackageKit:VersionMajor"></a>The "VersionMajor" property</h3>
+<pre class="programlisting">'VersionMajor'  read      'u'
+</pre>
+</div>
+<p>
+            The major version number.
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title='The "VersionMinor" property'>
+<a name="id2948885"></a><h3>
+<a name="PackageKit:VersionMinor"></a>The "VersionMinor" property</h3>
+<pre class="programlisting">'VersionMinor'  read      'u'
+</pre>
+</div>
+<p>
+            The minor version number.
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title='The "VersionMicro" property'>
+<a name="id2948916"></a><h3>
+<a name="PackageKit:VersionMicro"></a>The "VersionMicro" property</h3>
+<pre class="programlisting">'VersionMicro'  read      'u'
+</pre>
+</div>
+<p>
+            The micro version number.
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title='The "BackendName" property'>
+<a name="id2948947"></a><h3>
+<a name="PackageKit:BackendName"></a>The "BackendName" property</h3>
+<pre class="programlisting">'BackendName'  read      's'
+</pre>
+</div>
+<p>
+            The backend name, e.g. "yum".
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title='The "BackendDescription" property'>
+<a name="id2955834"></a><h3>
+<a name="PackageKit:BackendDescription"></a>The "BackendDescription" property</h3>
+<pre class="programlisting">'BackendDescription'  read      's'
+</pre>
+</div>
+<p>
+            The backend description, e.g. "Yellow Dog Update Modifier".
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title='The "BackendAuthor" property'>
+<a name="id2955867"></a><h3>
+<a name="PackageKit:BackendAuthor"></a>The "BackendAuthor" property</h3>
+<pre class="programlisting">'BackendAuthor'  read      's'
+</pre>
+</div>
+<p>
+            The backend author, e.g. "Joe Bloggs &lt;joe&amp;blogs.com&gt;".
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title='The "Roles" property'>
+<a name="id2952254"></a><h3>
+<a name="PackageKit:Roles"></a>The "Roles" property</h3>
+<pre class="programlisting">'Roles'  read      's'
+</pre>
+</div>
+<p>
+            The roles the backend supports, e.g. "search-name;refresh-cache".
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title='The "Groups" property'>
+<a name="id2952285"></a><h3>
+<a name="PackageKit:Groups"></a>The "Groups" property</h3>
+<pre class="programlisting">'Groups'  read      's'
+</pre>
+</div>
+<p>
+            The groups the backend supports, e.g. "accessories;games".
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title='The "Filters" property'>
+<a name="id2952317"></a><h3>
+<a name="PackageKit:Filters"></a>The "Filters" property</h3>
+<pre class="programlisting">'Filters'  read      's'
+</pre>
+</div>
+<p>
+            The filters the backend supports, e.g. "installed;newest".
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title='The "MimeTypes" property'>
+<a name="id2887791"></a><h3>
+<a name="PackageKit:MimeTypes"></a>The "MimeTypes" property</h3>
+<pre class="programlisting">'MimeTypes'  read      's'
+</pre>
+</div>
+<p>
+            The mime-types the backend supports, e.g. "application/x-rpm;application/x-deb".
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title='The "Locked" property'>
+<a name="id2887823"></a><h3>
+<a name="PackageKit:Locked"></a>The "Locked" property</h3>
+<pre class="programlisting">'Locked'  read      'b'
+</pre>
+</div>
+<p>
+            Set when the backend is locked and native tools would fail.
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title='The "NetworkState" property'>
+<a name="id2887854"></a><h3>
+<a name="PackageKit:NetworkState"></a>The "NetworkState" property</h3>
+<pre class="programlisting">'NetworkState'  read      's'
+</pre>
+</div>
+<p>
+            Gets the network state from the daemon. This is provided as some clients may not want
+            to use NetworkManager if the system daemon is configured to use something else.
+          </p>
+<p>
+            If the system is managed using NetworkManager then the following
+            states are supported:
+            unknown, offline, online,
+            wifi, mobile or wired.
+            If the system is configured for legacy UNIX network fallback, or NetworkManager
+            is not running then the folowing states are supported:
+            unknown, offline or online.
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+<hr>
+<div class="refsect2" title='The "DistroId" property'>
+<a name="id2960892"></a><h3>
+<a name="PackageKit:DistroId"></a>The "DistroId" property</h3>
+<pre class="programlisting">'DistroId'  read      's'
+</pre>
+</div>
+<p>
+            The distribution identification, in the
+            distro;version;arch form e.g.
+            "debian;squeeze/sid;x86_64".
+          </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.13</div>
+</body>
+</html>

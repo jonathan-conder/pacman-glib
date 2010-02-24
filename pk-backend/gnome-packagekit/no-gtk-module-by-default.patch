@@ -1,0 +1,12 @@
+diff -ru a/data/gnome-packagekit.schemas.in b/data/gnome-packagekit.schemas.in
+--- a/data/gnome-packagekit.schemas.in	2010-01-28 05:29:15.000000000 +1300
++++ b/data/gnome-packagekit.schemas.in	2010-02-23 01:37:03.552100822 +1300
+@@ -540,7 +540,7 @@
+       <applyto>/apps/gnome_settings_daemon/gtk-modules/pk-gtk-module</applyto>
+       <owner>gnome-packagekit</owner>
+       <type>bool</type>
+-      <default>true</default>
++      <default>false</default>
+       <locale name="C">
+         <short>GTK+ module for font installation</short>
+         <long>This key determines if applications should be able to prompt for fonts</long>

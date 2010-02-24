@@ -1,0 +1,52 @@
+<!-- ##### SECTION Title ##### -->
+pk-package-sack-sync
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION pk_package_sack_resolve ##### -->
+<para>
+
+</para>
+
+@package_sack: 
+@cancellable: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_package_sack_get_details ##### -->
+<para>
+
+</para>
+
+@package_sack: 
+@cancellable: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_package_sack_get_update_detail ##### -->
+<para>
+
+</para>
+
+@package_sack: 
+@cancellable: 
+@error: 
+@Returns: 
+
+

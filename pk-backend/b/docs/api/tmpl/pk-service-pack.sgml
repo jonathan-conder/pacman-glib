@@ -1,0 +1,159 @@
+<!-- ##### SECTION Title ##### -->
+PkServicePack
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO PK_SERVICE_PACK_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PK_SERVICE_PACK_TYPE_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PK_SERVICE_PACK_FILE_EXTENSION ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### ENUM PkServicePackError ##### -->
+<para>
+
+</para>
+
+@PK_SERVICE_PACK_ERROR_FAILED_SETUP: 
+@PK_SERVICE_PACK_ERROR_FAILED_DOWNLOAD: 
+@PK_SERVICE_PACK_ERROR_FAILED_EXTRACTION: 
+@PK_SERVICE_PACK_ERROR_FAILED_CREATE: 
+@PK_SERVICE_PACK_ERROR_NOTHING_TO_DO: 
+@PK_SERVICE_PACK_ERROR_NOT_COMPATIBLE: 
+
+<!-- ##### STRUCT PkServicePackPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT PkServicePack ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION pk_service_pack_error_quark ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_service_pack_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_service_pack_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_service_pack_test ##### -->
+<para>
+
+</para>
+
+@user_data: 
+
+
+<!-- ##### FUNCTION pk_service_pack_check_valid ##### -->
+<para>
+
+</para>
+
+@pack: 
+@filename: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_service_pack_set_temp_directory ##### -->
+<para>
+
+</para>
+
+@pack: 
+@directory: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_service_pack_generic_finish ##### -->
+<para>
+
+</para>
+
+@pack: 
+@res: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION pk_service_pack_create_for_package_ids_async ##### -->
+<para>
+
+</para>
+
+@pack: 
+@filename: 
+@package_ids: 
+@package_ids_exclude: 
+@cancellable: 
+@progress_callback: 
+@progress_user_data: 
+@callback: 
+@user_data: 
+
+
+<!-- ##### FUNCTION pk_service_pack_create_for_updates_async ##### -->
+<para>
+
+</para>
+
+@pack: 
+@filename: 
+@package_ids_exclude: 
+@cancellable: 
+@progress_callback: 
+@progress_user_data: 
+@callback: 
+@user_data: 
+
+

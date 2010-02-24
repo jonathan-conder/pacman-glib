@@ -1,0 +1,64 @@
+<!-- ##### SECTION Title ##### -->
+PkCategory
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT PkCategoryPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT PkCategory ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG PkCategory:cat-id ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG PkCategory:icon ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG PkCategory:name ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG PkCategory:parent-id ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG PkCategory:summary ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION pk_category_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

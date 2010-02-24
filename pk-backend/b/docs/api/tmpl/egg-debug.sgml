@@ -1,0 +1,120 @@
+<!-- ##### SECTION Title ##### -->
+egg-debug
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO egg_debug ##### -->
+<para>
+
+</para>
+
+@...: 
+
+
+<!-- ##### MACRO egg_warning ##### -->
+<para>
+
+</para>
+
+@...: 
+
+
+<!-- ##### MACRO egg_error ##### -->
+<para>
+
+</para>
+
+@...: 
+
+
+<!-- ##### FUNCTION egg_debug_init ##### -->
+<para>
+
+</para>
+
+@argc: 
+@argv: 
+@Returns: 
+
+
+<!-- ##### FUNCTION egg_debug_get_option_group ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION egg_debug_is_verbose ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION egg_debug_backtrace ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION egg_debug_set_log_filename ##### -->
+<para>
+
+</para>
+
+@filename: 
+
+
+<!-- ##### FUNCTION egg_debug_real ##### -->
+<para>
+
+</para>
+
+@func: 
+@file: 
+@line: 
+@format: 
+@Varargs: 
+
+
+<!-- ##### FUNCTION egg_warning_real ##### -->
+<para>
+
+</para>
+
+@func: 
+@file: 
+@line: 
+@format: 
+@Varargs: 
+
+
+<!-- ##### FUNCTION egg_error_real ##### -->
+<para>
+
+</para>
+
+@func: 
+@file: 
+@line: 
+@format: 
+@Varargs: 
+
+

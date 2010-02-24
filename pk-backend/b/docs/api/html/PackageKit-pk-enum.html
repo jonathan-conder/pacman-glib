@@ -1,0 +1,1970 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>pk-enum</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="PackageKit Reference Manual">
+<link rel="up" href="libpackagekit-helpers.html" title="libpackagekit glib helpers">
+<link rel="prev" href="PackageKit-pk-control-sync.html" title="pk-control-sync">
+<link rel="next" href="PackageKit-pk-package-ids.html" title="pk-package-ids">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="reference" href="specification.html" title="PackageKit Specification">
+<link rel="chapter" href="introduction.html" title="PackageKit Introduction">
+<link rel="chapter" href="concepts.html" title="Important Concepts">
+<link rel="chapter" href="backend-compiled.html" title="Compiled Backends">
+<link rel="chapter" href="backend-spawn.html" title="Spawned Backends">
+<link rel="reference" href="api-reference.html" title="D-Bus API Reference">
+<link rel="reference" href="libpackagekit-gobject.html" title="libpackagekit GObjects">
+<link rel="reference" href="libpackagekit-helpers.html" title="libpackagekit glib helpers">
+<link rel="reference" href="faq.html" title="Frequently asked questions">
+<link rel="chapter" href="developer-faq.html" title="Developer FAQ">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="PackageKit-pk-control-sync.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="libpackagekit-helpers.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">PackageKit Reference Manual</th>
+<td><a accesskey="n" href="PackageKit-pk-package-ids.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#PackageKit-pk-enum.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#PackageKit-pk-enum.description" class="shortcut">Description</a>
+</td></tr>
+</table>
+<div class="refentry" title="pk-enum">
+<a name="PackageKit-pk-enum"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="PackageKit-pk-enum.top_of_page"></a>pk-enum</span></h2>
+<p>pk-enum — Functions for converting strings to enum and vice-versa</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="PackageKit-pk-enum.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">#define             <a class="link" href="PackageKit-pk-enum.html#pk-sig-type-enum-from-text" title="pk_sig_type_enum_from_text">pk_sig_type_enum_from_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-sig-type-enum-to-text" title="pk_sig_type_enum_to_text">pk_sig_type_enum_to_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-distro-upgrade-enum-from-text" title="pk_distro_upgrade_enum_from_text">pk_distro_upgrade_enum_from_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-distro-upgrade-enum-to-text" title="pk_distro_upgrade_enum_to_text">pk_distro_upgrade_enum_to_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-provides-enum-from-text" title="pk_provides_enum_from_text">pk_provides_enum_from_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-provides-enum-to-text" title="pk_provides_enum_to_text">pk_provides_enum_to_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-info-enum-from-text" title="pk_info_enum_from_text">pk_info_enum_from_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-info-enum-to-text" title="pk_info_enum_to_text">pk_info_enum_to_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-exit-enum-from-text" title="pk_exit_enum_from_text">pk_exit_enum_from_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-exit-enum-to-text" title="pk_exit_enum_to_text">pk_exit_enum_to_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-network-enum-from-text" title="pk_network_enum_from_text">pk_network_enum_from_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-network-enum-to-text" title="pk_network_enum_to_text">pk_network_enum_to_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-status-enum-from-text" title="pk_status_enum_from_text">pk_status_enum_from_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-status-enum-to-text" title="pk_status_enum_to_text">pk_status_enum_to_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-role-enum-from-text" title="pk_role_enum_from_text">pk_role_enum_from_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-role-enum-to-text" title="pk_role_enum_to_text">pk_role_enum_to_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-error-enum-from-text" title="pk_error_enum_from_text">pk_error_enum_from_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-error-enum-to-text" title="pk_error_enum_to_text">pk_error_enum_to_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-restart-enum-from-text" title="pk_restart_enum_from_text">pk_restart_enum_from_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-restart-enum-to-text" title="pk_restart_enum_to_text">pk_restart_enum_to_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-message-enum-from-text" title="pk_message_enum_from_text">pk_message_enum_from_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-message-enum-to-text" title="pk_message_enum_to_text">pk_message_enum_to_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-group-enum-from-text" title="pk_group_enum_from_text">pk_group_enum_from_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-group-enum-to-text" title="pk_group_enum_to_text">pk_group_enum_to_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-update-state-enum-from-text" title="pk_update_state_enum_from_text">pk_update_state_enum_from_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-update-state-enum-to-text" title="pk_update_state_enum_to_text">pk_update_state_enum_to_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-filter-enum-from-text" title="pk_filter_enum_from_text">pk_filter_enum_from_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-filter-enum-to-text" title="pk_filter_enum_to_text">pk_filter_enum_to_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-license-enum-from-text" title="pk_license_enum_from_text">pk_license_enum_from_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-license-enum-to-text" title="pk_license_enum_to_text">pk_license_enum_to_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-media-type-enum-from-text" title="pk_media_type_enum_from_text">pk_media_type_enum_from_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-media-type-enum-to-text" title="pk_media_type_enum_to_text">pk_media_type_enum_to_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-authorize-type-enum-from-text" title="pk_authorize_type_enum_from_text">pk_authorize_type_enum_from_text</a>
+#define             <a class="link" href="PackageKit-pk-enum.html#pk-authorize-type-enum-to-text" title="pk_authorize_type_enum_to_text">pk_authorize_type_enum_to_text</a>
+                    <a class="link" href="PackageKit-pk-enum.html#PkEnumMatch" title="PkEnumMatch">PkEnumMatch</a>;
+enum                <a class="link" href="PackageKit-pk-enum.html#PkRoleEnum" title="enum PkRoleEnum">PkRoleEnum</a>;
+enum                <a class="link" href="PackageKit-pk-enum.html#PkStatusEnum" title="enum PkStatusEnum">PkStatusEnum</a>;
+enum                <a class="link" href="PackageKit-pk-enum.html#PkExitEnum" title="enum PkExitEnum">PkExitEnum</a>;
+enum                <a class="link" href="PackageKit-pk-enum.html#PkNetworkEnum" title="enum PkNetworkEnum">PkNetworkEnum</a>;
+enum                <a class="link" href="PackageKit-pk-enum.html#PkFilterEnum" title="enum PkFilterEnum">PkFilterEnum</a>;
+enum                <a class="link" href="PackageKit-pk-enum.html#PkRestartEnum" title="enum PkRestartEnum">PkRestartEnum</a>;
+enum                <a class="link" href="PackageKit-pk-enum.html#PkMessageEnum" title="enum PkMessageEnum">PkMessageEnum</a>;
+enum                <a class="link" href="PackageKit-pk-enum.html#PkErrorEnum" title="enum PkErrorEnum">PkErrorEnum</a>;
+enum                <a class="link" href="PackageKit-pk-enum.html#PkGroupEnum" title="enum PkGroupEnum">PkGroupEnum</a>;
+enum                <a class="link" href="PackageKit-pk-enum.html#PkUpdateStateEnum" title="enum PkUpdateStateEnum">PkUpdateStateEnum</a>;
+enum                <a class="link" href="PackageKit-pk-enum.html#PkInfoEnum" title="enum PkInfoEnum">PkInfoEnum</a>;
+enum                <a class="link" href="PackageKit-pk-enum.html#PkDistroUpgradeEnum" title="enum PkDistroUpgradeEnum">PkDistroUpgradeEnum</a>;
+enum                <a class="link" href="PackageKit-pk-enum.html#PkSigTypeEnum" title="enum PkSigTypeEnum">PkSigTypeEnum</a>;
+enum                <a class="link" href="PackageKit-pk-enum.html#PkProvidesEnum" title="enum PkProvidesEnum">PkProvidesEnum</a>;
+enum                <a class="link" href="PackageKit-pk-enum.html#PkLicenseEnum" title="enum PkLicenseEnum">PkLicenseEnum</a>;
+enum                <a class="link" href="PackageKit-pk-enum.html#PkMediaTypeEnum" title="enum PkMediaTypeEnum">PkMediaTypeEnum</a>;
+enum                <a class="link" href="PackageKit-pk-enum.html#PkAuthorizeEnum" title="enum PkAuthorizeEnum">PkAuthorizeEnum</a>;
+<span class="returnvalue">void</span>                <a class="link" href="PackageKit-pk-enum.html#pk-enum-test" title="pk_enum_test ()">pk_enum_test</a>                        (<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="PackageKit-pk-enum.html#pk-enum-find-value" title="pk_enum_find_value ()">pk_enum_find_value</a>                  (const <a class="link" href="PackageKit-pk-enum.html#PkEnumMatch" title="PkEnumMatch"><span class="returnvalue">PkEnumMatch</span></a> *table,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *string);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-enum-find-string" title="pk_enum_find_string ()">pk_enum_find_string</a>                 (const <a class="link" href="PackageKit-pk-enum.html#PkEnumMatch" title="PkEnumMatch"><span class="returnvalue">PkEnumMatch</span></a> *table,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a> value);
+<a class="link" href="PackageKit-pk-enum.html#PkSigTypeEnum" title="enum PkSigTypeEnum"><span class="returnvalue">PkSigTypeEnum</span></a>       <a class="link" href="PackageKit-pk-enum.html#pk-sig-type-enum-from-string" title="pk_sig_type_enum_from_string ()">pk_sig_type_enum_from_string</a>        (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *sig_type);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-sig-type-enum-to-string" title="pk_sig_type_enum_to_string ()">pk_sig_type_enum_to_string</a>          (<a class="link" href="PackageKit-pk-enum.html#PkSigTypeEnum" title="enum PkSigTypeEnum"><span class="returnvalue">PkSigTypeEnum</span></a> sig_type);
+<a class="link" href="PackageKit-pk-enum.html#PkInfoEnum" title="enum PkInfoEnum"><span class="returnvalue">PkInfoEnum</span></a>          <a class="link" href="PackageKit-pk-enum.html#pk-info-enum-from-string" title="pk_info_enum_from_string ()">pk_info_enum_from_string</a>            (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *info);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-info-enum-to-string" title="pk_info_enum_to_string ()">pk_info_enum_to_string</a>              (<a class="link" href="PackageKit-pk-enum.html#PkInfoEnum" title="enum PkInfoEnum"><span class="returnvalue">PkInfoEnum</span></a> info);
+<a class="link" href="PackageKit-pk-enum.html#PkUpdateStateEnum" title="enum PkUpdateStateEnum"><span class="returnvalue">PkUpdateStateEnum</span></a>   <a class="link" href="PackageKit-pk-enum.html#pk-update-state-enum-from-string" title="pk_update_state_enum_from_string ()">pk_update_state_enum_from_string</a>    (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *update_state);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-update-state-enum-to-string" title="pk_update_state_enum_to_string ()">pk_update_state_enum_to_string</a>      (<a class="link" href="PackageKit-pk-enum.html#PkUpdateStateEnum" title="enum PkUpdateStateEnum"><span class="returnvalue">PkUpdateStateEnum</span></a> update_state);
+<a class="link" href="PackageKit-pk-enum.html#PkExitEnum" title="enum PkExitEnum"><span class="returnvalue">PkExitEnum</span></a>          <a class="link" href="PackageKit-pk-enum.html#pk-exit-enum-from-string" title="pk_exit_enum_from_string ()">pk_exit_enum_from_string</a>            (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *exit);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-exit-enum-to-string" title="pk_exit_enum_to_string ()">pk_exit_enum_to_string</a>              (<a class="link" href="PackageKit-pk-enum.html#PkExitEnum" title="enum PkExitEnum"><span class="returnvalue">PkExitEnum</span></a> exit);
+<a class="link" href="PackageKit-pk-enum.html#PkNetworkEnum" title="enum PkNetworkEnum"><span class="returnvalue">PkNetworkEnum</span></a>       <a class="link" href="PackageKit-pk-enum.html#pk-network-enum-from-string" title="pk_network_enum_from_string ()">pk_network_enum_from_string</a>         (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *network);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-network-enum-to-string" title="pk_network_enum_to_string ()">pk_network_enum_to_string</a>           (<a class="link" href="PackageKit-pk-enum.html#PkNetworkEnum" title="enum PkNetworkEnum"><span class="returnvalue">PkNetworkEnum</span></a> network);
+<a class="link" href="PackageKit-pk-enum.html#PkStatusEnum" title="enum PkStatusEnum"><span class="returnvalue">PkStatusEnum</span></a>        <a class="link" href="PackageKit-pk-enum.html#pk-status-enum-from-string" title="pk_status_enum_from_string ()">pk_status_enum_from_string</a>          (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *status);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-status-enum-to-string" title="pk_status_enum_to_string ()">pk_status_enum_to_string</a>            (<a class="link" href="PackageKit-pk-enum.html#PkStatusEnum" title="enum PkStatusEnum"><span class="returnvalue">PkStatusEnum</span></a> status);
+<a class="link" href="PackageKit-pk-enum.html#PkRoleEnum" title="enum PkRoleEnum"><span class="returnvalue">PkRoleEnum</span></a>          <a class="link" href="PackageKit-pk-enum.html#pk-role-enum-from-string" title="pk_role_enum_from_string ()">pk_role_enum_from_string</a>            (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *role);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-role-enum-to-string" title="pk_role_enum_to_string ()">pk_role_enum_to_string</a>              (<a class="link" href="PackageKit-pk-enum.html#PkRoleEnum" title="enum PkRoleEnum"><span class="returnvalue">PkRoleEnum</span></a> role);
+<a class="link" href="PackageKit-pk-enum.html#PkErrorEnum" title="enum PkErrorEnum"><span class="returnvalue">PkErrorEnum</span></a>         <a class="link" href="PackageKit-pk-enum.html#pk-error-enum-from-string" title="pk_error_enum_from_string ()">pk_error_enum_from_string</a>           (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *code);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-error-enum-to-string" title="pk_error_enum_to_string ()">pk_error_enum_to_string</a>             (<a class="link" href="PackageKit-pk-enum.html#PkErrorEnum" title="enum PkErrorEnum"><span class="returnvalue">PkErrorEnum</span></a> code);
+<a class="link" href="PackageKit-pk-enum.html#PkRestartEnum" title="enum PkRestartEnum"><span class="returnvalue">PkRestartEnum</span></a>       <a class="link" href="PackageKit-pk-enum.html#pk-restart-enum-from-string" title="pk_restart_enum_from_string ()">pk_restart_enum_from_string</a>         (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *restart);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-restart-enum-to-string" title="pk_restart_enum_to_string ()">pk_restart_enum_to_string</a>           (<a class="link" href="PackageKit-pk-enum.html#PkRestartEnum" title="enum PkRestartEnum"><span class="returnvalue">PkRestartEnum</span></a> restart);
+<a class="link" href="PackageKit-pk-enum.html#PkMessageEnum" title="enum PkMessageEnum"><span class="returnvalue">PkMessageEnum</span></a>       <a class="link" href="PackageKit-pk-enum.html#pk-message-enum-from-string" title="pk_message_enum_from_string ()">pk_message_enum_from_string</a>         (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *message);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-message-enum-to-string" title="pk_message_enum_to_string ()">pk_message_enum_to_string</a>           (<a class="link" href="PackageKit-pk-enum.html#PkMessageEnum" title="enum PkMessageEnum"><span class="returnvalue">PkMessageEnum</span></a> message);
+<a class="link" href="PackageKit-pk-enum.html#PkGroupEnum" title="enum PkGroupEnum"><span class="returnvalue">PkGroupEnum</span></a>         <a class="link" href="PackageKit-pk-enum.html#pk-group-enum-from-string" title="pk_group_enum_from_string ()">pk_group_enum_from_string</a>           (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *group);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-group-enum-to-string" title="pk_group_enum_to_string ()">pk_group_enum_to_string</a>             (<a class="link" href="PackageKit-pk-enum.html#PkGroupEnum" title="enum PkGroupEnum"><span class="returnvalue">PkGroupEnum</span></a> group);
+<a class="link" href="PackageKit-pk-enum.html#PkFilterEnum" title="enum PkFilterEnum"><span class="returnvalue">PkFilterEnum</span></a>        <a class="link" href="PackageKit-pk-enum.html#pk-filter-enum-from-string" title="pk_filter_enum_from_string ()">pk_filter_enum_from_string</a>          (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *filter);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-filter-enum-to-string" title="pk_filter_enum_to_string ()">pk_filter_enum_to_string</a>            (<a class="link" href="PackageKit-pk-enum.html#PkFilterEnum" title="enum PkFilterEnum"><span class="returnvalue">PkFilterEnum</span></a> filter);
+<a class="link" href="PackageKit-pk-enum.html#PkProvidesEnum" title="enum PkProvidesEnum"><span class="returnvalue">PkProvidesEnum</span></a>      <a class="link" href="PackageKit-pk-enum.html#pk-provides-enum-from-string" title="pk_provides_enum_from_string ()">pk_provides_enum_from_string</a>        (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *provides);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-provides-enum-to-string" title="pk_provides_enum_to_string ()">pk_provides_enum_to_string</a>          (<a class="link" href="PackageKit-pk-enum.html#PkProvidesEnum" title="enum PkProvidesEnum"><span class="returnvalue">PkProvidesEnum</span></a> provides);
+<a class="link" href="PackageKit-pk-enum.html#PkLicenseEnum" title="enum PkLicenseEnum"><span class="returnvalue">PkLicenseEnum</span></a>       <a class="link" href="PackageKit-pk-enum.html#pk-license-enum-from-string" title="pk_license_enum_from_string ()">pk_license_enum_from_string</a>         (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *license);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-license-enum-to-string" title="pk_license_enum_to_string ()">pk_license_enum_to_string</a>           (<a class="link" href="PackageKit-pk-enum.html#PkLicenseEnum" title="enum PkLicenseEnum"><span class="returnvalue">PkLicenseEnum</span></a> license);
+<a class="link" href="PackageKit-pk-enum.html#PkDistroUpgradeEnum" title="enum PkDistroUpgradeEnum"><span class="returnvalue">PkDistroUpgradeEnum</span></a>  <a class="link" href="PackageKit-pk-enum.html#pk-distro-upgrade-enum-from-string" title="pk_distro_upgrade_enum_from_string ()">pk_distro_upgrade_enum_from_string</a> (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *upgrade);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-distro-upgrade-enum-to-string" title="pk_distro_upgrade_enum_to_string ()">pk_distro_upgrade_enum_to_string</a>    (<a class="link" href="PackageKit-pk-enum.html#PkDistroUpgradeEnum" title="enum PkDistroUpgradeEnum"><span class="returnvalue">PkDistroUpgradeEnum</span></a> upgrade);
+<a class="link" href="PackageKit-pk-enum.html#PkMediaTypeEnum" title="enum PkMediaTypeEnum"><span class="returnvalue">PkMediaTypeEnum</span></a>     <a class="link" href="PackageKit-pk-enum.html#pk-media-type-enum-from-string" title="pk_media_type_enum_from_string ()">pk_media_type_enum_from_string</a>      (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *media_type);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-media-type-enum-to-string" title="pk_media_type_enum_to_string ()">pk_media_type_enum_to_string</a>        (<a class="link" href="PackageKit-pk-enum.html#PkMediaTypeEnum" title="enum PkMediaTypeEnum"><span class="returnvalue">PkMediaTypeEnum</span></a> media_type);
+<a class="link" href="PackageKit-pk-enum.html#PkAuthorizeEnum" title="enum PkAuthorizeEnum"><span class="returnvalue">PkAuthorizeEnum</span></a>     <a class="link" href="PackageKit-pk-enum.html#pk-authorize-type-enum-from-string" title="pk_authorize_type_enum_from_string ()">pk_authorize_type_enum_from_string</a>  (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *auth_type);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="PackageKit-pk-enum.html#pk-authorize-type-enum-to-string" title="pk_authorize_type_enum_to_string ()">pk_authorize_type_enum_to_string</a>    (<a class="link" href="PackageKit-pk-enum.html#PkAuthorizeEnum" title="enum PkAuthorizeEnum"><span class="returnvalue">PkAuthorizeEnum</span></a> auth_type);
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="PackageKit-pk-enum.description"></a><h2>Description</h2>
+<p>
+This file contains functions to convert to and from enumerated types.</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="PackageKit-pk-enum.details"></a><h2>Details</h2>
+<div class="refsect2" title="pk_sig_type_enum_from_text">
+<a name="pk-sig-type-enum-from-text"></a><h3>pk_sig_type_enum_from_text</h3>
+<pre class="programlisting">#define pk_sig_type_enum_from_text		pk_sig_type_enum_from_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_sig_type_enum_to_text">
+<a name="pk-sig-type-enum-to-text"></a><h3>pk_sig_type_enum_to_text</h3>
+<pre class="programlisting">#define pk_sig_type_enum_to_text		pk_sig_type_enum_to_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_distro_upgrade_enum_from_text">
+<a name="pk-distro-upgrade-enum-from-text"></a><h3>pk_distro_upgrade_enum_from_text</h3>
+<pre class="programlisting">#define pk_distro_upgrade_enum_from_text pk_distro_upgrade_enum_from_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_distro_upgrade_enum_to_text">
+<a name="pk-distro-upgrade-enum-to-text"></a><h3>pk_distro_upgrade_enum_to_text</h3>
+<pre class="programlisting">#define pk_distro_upgrade_enum_to_text		pk_distro_upgrade_enum_to_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_provides_enum_from_text">
+<a name="pk-provides-enum-from-text"></a><h3>pk_provides_enum_from_text</h3>
+<pre class="programlisting">#define pk_provides_enum_from_text		pk_provides_enum_from_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_provides_enum_to_text">
+<a name="pk-provides-enum-to-text"></a><h3>pk_provides_enum_to_text</h3>
+<pre class="programlisting">#define pk_provides_enum_to_text		pk_provides_enum_to_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_info_enum_from_text">
+<a name="pk-info-enum-from-text"></a><h3>pk_info_enum_from_text</h3>
+<pre class="programlisting">#define pk_info_enum_from_text			pk_info_enum_from_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_info_enum_to_text">
+<a name="pk-info-enum-to-text"></a><h3>pk_info_enum_to_text</h3>
+<pre class="programlisting">#define pk_info_enum_to_text			pk_info_enum_to_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_exit_enum_from_text">
+<a name="pk-exit-enum-from-text"></a><h3>pk_exit_enum_from_text</h3>
+<pre class="programlisting">#define pk_exit_enum_from_text			pk_exit_enum_from_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_exit_enum_to_text">
+<a name="pk-exit-enum-to-text"></a><h3>pk_exit_enum_to_text</h3>
+<pre class="programlisting">#define pk_exit_enum_to_text			pk_exit_enum_to_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_network_enum_from_text">
+<a name="pk-network-enum-from-text"></a><h3>pk_network_enum_from_text</h3>
+<pre class="programlisting">#define pk_network_enum_from_text		pk_network_enum_from_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_network_enum_to_text">
+<a name="pk-network-enum-to-text"></a><h3>pk_network_enum_to_text</h3>
+<pre class="programlisting">#define pk_network_enum_to_text			pk_network_enum_to_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_status_enum_from_text">
+<a name="pk-status-enum-from-text"></a><h3>pk_status_enum_from_text</h3>
+<pre class="programlisting">#define pk_status_enum_from_text		pk_status_enum_from_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_status_enum_to_text">
+<a name="pk-status-enum-to-text"></a><h3>pk_status_enum_to_text</h3>
+<pre class="programlisting">#define pk_status_enum_to_text			pk_status_enum_to_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_role_enum_from_text">
+<a name="pk-role-enum-from-text"></a><h3>pk_role_enum_from_text</h3>
+<pre class="programlisting">#define pk_role_enum_from_text			pk_role_enum_from_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_role_enum_to_text">
+<a name="pk-role-enum-to-text"></a><h3>pk_role_enum_to_text</h3>
+<pre class="programlisting">#define pk_role_enum_to_text			pk_role_enum_to_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_error_enum_from_text">
+<a name="pk-error-enum-from-text"></a><h3>pk_error_enum_from_text</h3>
+<pre class="programlisting">#define pk_error_enum_from_text			pk_error_enum_from_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_error_enum_to_text">
+<a name="pk-error-enum-to-text"></a><h3>pk_error_enum_to_text</h3>
+<pre class="programlisting">#define pk_error_enum_to_text			pk_error_enum_to_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_restart_enum_from_text">
+<a name="pk-restart-enum-from-text"></a><h3>pk_restart_enum_from_text</h3>
+<pre class="programlisting">#define pk_restart_enum_from_text		pk_restart_enum_from_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_restart_enum_to_text">
+<a name="pk-restart-enum-to-text"></a><h3>pk_restart_enum_to_text</h3>
+<pre class="programlisting">#define pk_restart_enum_to_text			pk_restart_enum_to_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_message_enum_from_text">
+<a name="pk-message-enum-from-text"></a><h3>pk_message_enum_from_text</h3>
+<pre class="programlisting">#define pk_message_enum_from_text		pk_message_enum_from_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_message_enum_to_text">
+<a name="pk-message-enum-to-text"></a><h3>pk_message_enum_to_text</h3>
+<pre class="programlisting">#define pk_message_enum_to_text			pk_message_enum_to_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_group_enum_from_text">
+<a name="pk-group-enum-from-text"></a><h3>pk_group_enum_from_text</h3>
+<pre class="programlisting">#define pk_group_enum_from_text			pk_group_enum_from_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_group_enum_to_text">
+<a name="pk-group-enum-to-text"></a><h3>pk_group_enum_to_text</h3>
+<pre class="programlisting">#define pk_group_enum_to_text			pk_group_enum_to_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_update_state_enum_from_text">
+<a name="pk-update-state-enum-from-text"></a><h3>pk_update_state_enum_from_text</h3>
+<pre class="programlisting">#define pk_update_state_enum_from_text		pk_update_state_enum_from_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_update_state_enum_to_text">
+<a name="pk-update-state-enum-to-text"></a><h3>pk_update_state_enum_to_text</h3>
+<pre class="programlisting">#define pk_update_state_enum_to_text		pk_update_state_enum_to_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_filter_enum_from_text">
+<a name="pk-filter-enum-from-text"></a><h3>pk_filter_enum_from_text</h3>
+<pre class="programlisting">#define pk_filter_enum_from_text		pk_filter_enum_from_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_filter_enum_to_text">
+<a name="pk-filter-enum-to-text"></a><h3>pk_filter_enum_to_text</h3>
+<pre class="programlisting">#define pk_filter_enum_to_text			pk_filter_enum_to_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_license_enum_from_text">
+<a name="pk-license-enum-from-text"></a><h3>pk_license_enum_from_text</h3>
+<pre class="programlisting">#define pk_license_enum_from_text		pk_license_enum_from_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_license_enum_to_text">
+<a name="pk-license-enum-to-text"></a><h3>pk_license_enum_to_text</h3>
+<pre class="programlisting">#define pk_license_enum_to_text			pk_license_enum_to_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_media_type_enum_from_text">
+<a name="pk-media-type-enum-from-text"></a><h3>pk_media_type_enum_from_text</h3>
+<pre class="programlisting">#define pk_media_type_enum_from_text		pk_media_type_enum_from_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_media_type_enum_to_text">
+<a name="pk-media-type-enum-to-text"></a><h3>pk_media_type_enum_to_text</h3>
+<pre class="programlisting">#define pk_media_type_enum_to_text		pk_media_type_enum_to_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_authorize_type_enum_from_text">
+<a name="pk-authorize-type-enum-from-text"></a><h3>pk_authorize_type_enum_from_text</h3>
+<pre class="programlisting">#define pk_authorize_type_enum_from_text pk_authorize_type_enum_from_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_authorize_type_enum_to_text">
+<a name="pk-authorize-type-enum-to-text"></a><h3>pk_authorize_type_enum_to_text</h3>
+<pre class="programlisting">#define pk_authorize_type_enum_to_text		pk_authorize_type_enum_to_string
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="PkEnumMatch">
+<a name="PkEnumMatch"></a><h3>PkEnumMatch</h3>
+<pre class="programlisting">typedef struct {
+	guint		 value;
+	const gchar *string;
+} PkEnumMatch;
+</pre>
+<p>
+Matching an enumerated type to a string</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkRoleEnum">
+<a name="PkRoleEnum"></a><h3>enum PkRoleEnum</h3>
+<pre class="programlisting">typedef enum {
+	PK_ROLE_ENUM_UNKNOWN,
+	PK_ROLE_ENUM_CANCEL,
+	PK_ROLE_ENUM_GET_DEPENDS,
+	PK_ROLE_ENUM_GET_DETAILS,
+	PK_ROLE_ENUM_GET_FILES,
+	PK_ROLE_ENUM_GET_PACKAGES,
+	PK_ROLE_ENUM_GET_REPO_LIST,
+	PK_ROLE_ENUM_GET_REQUIRES,
+	PK_ROLE_ENUM_GET_UPDATE_DETAIL,
+	PK_ROLE_ENUM_GET_UPDATES,
+	PK_ROLE_ENUM_INSTALL_FILES,
+	PK_ROLE_ENUM_INSTALL_PACKAGES,
+	PK_ROLE_ENUM_INSTALL_SIGNATURE,
+	PK_ROLE_ENUM_REFRESH_CACHE,
+	PK_ROLE_ENUM_REMOVE_PACKAGES,
+	PK_ROLE_ENUM_REPO_ENABLE,
+	PK_ROLE_ENUM_REPO_SET_DATA,
+	PK_ROLE_ENUM_RESOLVE,
+	PK_ROLE_ENUM_ROLLBACK,
+	PK_ROLE_ENUM_SEARCH_DETAILS,
+	PK_ROLE_ENUM_SEARCH_FILE,
+	PK_ROLE_ENUM_SEARCH_GROUP,
+	PK_ROLE_ENUM_SEARCH_NAME,
+	PK_ROLE_ENUM_UPDATE_PACKAGES,
+	PK_ROLE_ENUM_UPDATE_SYSTEM,
+	PK_ROLE_ENUM_WHAT_PROVIDES,
+	PK_ROLE_ENUM_ACCEPT_EULA,
+	PK_ROLE_ENUM_DOWNLOAD_PACKAGES,
+	PK_ROLE_ENUM_GET_DISTRO_UPGRADES,
+	PK_ROLE_ENUM_GET_CATEGORIES,
+	PK_ROLE_ENUM_GET_OLD_TRANSACTIONS,
+	PK_ROLE_ENUM_SIMULATE_INSTALL_FILES,
+	PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES,
+	PK_ROLE_ENUM_SIMULATE_REMOVE_PACKAGES,
+	PK_ROLE_ENUM_SIMULATE_UPDATE_PACKAGES,
+	PK_ROLE_ENUM_LAST
+} PkRoleEnum;
+</pre>
+<p>
+What we were asked to do, this never changes for the lifetime of the
+transaction.
+Icons that have to represent the whole "aim" of the transaction will use
+these constants</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkStatusEnum">
+<a name="PkStatusEnum"></a><h3>enum PkStatusEnum</h3>
+<pre class="programlisting">typedef enum {
+	PK_STATUS_ENUM_UNKNOWN,
+	PK_STATUS_ENUM_WAIT,
+	PK_STATUS_ENUM_SETUP,
+	PK_STATUS_ENUM_RUNNING,
+	PK_STATUS_ENUM_QUERY,
+	PK_STATUS_ENUM_INFO,
+	PK_STATUS_ENUM_REMOVE,
+	PK_STATUS_ENUM_REFRESH_CACHE,
+	PK_STATUS_ENUM_DOWNLOAD,
+	PK_STATUS_ENUM_INSTALL,
+	PK_STATUS_ENUM_UPDATE,
+	PK_STATUS_ENUM_CLEANUP,
+	PK_STATUS_ENUM_OBSOLETE,
+	PK_STATUS_ENUM_DEP_RESOLVE,
+	PK_STATUS_ENUM_SIG_CHECK,
+	PK_STATUS_ENUM_ROLLBACK,
+	PK_STATUS_ENUM_TEST_COMMIT,
+	PK_STATUS_ENUM_COMMIT,
+	PK_STATUS_ENUM_REQUEST,
+	PK_STATUS_ENUM_FINISHED,
+	PK_STATUS_ENUM_CANCEL,
+	PK_STATUS_ENUM_DOWNLOAD_REPOSITORY,
+	PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST,
+	PK_STATUS_ENUM_DOWNLOAD_FILELIST,
+	PK_STATUS_ENUM_DOWNLOAD_CHANGELOG,
+	PK_STATUS_ENUM_DOWNLOAD_GROUP,
+	PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO,
+	PK_STATUS_ENUM_REPACKAGING,
+	PK_STATUS_ENUM_LOADING_CACHE,
+	PK_STATUS_ENUM_SCAN_APPLICATIONS,
+	PK_STATUS_ENUM_GENERATE_PACKAGE_LIST,
+	PK_STATUS_ENUM_WAITING_FOR_LOCK,
+	PK_STATUS_ENUM_WAITING_FOR_AUTH,
+	PK_STATUS_ENUM_SCAN_PROCESS_LIST,
+	PK_STATUS_ENUM_CHECK_EXECUTABLE_FILES,
+	PK_STATUS_ENUM_CHECK_LIBRARIES,
+	PK_STATUS_ENUM_COPY_FILES,
+	PK_STATUS_ENUM_LAST
+} PkStatusEnum;
+</pre>
+<p>
+What status we are now; this can change for each transaction giving a
+status of what sort of thing is happening
+Icons that change to represent the current status of the transaction will
+use these constants
+If you add to these, make sure you add filenames in gpk-watch.c also
+</p>
+<p>
+A typical transaction will do:
+- schedule task
+WAIT
+- run task
+SETUP
+- wait for lock
+RUNNING
+</p>
+<p>
+This means that backends should run pk_backend_set_status (backend, PK_STATUS_ENUM_RUNNING)
+when they are ready to start running the transaction and after a lock has been got.</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkExitEnum">
+<a name="PkExitEnum"></a><h3>enum PkExitEnum</h3>
+<pre class="programlisting">typedef enum {
+	PK_EXIT_ENUM_UNKNOWN,
+	PK_EXIT_ENUM_SUCCESS,
+	PK_EXIT_ENUM_FAILED,
+	PK_EXIT_ENUM_CANCELLED,
+	PK_EXIT_ENUM_KEY_REQUIRED,
+	PK_EXIT_ENUM_EULA_REQUIRED,
+	PK_EXIT_ENUM_KILLED, /* when we forced the cancel, but had to SIGKILL */
+	PK_EXIT_ENUM_MEDIA_CHANGE_REQUIRED,
+	PK_EXIT_ENUM_NEED_UNTRUSTED,
+	PK_EXIT_ENUM_LAST
+} PkExitEnum;
+</pre>
+<p>
+How the backend exited</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkNetworkEnum">
+<a name="PkNetworkEnum"></a><h3>enum PkNetworkEnum</h3>
+<pre class="programlisting">typedef enum {
+	PK_NETWORK_ENUM_UNKNOWN,
+	PK_NETWORK_ENUM_OFFLINE,
+	PK_NETWORK_ENUM_ONLINE,
+	PK_NETWORK_ENUM_WIRED,
+	PK_NETWORK_ENUM_WIFI,
+	PK_NETWORK_ENUM_MOBILE,
+	PK_NETWORK_ENUM_LAST
+} PkNetworkEnum;
+</pre>
+</div>
+<hr>
+<div class="refsect2" title="enum PkFilterEnum">
+<a name="PkFilterEnum"></a><h3>enum PkFilterEnum</h3>
+<pre class="programlisting">typedef enum {
+	PK_FILTER_ENUM_UNKNOWN,
+	PK_FILTER_ENUM_NONE,
+	PK_FILTER_ENUM_INSTALLED,
+	PK_FILTER_ENUM_NOT_INSTALLED,
+	PK_FILTER_ENUM_DEVELOPMENT,
+	PK_FILTER_ENUM_NOT_DEVELOPMENT,
+	PK_FILTER_ENUM_GUI,
+	PK_FILTER_ENUM_NOT_GUI,
+	PK_FILTER_ENUM_FREE,
+	PK_FILTER_ENUM_NOT_FREE,
+	PK_FILTER_ENUM_VISIBLE,
+	PK_FILTER_ENUM_NOT_VISIBLE,
+	PK_FILTER_ENUM_SUPPORTED,
+	PK_FILTER_ENUM_NOT_SUPPORTED,
+	PK_FILTER_ENUM_BASENAME,
+	PK_FILTER_ENUM_NOT_BASENAME,
+	PK_FILTER_ENUM_NEWEST,
+	PK_FILTER_ENUM_NOT_NEWEST,
+	PK_FILTER_ENUM_ARCH,
+	PK_FILTER_ENUM_NOT_ARCH,
+	PK_FILTER_ENUM_SOURCE,
+	PK_FILTER_ENUM_NOT_SOURCE,
+	PK_FILTER_ENUM_COLLECTIONS,
+	PK_FILTER_ENUM_NOT_COLLECTIONS,
+	PK_FILTER_ENUM_APPLICATION,
+	PK_FILTER_ENUM_NOT_APPLICATION,
+	PK_FILTER_ENUM_LAST,
+} PkFilterEnum;
+</pre>
+<p>
+The filter types</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkRestartEnum">
+<a name="PkRestartEnum"></a><h3>enum PkRestartEnum</h3>
+<pre class="programlisting">typedef enum {
+	PK_RESTART_ENUM_UNKNOWN,
+	PK_RESTART_ENUM_NONE,
+	PK_RESTART_ENUM_APPLICATION,
+	PK_RESTART_ENUM_SESSION,
+	PK_RESTART_ENUM_SYSTEM,
+	PK_RESTART_ENUM_SECURITY_SESSION, /* a library that is being used by this package has been updated for security */
+	PK_RESTART_ENUM_SECURITY_SYSTEM,
+	PK_RESTART_ENUM_LAST
+} PkRestartEnum;
+</pre>
+<p>
+What restart we need to after a transaction, ordered by severity</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkMessageEnum">
+<a name="PkMessageEnum"></a><h3>enum PkMessageEnum</h3>
+<pre class="programlisting">typedef enum {
+	PK_MESSAGE_ENUM_UNKNOWN,
+	PK_MESSAGE_ENUM_BROKEN_MIRROR,
+	PK_MESSAGE_ENUM_CONNECTION_REFUSED,
+	PK_MESSAGE_ENUM_PARAMETER_INVALID,
+	PK_MESSAGE_ENUM_PRIORITY_INVALID,
+	PK_MESSAGE_ENUM_BACKEND_ERROR,
+	PK_MESSAGE_ENUM_DAEMON_ERROR,
+	PK_MESSAGE_ENUM_CACHE_BEING_REBUILT,
+	PK_MESSAGE_ENUM_UNTRUSTED_PACKAGE,
+	PK_MESSAGE_ENUM_NEWER_PACKAGE_EXISTS,
+	PK_MESSAGE_ENUM_COULD_NOT_FIND_PACKAGE,
+	PK_MESSAGE_ENUM_CONFIG_FILES_CHANGED,
+	PK_MESSAGE_ENUM_PACKAGE_ALREADY_INSTALLED,
+	PK_MESSAGE_ENUM_AUTOREMOVE_IGNORED,
+	PK_MESSAGE_ENUM_REPO_METADATA_DOWNLOAD_FAILED,
+	PK_MESSAGE_ENUM_REPO_FOR_DEVELOPERS_ONLY,
+	PK_MESSAGE_ENUM_LAST
+} PkMessageEnum;
+</pre>
+<p>
+What message type we need to show</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkErrorEnum">
+<a name="PkErrorEnum"></a><h3>enum PkErrorEnum</h3>
+<pre class="programlisting">typedef enum {
+	PK_ERROR_ENUM_UNKNOWN,
+	PK_ERROR_ENUM_OOM,
+	PK_ERROR_ENUM_NO_NETWORK,
+	PK_ERROR_ENUM_NOT_SUPPORTED,
+	PK_ERROR_ENUM_INTERNAL_ERROR,
+	PK_ERROR_ENUM_GPG_FAILURE,
+	PK_ERROR_ENUM_PACKAGE_ID_INVALID,
+	PK_ERROR_ENUM_PACKAGE_NOT_INSTALLED,
+	PK_ERROR_ENUM_PACKAGE_NOT_FOUND,
+	PK_ERROR_ENUM_PACKAGE_ALREADY_INSTALLED,
+	PK_ERROR_ENUM_PACKAGE_DOWNLOAD_FAILED,
+	PK_ERROR_ENUM_GROUP_NOT_FOUND,
+	PK_ERROR_ENUM_GROUP_LIST_INVALID,
+	PK_ERROR_ENUM_DEP_RESOLUTION_FAILED,
+	PK_ERROR_ENUM_FILTER_INVALID,
+	PK_ERROR_ENUM_CREATE_THREAD_FAILED,
+	PK_ERROR_ENUM_TRANSACTION_ERROR,
+	PK_ERROR_ENUM_TRANSACTION_CANCELLED,
+	PK_ERROR_ENUM_NO_CACHE,
+	PK_ERROR_ENUM_REPO_NOT_FOUND,
+	PK_ERROR_ENUM_CANNOT_REMOVE_SYSTEM_PACKAGE,
+	PK_ERROR_ENUM_PROCESS_KILL,
+	PK_ERROR_ENUM_FAILED_INITIALIZATION,
+	PK_ERROR_ENUM_FAILED_FINALISE,
+	PK_ERROR_ENUM_FAILED_CONFIG_PARSING,
+	PK_ERROR_ENUM_CANNOT_CANCEL,
+	PK_ERROR_ENUM_CANNOT_GET_LOCK,
+	PK_ERROR_ENUM_NO_PACKAGES_TO_UPDATE,
+	PK_ERROR_ENUM_CANNOT_WRITE_REPO_CONFIG,
+	PK_ERROR_ENUM_LOCAL_INSTALL_FAILED,
+	PK_ERROR_ENUM_BAD_GPG_SIGNATURE,
+	PK_ERROR_ENUM_MISSING_GPG_SIGNATURE,
+	PK_ERROR_ENUM_CANNOT_INSTALL_SOURCE_PACKAGE,
+	PK_ERROR_ENUM_REPO_CONFIGURATION_ERROR,
+	PK_ERROR_ENUM_NO_LICENSE_AGREEMENT,
+	PK_ERROR_ENUM_FILE_CONFLICTS,
+	PK_ERROR_ENUM_PACKAGE_CONFLICTS,
+	PK_ERROR_ENUM_REPO_NOT_AVAILABLE,
+	PK_ERROR_ENUM_INVALID_PACKAGE_FILE,
+	PK_ERROR_ENUM_PACKAGE_INSTALL_BLOCKED,
+	PK_ERROR_ENUM_PACKAGE_CORRUPT,
+	PK_ERROR_ENUM_ALL_PACKAGES_ALREADY_INSTALLED,
+	PK_ERROR_ENUM_FILE_NOT_FOUND,
+	PK_ERROR_ENUM_NO_MORE_MIRRORS_TO_TRY,
+	PK_ERROR_ENUM_NO_DISTRO_UPGRADE_DATA,
+	PK_ERROR_ENUM_INCOMPATIBLE_ARCHITECTURE,
+	PK_ERROR_ENUM_NO_SPACE_ON_DEVICE,
+	PK_ERROR_ENUM_MEDIA_CHANGE_REQUIRED,
+	PK_ERROR_ENUM_NOT_AUTHORIZED,
+	PK_ERROR_ENUM_UPDATE_NOT_FOUND,
+	PK_ERROR_ENUM_CANNOT_INSTALL_REPO_UNSIGNED,
+	PK_ERROR_ENUM_CANNOT_UPDATE_REPO_UNSIGNED,
+	PK_ERROR_ENUM_CANNOT_GET_FILELIST,
+	PK_ERROR_ENUM_CANNOT_GET_REQUIRES,
+	PK_ERROR_ENUM_CANNOT_DISABLE_REPOSITORY,
+	PK_ERROR_ENUM_RESTRICTED_DOWNLOAD,
+	PK_ERROR_ENUM_PACKAGE_FAILED_TO_CONFIGURE,
+	PK_ERROR_ENUM_PACKAGE_FAILED_TO_BUILD,
+	PK_ERROR_ENUM_PACKAGE_FAILED_TO_INSTALL,
+	PK_ERROR_ENUM_PACKAGE_FAILED_TO_REMOVE,
+	PK_ERROR_ENUM_UPDATE_FAILED_DUE_TO_RUNNING_PROCESS,
+	PK_ERROR_ENUM_LAST
+} PkErrorEnum;
+</pre>
+<p>
+The error type</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkGroupEnum">
+<a name="PkGroupEnum"></a><h3>enum PkGroupEnum</h3>
+<pre class="programlisting">typedef enum {
+	PK_GROUP_ENUM_UNKNOWN,
+	PK_GROUP_ENUM_ACCESSIBILITY,
+	PK_GROUP_ENUM_ACCESSORIES,
+	PK_GROUP_ENUM_ADMIN_TOOLS,
+	PK_GROUP_ENUM_COMMUNICATION,
+	PK_GROUP_ENUM_DESKTOP_GNOME,
+	PK_GROUP_ENUM_DESKTOP_KDE,
+	PK_GROUP_ENUM_DESKTOP_OTHER,
+	PK_GROUP_ENUM_DESKTOP_XFCE,
+	PK_GROUP_ENUM_EDUCATION,
+	PK_GROUP_ENUM_FONTS,
+	PK_GROUP_ENUM_GAMES,
+	PK_GROUP_ENUM_GRAPHICS,
+	PK_GROUP_ENUM_INTERNET,
+	PK_GROUP_ENUM_LEGACY,
+	PK_GROUP_ENUM_LOCALIZATION,
+	PK_GROUP_ENUM_MAPS,
+	PK_GROUP_ENUM_MULTIMEDIA,
+	PK_GROUP_ENUM_NETWORK,
+	PK_GROUP_ENUM_OFFICE,
+	PK_GROUP_ENUM_OTHER,
+	PK_GROUP_ENUM_POWER_MANAGEMENT,
+	PK_GROUP_ENUM_PROGRAMMING,
+	PK_GROUP_ENUM_PUBLISHING,
+	PK_GROUP_ENUM_REPOS,
+	PK_GROUP_ENUM_SECURITY,
+	PK_GROUP_ENUM_SERVERS,
+	PK_GROUP_ENUM_SYSTEM,
+	PK_GROUP_ENUM_VIRTUALIZATION,
+	PK_GROUP_ENUM_SCIENCE,
+	PK_GROUP_ENUM_DOCUMENTATION,
+	PK_GROUP_ENUM_ELECTRONICS,
+	PK_GROUP_ENUM_COLLECTIONS,
+	PK_GROUP_ENUM_VENDOR,
+	PK_GROUP_ENUM_NEWEST,
+	PK_GROUP_ENUM_LAST
+} PkGroupEnum;
+</pre>
+<p>
+The group type</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkUpdateStateEnum">
+<a name="PkUpdateStateEnum"></a><h3>enum PkUpdateStateEnum</h3>
+<pre class="programlisting">typedef enum {
+	PK_UPDATE_STATE_ENUM_UNKNOWN,
+	PK_UPDATE_STATE_ENUM_STABLE,
+	PK_UPDATE_STATE_ENUM_UNSTABLE,
+	PK_UPDATE_STATE_ENUM_TESTING,
+	PK_UPDATE_STATE_ENUM_LAST
+} PkUpdateStateEnum;
+</pre>
+<p>
+What state the update is in</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkInfoEnum">
+<a name="PkInfoEnum"></a><h3>enum PkInfoEnum</h3>
+<pre class="programlisting">typedef enum {
+	PK_INFO_ENUM_UNKNOWN,
+	PK_INFO_ENUM_INSTALLED,
+	PK_INFO_ENUM_AVAILABLE,
+	PK_INFO_ENUM_LOW,
+	PK_INFO_ENUM_ENHANCEMENT,
+	PK_INFO_ENUM_NORMAL,
+	PK_INFO_ENUM_BUGFIX,
+	PK_INFO_ENUM_IMPORTANT,
+	PK_INFO_ENUM_SECURITY,
+	PK_INFO_ENUM_BLOCKED,
+	PK_INFO_ENUM_DOWNLOADING,
+	PK_INFO_ENUM_UPDATING,
+	PK_INFO_ENUM_INSTALLING,
+	PK_INFO_ENUM_REMOVING,
+	PK_INFO_ENUM_CLEANUP,
+	PK_INFO_ENUM_OBSOLETING,
+	PK_INFO_ENUM_COLLECTION_INSTALLED,
+	PK_INFO_ENUM_COLLECTION_AVAILABLE,
+	PK_INFO_ENUM_FINISHED,
+	PK_INFO_ENUM_REINSTALLING,
+	PK_INFO_ENUM_DOWNGRADING,
+	PK_INFO_ENUM_PREPARING,
+	PK_INFO_ENUM_DECOMPRESSING,
+	PK_INFO_ENUM_LAST
+} PkInfoEnum;
+</pre>
+<p>
+The enumerated types used in <code class="function">Package()</code> - these have to refer to a specific
+package action, rather than a general state</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkDistroUpgradeEnum">
+<a name="PkDistroUpgradeEnum"></a><h3>enum PkDistroUpgradeEnum</h3>
+<pre class="programlisting">typedef enum {
+	PK_DISTRO_UPGRADE_ENUM_UNKNOWN,
+	PK_DISTRO_UPGRADE_ENUM_STABLE,
+	PK_DISTRO_UPGRADE_ENUM_UNSTABLE,
+	PK_DISTRO_UPGRADE_ENUM_LAST
+} PkDistroUpgradeEnum;
+</pre>
+<p>
+The distro upgrade status</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkSigTypeEnum">
+<a name="PkSigTypeEnum"></a><h3>enum PkSigTypeEnum</h3>
+<pre class="programlisting">typedef enum {
+	PK_SIGTYPE_ENUM_UNKNOWN,
+	PK_SIGTYPE_ENUM_GPG,
+	PK_SIGTYPE_ENUM_LAST
+} PkSigTypeEnum;
+</pre>
+<p>
+The signature type type</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkProvidesEnum">
+<a name="PkProvidesEnum"></a><h3>enum PkProvidesEnum</h3>
+<pre class="programlisting">typedef enum {
+	PK_PROVIDES_ENUM_UNKNOWN,
+	PK_PROVIDES_ENUM_ANY,
+	PK_PROVIDES_ENUM_MODALIAS,
+	PK_PROVIDES_ENUM_CODEC,
+	PK_PROVIDES_ENUM_MIMETYPE,
+	PK_PROVIDES_ENUM_FONT,
+	PK_PROVIDES_ENUM_HARDWARE_DRIVER,
+	PK_PROVIDES_ENUM_POSTSCRIPT_DRIVER,
+	PK_PROVIDES_ENUM_LAST
+} PkProvidesEnum;
+</pre>
+<p>
+The signature type type</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkLicenseEnum">
+<a name="PkLicenseEnum"></a><h3>enum PkLicenseEnum</h3>
+<pre class="programlisting">typedef enum {
+	PK_LICENSE_ENUM_UNKNOWN,
+	PK_LICENSE_ENUM_AAL,
+	PK_LICENSE_ENUM_ADOBE,
+	PK_LICENSE_ENUM_ADSL,
+	PK_LICENSE_ENUM_AFL,
+	PK_LICENSE_ENUM_AGPLV1,
+	PK_LICENSE_ENUM_AMPAS_BSD,
+	PK_LICENSE_ENUM_APSL_2_DOT_0,
+	PK_LICENSE_ENUM_ARL,
+	PK_LICENSE_ENUM_ARPHIC,
+	PK_LICENSE_ENUM_ARTISTIC_2_DOT_0,
+	PK_LICENSE_ENUM_ARTISTIC_CLARIFIED,
+	PK_LICENSE_ENUM_ASL_1_DOT_0,
+	PK_LICENSE_ENUM_ASL_1_DOT_1,
+	PK_LICENSE_ENUM_ASL_2_DOT_0,
+	PK_LICENSE_ENUM_BAEKMUK,
+	PK_LICENSE_ENUM_BITTORRENT,
+	PK_LICENSE_ENUM_BOOST,
+	PK_LICENSE_ENUM_BSD,
+	PK_LICENSE_ENUM_BSD_WITH_ADVERTISING,
+	PK_LICENSE_ENUM_CATOSL,
+	PK_LICENSE_ENUM_CC0,
+	PK_LICENSE_ENUM_CC_BY,
+	PK_LICENSE_ENUM_CC_BY_SA,
+	PK_LICENSE_ENUM_CDDL,
+	PK_LICENSE_ENUM_CDL,
+	PK_LICENSE_ENUM_CECILL,
+	PK_LICENSE_ENUM_CECILL_B,
+	PK_LICENSE_ENUM_CECILL_C,
+	PK_LICENSE_ENUM_CNRI,
+	PK_LICENSE_ENUM_CONDOR,
+	PK_LICENSE_ENUM_COPYRIGHT_ONLY,
+	PK_LICENSE_ENUM_CPAL,
+	PK_LICENSE_ENUM_CPL,
+	PK_LICENSE_ENUM_CRYSTAL_STACKER,
+	PK_LICENSE_ENUM_DOC,
+	PK_LICENSE_ENUM_DSL,
+	PK_LICENSE_ENUM_DVIPDFM,
+	PK_LICENSE_ENUM_ECL_1_DOT_0,
+	PK_LICENSE_ENUM_ECL_2_DOT_0,
+	PK_LICENSE_ENUM_ECOS,
+	PK_LICENSE_ENUM_EFL_2_DOT_0,
+	PK_LICENSE_ENUM_ENTESSA,
+	PK_LICENSE_ENUM_EPL,
+	PK_LICENSE_ENUM_ERPL,
+	PK_LICENSE_ENUM_EUROSYM,
+	PK_LICENSE_ENUM_EU_DATAGRID,
+	PK_LICENSE_ENUM_FAIR,
+	PK_LICENSE_ENUM_FBSDDL,
+	PK_LICENSE_ENUM_FREE_ART,
+	PK_LICENSE_ENUM_FTL,
+	PK_LICENSE_ENUM_GEOGRATIS,
+	PK_LICENSE_ENUM_GFDL,
+	PK_LICENSE_ENUM_GIFTWARE,
+	PK_LICENSE_ENUM_GL2PS,
+	PK_LICENSE_ENUM_GLIDE,
+	PK_LICENSE_ENUM_GNUPLOT,
+	PK_LICENSE_ENUM_GPLV1,
+	PK_LICENSE_ENUM_GPLV2,
+	PK_LICENSE_ENUM_GPLV2_OR_ARTISTIC,
+	PK_LICENSE_ENUM_GPLV2_PLUS,
+	PK_LICENSE_ENUM_GPLV2_PLUS_OR_ARTISTIC,
+	PK_LICENSE_ENUM_GPLV2_PLUS_WITH_EXCEPTIONS,
+	PK_LICENSE_ENUM_GPLV2_WITH_EXCEPTIONS,
+	PK_LICENSE_ENUM_GPLV3,
+	PK_LICENSE_ENUM_GPLV3_PLUS,
+	PK_LICENSE_ENUM_GPLV3_PLUS_WITH_EXCEPTIONS,
+	PK_LICENSE_ENUM_GPLV3_WITH_EXCEPTIONS,
+	PK_LICENSE_ENUM_GPL_PLUS,
+	PK_LICENSE_ENUM_GPL_PLUS_OR_ARTISTIC,
+	PK_LICENSE_ENUM_GPL_PLUS_WITH_EXCEPTIONS,
+	PK_LICENSE_ENUM_IBM,
+	PK_LICENSE_ENUM_IEEE,
+	PK_LICENSE_ENUM_IJG,
+	PK_LICENSE_ENUM_IMAGEMAGICK,
+	PK_LICENSE_ENUM_IMATIX,
+	PK_LICENSE_ENUM_IMLIB2,
+	PK_LICENSE_ENUM_INTEL_ACPI,
+	PK_LICENSE_ENUM_INTERBASE,
+	PK_LICENSE_ENUM_IPA,
+	PK_LICENSE_ENUM_ISC,
+	PK_LICENSE_ENUM_JABBER,
+	PK_LICENSE_ENUM_JASPER,
+	PK_LICENSE_ENUM_JPYTHON,
+	PK_LICENSE_ENUM_KNUTH,
+	PK_LICENSE_ENUM_LBNL_BSD,
+	PK_LICENSE_ENUM_LGPLV2,
+	PK_LICENSE_ENUM_LGPLV2_PLUS,
+	PK_LICENSE_ENUM_LGPLV2_PLUS_OR_ARTISTIC,
+	PK_LICENSE_ENUM_LGPLV2_PLUS_WITH_EXCEPTIONS,
+	PK_LICENSE_ENUM_LGPLV2_WITH_EXCEPTIONS,
+	PK_LICENSE_ENUM_LGPLV3,
+	PK_LICENSE_ENUM_LGPLV3_PLUS,
+	PK_LICENSE_ENUM_LGPLV3_PLUS_WITH_EXCEPTIONS,
+	PK_LICENSE_ENUM_LGPLV3_WITH_EXCEPTIONS,
+	PK_LICENSE_ENUM_LIBERATION,
+	PK_LICENSE_ENUM_LIBTIFF,
+	PK_LICENSE_ENUM_LLGPL,
+	PK_LICENSE_ENUM_LOGICA,
+	PK_LICENSE_ENUM_LPL,
+	PK_LICENSE_ENUM_LPPL,
+	PK_LICENSE_ENUM_MECAB_IPADIC,
+	PK_LICENSE_ENUM_MIROS,
+	PK_LICENSE_ENUM_MIT,
+	PK_LICENSE_ENUM_MIT_WITH_ADVERTISING,
+	PK_LICENSE_ENUM_MOD_MACRO,
+	PK_LICENSE_ENUM_MOTOSOTO,
+	PK_LICENSE_ENUM_MPLUS,
+	PK_LICENSE_ENUM_MPLV1_DOT_0,
+	PK_LICENSE_ENUM_MPLV1_DOT_1,
+	PK_LICENSE_ENUM_MS_PL,
+	PK_LICENSE_ENUM_NAUMEN,
+	PK_LICENSE_ENUM_NCSA,
+	PK_LICENSE_ENUM_NETCDF,
+	PK_LICENSE_ENUM_NETSCAPE,
+	PK_LICENSE_ENUM_NEWMAT,
+	PK_LICENSE_ENUM_NGPL,
+	PK_LICENSE_ENUM_NOKIA,
+	PK_LICENSE_ENUM_NOSL,
+	PK_LICENSE_ENUM_NOWEB,
+	PK_LICENSE_ENUM_OAL,
+	PK_LICENSE_ENUM_OFL,
+	PK_LICENSE_ENUM_OFSFDL,
+	PK_LICENSE_ENUM_OPENLDAP,
+	PK_LICENSE_ENUM_OPENPBS,
+	PK_LICENSE_ENUM_OPENSSL,
+	PK_LICENSE_ENUM_OREILLY,
+	PK_LICENSE_ENUM_OSL_1_DOT_0,
+	PK_LICENSE_ENUM_OSL_1_DOT_1,
+	PK_LICENSE_ENUM_OSL_2_DOT_0,
+	PK_LICENSE_ENUM_OSL_2_DOT_1,
+	PK_LICENSE_ENUM_OSL_3_DOT_0,
+	PK_LICENSE_ENUM_PHORUM,
+	PK_LICENSE_ENUM_PHP,
+	PK_LICENSE_ENUM_PLEXUS,
+	PK_LICENSE_ENUM_PSUTILS,
+	PK_LICENSE_ENUM_PUBLIC_DOMAIN,
+	PK_LICENSE_ENUM_PUBLIC_USE,
+	PK_LICENSE_ENUM_PYTHON,
+	PK_LICENSE_ENUM_QHULL,
+	PK_LICENSE_ENUM_QPL,
+	PK_LICENSE_ENUM_RICEBSD,
+	PK_LICENSE_ENUM_RPSL,
+	PK_LICENSE_ENUM_RUBY,
+	PK_LICENSE_ENUM_SAXPATH,
+	PK_LICENSE_ENUM_SCEA,
+	PK_LICENSE_ENUM_SCRIP,
+	PK_LICENSE_ENUM_SENDMAIL,
+	PK_LICENSE_ENUM_SISSL,
+	PK_LICENSE_ENUM_SLEEPYCAT,
+	PK_LICENSE_ENUM_SLIB,
+	PK_LICENSE_ENUM_SNIA,
+	PK_LICENSE_ENUM_SPL,
+	PK_LICENSE_ENUM_STIX,
+	PK_LICENSE_ENUM_TCL,
+	PK_LICENSE_ENUM_TMATE,
+	PK_LICENSE_ENUM_TPL,
+	PK_LICENSE_ENUM_UCD,
+	PK_LICENSE_ENUM_VIM,
+	PK_LICENSE_ENUM_VNLSL,
+	PK_LICENSE_ENUM_VOSTROM,
+	PK_LICENSE_ENUM_VSL,
+	PK_LICENSE_ENUM_W3C,
+	PK_LICENSE_ENUM_WADALAB,
+	PK_LICENSE_ENUM_WEBMIN,
+	PK_LICENSE_ENUM_WTFPL,
+	PK_LICENSE_ENUM_WXWIDGETS,
+	PK_LICENSE_ENUM_XANO,
+	PK_LICENSE_ENUM_XEROX,
+	PK_LICENSE_ENUM_XINETD,
+	PK_LICENSE_ENUM_XSKAT,
+	PK_LICENSE_ENUM_YPLV1_DOT_1,
+	PK_LICENSE_ENUM_ZEND,
+	PK_LICENSE_ENUM_ZLIB,
+	PK_LICENSE_ENUM_ZLIB_WITH_ACKNOWLEDGEMENT,
+	PK_LICENSE_ENUM_ZPLV1_DOT_0,
+	PK_LICENSE_ENUM_ZPLV2_DOT_0,
+	PK_LICENSE_ENUM_ZPLV2_DOT_1,
+	PK_LICENSE_ENUM_LAST
+} PkLicenseEnum;
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkMediaTypeEnum">
+<a name="PkMediaTypeEnum"></a><h3>enum PkMediaTypeEnum</h3>
+<pre class="programlisting">typedef enum {
+	PK_MEDIA_TYPE_ENUM_UNKNOWN,
+	PK_MEDIA_TYPE_ENUM_CD,
+	PK_MEDIA_TYPE_ENUM_DVD,
+	PK_MEDIA_TYPE_ENUM_DISC,
+	PK_MEDIA_TYPE_ENUM_LAST
+} PkMediaTypeEnum;
+</pre>
+<p>
+The media type</p>
+</div>
+<hr>
+<div class="refsect2" title="enum PkAuthorizeEnum">
+<a name="PkAuthorizeEnum"></a><h3>enum PkAuthorizeEnum</h3>
+<pre class="programlisting">typedef enum {
+	PK_AUTHORIZE_ENUM_UNKNOWN,
+	PK_AUTHORIZE_ENUM_YES,
+	PK_AUTHORIZE_ENUM_NO,
+	PK_AUTHORIZE_ENUM_INTERACTIVE,
+	PK_AUTHORIZE_ENUM_LAST
+} PkAuthorizeEnum;
+</pre>
+<p>
+The authorization result</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_enum_test ()">
+<a name="pk-enum-test"></a><h3>pk_enum_test ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                pk_enum_test                        (<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);</pre>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="pk_enum_find_value ()">
+<a name="pk-enum-find-value"></a><h3>pk_enum_find_value ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               pk_enum_find_value                  (const <a class="link" href="PackageKit-pk-enum.html#PkEnumMatch" title="PkEnumMatch"><span class="returnvalue">PkEnumMatch</span></a> *table,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *string);</pre>
+<p>
+Search for a string value in a table of constants.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>table</code></em> :</span></p></td>
+<td> A <a class="link" href="PackageKit-pk-enum.html#PkEnumMatch" title="PkEnumMatch"><span class="type">PkEnumMatch</span></a> enum table of values
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>string</code></em> :</span></p></td>
+<td> the string constant to search for, e.g. "desktop-gnome"
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_SIGTYPE_ENUM_GPG
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="pk_enum_find_string ()">
+<a name="pk-enum-find-string"></a><h3>pk_enum_find_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_enum_find_string                 (const <a class="link" href="PackageKit-pk-enum.html#PkEnumMatch" title="PkEnumMatch"><span class="returnvalue">PkEnumMatch</span></a> *table,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a> value);</pre>
+<p>
+Search for a enum value in a table of constants.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>table</code></em> :</span></p></td>
+<td> A <a class="link" href="PackageKit-pk-enum.html#PkEnumMatch" title="PkEnumMatch"><span class="type">PkEnumMatch</span></a> enum table of values
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_SIGTYPE_ENUM_GPG
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the string constant, e.g. "desktop-gnome"
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="pk_sig_type_enum_from_string ()">
+<a name="pk-sig-type-enum-from-string"></a><h3>pk_sig_type_enum_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkSigTypeEnum" title="enum PkSigTypeEnum"><span class="returnvalue">PkSigTypeEnum</span></a>       pk_sig_type_enum_from_string        (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *sig_type);</pre>
+<p>
+Converts a text enumerated type to its unsigned integer representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>sig_type</code></em> :</span></p></td>
+<td> Text describing the enumerated type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_SIGTYPE_ENUM_GPG
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="pk_sig_type_enum_to_string ()">
+<a name="pk-sig-type-enum-to-string"></a><h3>pk_sig_type_enum_to_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_sig_type_enum_to_string          (<a class="link" href="PackageKit-pk-enum.html#PkSigTypeEnum" title="enum PkSigTypeEnum"><span class="returnvalue">PkSigTypeEnum</span></a> sig_type);</pre>
+<p>
+Converts a enumerated type to its text representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>sig_type</code></em> :</span></p></td>
+<td> The enumerated type value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. "available"
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_info_enum_from_string ()">
+<a name="pk-info-enum-from-string"></a><h3>pk_info_enum_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkInfoEnum" title="enum PkInfoEnum"><span class="returnvalue">PkInfoEnum</span></a>          pk_info_enum_from_string            (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *info);</pre>
+<p>
+Converts a text enumerated type to its unsigned integer representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>info</code></em> :</span></p></td>
+<td> Text describing the enumerated type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_SIGTYPE_ENUM_GPG
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_info_enum_to_string ()">
+<a name="pk-info-enum-to-string"></a><h3>pk_info_enum_to_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_info_enum_to_string              (<a class="link" href="PackageKit-pk-enum.html#PkInfoEnum" title="enum PkInfoEnum"><span class="returnvalue">PkInfoEnum</span></a> info);</pre>
+<p>
+Converts a enumerated type to its text representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>info</code></em> :</span></p></td>
+<td> The enumerated type value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. "available"
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_update_state_enum_from_string ()">
+<a name="pk-update-state-enum-from-string"></a><h3>pk_update_state_enum_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkUpdateStateEnum" title="enum PkUpdateStateEnum"><span class="returnvalue">PkUpdateStateEnum</span></a>   pk_update_state_enum_from_string    (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *update_state);</pre>
+<p>
+Converts a text enumerated type to its unsigned integer representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>update_state</code></em> :</span></p></td>
+<td> Text describing the enumerated type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. <code class="literal">PK_UPDATE_STATE_ENUM_STABLE</code>
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_update_state_enum_to_string ()">
+<a name="pk-update-state-enum-to-string"></a><h3>pk_update_state_enum_to_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_update_state_enum_to_string      (<a class="link" href="PackageKit-pk-enum.html#PkUpdateStateEnum" title="enum PkUpdateStateEnum"><span class="returnvalue">PkUpdateStateEnum</span></a> update_state);</pre>
+<p>
+Converts a enumerated type to its text representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>update_state</code></em> :</span></p></td>
+<td> The enumerated type value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. "testing"
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_exit_enum_from_string ()">
+<a name="pk-exit-enum-from-string"></a><h3>pk_exit_enum_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkExitEnum" title="enum PkExitEnum"><span class="returnvalue">PkExitEnum</span></a>          pk_exit_enum_from_string            (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *exit);</pre>
+<p>
+Converts a text enumerated type to its unsigned integer representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>exit</code></em> :</span></p></td>
+<td> Text describing the enumerated type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_SIGTYPE_ENUM_GPG
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_exit_enum_to_string ()">
+<a name="pk-exit-enum-to-string"></a><h3>pk_exit_enum_to_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_exit_enum_to_string              (<a class="link" href="PackageKit-pk-enum.html#PkExitEnum" title="enum PkExitEnum"><span class="returnvalue">PkExitEnum</span></a> exit);</pre>
+<p>
+Converts a enumerated type to its text representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>exit</code></em> :</span></p></td>
+<td> The enumerated type value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. "available"
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_network_enum_from_string ()">
+<a name="pk-network-enum-from-string"></a><h3>pk_network_enum_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkNetworkEnum" title="enum PkNetworkEnum"><span class="returnvalue">PkNetworkEnum</span></a>       pk_network_enum_from_string         (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *network);</pre>
+<p>
+Converts a text enumerated type to its unsigned integer representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>network</code></em> :</span></p></td>
+<td> Text describing the enumerated type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_SIGTYPE_ENUM_GPG
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_network_enum_to_string ()">
+<a name="pk-network-enum-to-string"></a><h3>pk_network_enum_to_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_network_enum_to_string           (<a class="link" href="PackageKit-pk-enum.html#PkNetworkEnum" title="enum PkNetworkEnum"><span class="returnvalue">PkNetworkEnum</span></a> network);</pre>
+<p>
+Converts a enumerated type to its text representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>network</code></em> :</span></p></td>
+<td> The enumerated type value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. "available"
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_status_enum_from_string ()">
+<a name="pk-status-enum-from-string"></a><h3>pk_status_enum_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkStatusEnum" title="enum PkStatusEnum"><span class="returnvalue">PkStatusEnum</span></a>        pk_status_enum_from_string          (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *status);</pre>
+<p>
+Converts a text enumerated type to its unsigned integer representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>status</code></em> :</span></p></td>
+<td> Text describing the enumerated type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_SIGTYPE_ENUM_GPG
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_status_enum_to_string ()">
+<a name="pk-status-enum-to-string"></a><h3>pk_status_enum_to_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_status_enum_to_string            (<a class="link" href="PackageKit-pk-enum.html#PkStatusEnum" title="enum PkStatusEnum"><span class="returnvalue">PkStatusEnum</span></a> status);</pre>
+<p>
+Converts a enumerated type to its text representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>status</code></em> :</span></p></td>
+<td> The enumerated type value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. "available"
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_role_enum_from_string ()">
+<a name="pk-role-enum-from-string"></a><h3>pk_role_enum_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkRoleEnum" title="enum PkRoleEnum"><span class="returnvalue">PkRoleEnum</span></a>          pk_role_enum_from_string            (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *role);</pre>
+<p>
+Converts a text enumerated type to its unsigned integer representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>role</code></em> :</span></p></td>
+<td> Text describing the enumerated type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_SIGTYPE_ENUM_GPG
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_role_enum_to_string ()">
+<a name="pk-role-enum-to-string"></a><h3>pk_role_enum_to_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_role_enum_to_string              (<a class="link" href="PackageKit-pk-enum.html#PkRoleEnum" title="enum PkRoleEnum"><span class="returnvalue">PkRoleEnum</span></a> role);</pre>
+<p>
+Converts a enumerated type to its text representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>role</code></em> :</span></p></td>
+<td> The enumerated type value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. "available"
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_error_enum_from_string ()">
+<a name="pk-error-enum-from-string"></a><h3>pk_error_enum_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkErrorEnum" title="enum PkErrorEnum"><span class="returnvalue">PkErrorEnum</span></a>         pk_error_enum_from_string           (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *code);</pre>
+<p>
+Converts a text enumerated type to its unsigned integer representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>code</code></em> :</span></p></td>
+<td> Text describing the enumerated type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_SIGTYPE_ENUM_GPG
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_error_enum_to_string ()">
+<a name="pk-error-enum-to-string"></a><h3>pk_error_enum_to_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_error_enum_to_string             (<a class="link" href="PackageKit-pk-enum.html#PkErrorEnum" title="enum PkErrorEnum"><span class="returnvalue">PkErrorEnum</span></a> code);</pre>
+<p>
+Converts a enumerated type to its text representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>code</code></em> :</span></p></td>
+<td> The enumerated type value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. "available"
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_restart_enum_from_string ()">
+<a name="pk-restart-enum-from-string"></a><h3>pk_restart_enum_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkRestartEnum" title="enum PkRestartEnum"><span class="returnvalue">PkRestartEnum</span></a>       pk_restart_enum_from_string         (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *restart);</pre>
+<p>
+Converts a text enumerated type to its unsigned integer representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>restart</code></em> :</span></p></td>
+<td> Text describing the enumerated type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_SIGTYPE_ENUM_GPG
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_restart_enum_to_string ()">
+<a name="pk-restart-enum-to-string"></a><h3>pk_restart_enum_to_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_restart_enum_to_string           (<a class="link" href="PackageKit-pk-enum.html#PkRestartEnum" title="enum PkRestartEnum"><span class="returnvalue">PkRestartEnum</span></a> restart);</pre>
+<p>
+Converts a enumerated type to its text representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>restart</code></em> :</span></p></td>
+<td> The enumerated type value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. "available"
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_message_enum_from_string ()">
+<a name="pk-message-enum-from-string"></a><h3>pk_message_enum_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkMessageEnum" title="enum PkMessageEnum"><span class="returnvalue">PkMessageEnum</span></a>       pk_message_enum_from_string         (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *message);</pre>
+<p>
+Converts a text enumerated type to its unsigned integer representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
+<td> Text describing the enumerated type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_SIGTYPE_ENUM_GPG
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_message_enum_to_string ()">
+<a name="pk-message-enum-to-string"></a><h3>pk_message_enum_to_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_message_enum_to_string           (<a class="link" href="PackageKit-pk-enum.html#PkMessageEnum" title="enum PkMessageEnum"><span class="returnvalue">PkMessageEnum</span></a> message);</pre>
+<p>
+Converts a enumerated type to its text representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
+<td> The enumerated type value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. "available"
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_group_enum_from_string ()">
+<a name="pk-group-enum-from-string"></a><h3>pk_group_enum_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkGroupEnum" title="enum PkGroupEnum"><span class="returnvalue">PkGroupEnum</span></a>         pk_group_enum_from_string           (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *group);</pre>
+<p>
+Converts a text enumerated type to its unsigned integer representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>group</code></em> :</span></p></td>
+<td> Text describing the enumerated type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_SIGTYPE_ENUM_GPG
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_group_enum_to_string ()">
+<a name="pk-group-enum-to-string"></a><h3>pk_group_enum_to_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_group_enum_to_string             (<a class="link" href="PackageKit-pk-enum.html#PkGroupEnum" title="enum PkGroupEnum"><span class="returnvalue">PkGroupEnum</span></a> group);</pre>
+<p>
+Converts a enumerated type to its text representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>group</code></em> :</span></p></td>
+<td> The enumerated type value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. "available"
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_filter_enum_from_string ()">
+<a name="pk-filter-enum-from-string"></a><h3>pk_filter_enum_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkFilterEnum" title="enum PkFilterEnum"><span class="returnvalue">PkFilterEnum</span></a>        pk_filter_enum_from_string          (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *filter);</pre>
+<p>
+Converts a text enumerated type to its unsigned integer representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filter</code></em> :</span></p></td>
+<td> Text describing the enumerated type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_SIGTYPE_ENUM_GPG
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_filter_enum_to_string ()">
+<a name="pk-filter-enum-to-string"></a><h3>pk_filter_enum_to_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_filter_enum_to_string            (<a class="link" href="PackageKit-pk-enum.html#PkFilterEnum" title="enum PkFilterEnum"><span class="returnvalue">PkFilterEnum</span></a> filter);</pre>
+<p>
+Converts a enumerated type to its text representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filter</code></em> :</span></p></td>
+<td> The enumerated type value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. "available"
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_provides_enum_from_string ()">
+<a name="pk-provides-enum-from-string"></a><h3>pk_provides_enum_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkProvidesEnum" title="enum PkProvidesEnum"><span class="returnvalue">PkProvidesEnum</span></a>      pk_provides_enum_from_string        (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *provides);</pre>
+<p>
+Converts a text enumerated type to its unsigned integer representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>provides</code></em> :</span></p></td>
+<td> Text describing the enumerated type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_PROVIDES_ENUM_MODALIAS
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_provides_enum_to_string ()">
+<a name="pk-provides-enum-to-string"></a><h3>pk_provides_enum_to_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_provides_enum_to_string          (<a class="link" href="PackageKit-pk-enum.html#PkProvidesEnum" title="enum PkProvidesEnum"><span class="returnvalue">PkProvidesEnum</span></a> provides);</pre>
+<p>
+Converts a enumerated type to its text representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>provides</code></em> :</span></p></td>
+<td> The enumerated type value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. "codec"
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_license_enum_from_string ()">
+<a name="pk-license-enum-from-string"></a><h3>pk_license_enum_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkLicenseEnum" title="enum PkLicenseEnum"><span class="returnvalue">PkLicenseEnum</span></a>       pk_license_enum_from_string         (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *license);</pre>
+<p>
+Converts a text enumerated type to its unsigned integer representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>license</code></em> :</span></p></td>
+<td> Text describing the enumerated type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_SIGTYPE_ENUM_GPG
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_license_enum_to_string ()">
+<a name="pk-license-enum-to-string"></a><h3>pk_license_enum_to_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_license_enum_to_string           (<a class="link" href="PackageKit-pk-enum.html#PkLicenseEnum" title="enum PkLicenseEnum"><span class="returnvalue">PkLicenseEnum</span></a> license);</pre>
+<p>
+Converts a enumerated type to its text representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>license</code></em> :</span></p></td>
+<td> The enumerated type value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. "available"
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_distro_upgrade_enum_from_string ()">
+<a name="pk-distro-upgrade-enum-from-string"></a><h3>pk_distro_upgrade_enum_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkDistroUpgradeEnum" title="enum PkDistroUpgradeEnum"><span class="returnvalue">PkDistroUpgradeEnum</span></a>  pk_distro_upgrade_enum_from_string (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *upgrade);</pre>
+<p>
+Converts a text enumerated type to its unsigned integer representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>upgrade</code></em> :</span></p></td>
+<td> Text describing the enumerated type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_DISTRO_UPGRADE_ENUM_STABLE
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_distro_upgrade_enum_to_string ()">
+<a name="pk-distro-upgrade-enum-to-string"></a><h3>pk_distro_upgrade_enum_to_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_distro_upgrade_enum_to_string    (<a class="link" href="PackageKit-pk-enum.html#PkDistroUpgradeEnum" title="enum PkDistroUpgradeEnum"><span class="returnvalue">PkDistroUpgradeEnum</span></a> upgrade);</pre>
+<p>
+Converts a enumerated type to its text representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>upgrade</code></em> :</span></p></td>
+<td> The enumerated type value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. "stable"
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_media_type_enum_from_string ()">
+<a name="pk-media-type-enum-from-string"></a><h3>pk_media_type_enum_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkMediaTypeEnum" title="enum PkMediaTypeEnum"><span class="returnvalue">PkMediaTypeEnum</span></a>     pk_media_type_enum_from_string      (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *media_type);</pre>
+<p>
+Converts a text enumerated type to its unsigned integer representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>media_type</code></em> :</span></p></td>
+<td> Text describing the enumerated type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_MEDIA_TYPE_ENUM_CD
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_media_type_enum_to_string ()">
+<a name="pk-media-type-enum-to-string"></a><h3>pk_media_type_enum_to_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_media_type_enum_to_string        (<a class="link" href="PackageKit-pk-enum.html#PkMediaTypeEnum" title="enum PkMediaTypeEnum"><span class="returnvalue">PkMediaTypeEnum</span></a> media_type);</pre>
+<p>
+Converts a enumerated type to its text representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>media_type</code></em> :</span></p></td>
+<td> The enumerated type value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. "dvd"
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_authorize_type_enum_from_string ()">
+<a name="pk-authorize-type-enum-from-string"></a><h3>pk_authorize_type_enum_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="PackageKit-pk-enum.html#PkAuthorizeEnum" title="enum PkAuthorizeEnum"><span class="returnvalue">PkAuthorizeEnum</span></a>     pk_authorize_type_enum_from_string  (const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *auth_type);</pre>
+<p>
+Converts a text enumerated type to its unsigned integer representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>auth_type</code></em> :</span></p></td>
+<td>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. PK_AUTHORIZE_ENUM_YES
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_authorize_type_enum_to_string ()">
+<a name="pk-authorize-type-enum-to-string"></a><h3>pk_authorize_type_enum_to_string ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       pk_authorize_type_enum_to_string    (<a class="link" href="PackageKit-pk-enum.html#PkAuthorizeEnum" title="enum PkAuthorizeEnum"><span class="returnvalue">PkAuthorizeEnum</span></a> auth_type);</pre>
+<p>
+Converts a enumerated type to its text representation</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>auth_type</code></em> :</span></p></td>
+<td>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the enumerated constant value, e.g. "yes"
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.0</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.13</div>
+</body>
+</html>

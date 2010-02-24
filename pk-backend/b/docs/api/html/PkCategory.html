@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>PkCategory</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="PackageKit Reference Manual">
+<link rel="up" href="libpackagekit-gobject.html" title="libpackagekit GObjects">
+<link rel="prev" href="PkCatalog.html" title="PkCatalog">
+<link rel="next" href="PkClient.html" title="PkClient">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="reference" href="specification.html" title="PackageKit Specification">
+<link rel="chapter" href="introduction.html" title="PackageKit Introduction">
+<link rel="chapter" href="concepts.html" title="Important Concepts">
+<link rel="chapter" href="backend-compiled.html" title="Compiled Backends">
+<link rel="chapter" href="backend-spawn.html" title="Spawned Backends">
+<link rel="reference" href="api-reference.html" title="D-Bus API Reference">
+<link rel="reference" href="libpackagekit-gobject.html" title="libpackagekit GObjects">
+<link rel="reference" href="libpackagekit-helpers.html" title="libpackagekit glib helpers">
+<link rel="reference" href="faq.html" title="Frequently asked questions">
+<link rel="chapter" href="developer-faq.html" title="Developer FAQ">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="PkCatalog.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="libpackagekit-gobject.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">PackageKit Reference Manual</th>
+<td><a accesskey="n" href="PkClient.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#PkCategory.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#PkCategory.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#PkCategory.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#PkCategory.properties" class="shortcut">Properties</a>
+</td></tr>
+</table>
+<div class="refentry" title="PkCategory">
+<a name="PkCategory"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="PkCategory.top_of_page"></a>PkCategory</span></h2>
+<p>PkCategory — Category object</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="PkCategory.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">                    <a class="link" href="PkCategory.html#PkCategoryPrivate" title="PkCategoryPrivate">PkCategoryPrivate</a>;
+                    <a class="link" href="PkCategory.html#PkCategory-struct" title="PkCategory">PkCategory</a>;
+<a class="link" href="PkCategory.html" title="PkCategory"><span class="returnvalue">PkCategory</span></a> *        <a class="link" href="PkCategory.html#pk-category-new" title="pk_category_new ()">pk_category_new</a>                     (void);
+</pre>
+</div>
+<div class="refsect1" title="Object Hierarchy">
+<a name="PkCategory.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----PkSource
+         +----PkCategory
+</pre>
+</div>
+<div class="refsect1" title="Properties">
+<a name="PkCategory.properties"></a><h2>Properties</h2>
+<pre class="synopsis">
+  "<a class="link" href="PkCategory.html#PkCategory--cat-id" title='The "cat-id" property'>cat-id</a>"                   <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+  "<a class="link" href="PkCategory.html#PkCategory--icon" title='The "icon" property'>icon</a>"                     <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+  "<a class="link" href="PkCategory.html#PkCategory--name" title='The "name" property'>name</a>"                     <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+  "<a class="link" href="PkCategory.html#PkCategory--parent-id" title='The "parent-id" property'>parent-id</a>"                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+  "<a class="link" href="PkCategory.html#PkCategory--summary" title='The "summary" property'>summary</a>"                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="PkCategory.description"></a><h2>Description</h2>
+<p>
+This GObject represents a category in the group system.</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="PkCategory.details"></a><h2>Details</h2>
+<div class="refsect2" title="PkCategoryPrivate">
+<a name="PkCategoryPrivate"></a><h3>PkCategoryPrivate</h3>
+<pre class="programlisting">typedef struct _PkCategoryPrivate PkCategoryPrivate;</pre>
+<p>
+Private <a class="link" href="PkCategory.html" title="PkCategory"><span class="type">PkCategory</span></a> data</p>
+</div>
+<hr>
+<div class="refsect2" title="PkCategory">
+<a name="PkCategory-struct"></a><h3>PkCategory</h3>
+<pre class="programlisting">typedef struct _PkCategory PkCategory;</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_category_new ()">
+<a name="pk-category-new"></a><h3>pk_category_new ()</h3>
+<pre class="programlisting"><a class="link" href="PkCategory.html" title="PkCategory"><span class="returnvalue">PkCategory</span></a> *        pk_category_new                     (void);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new PkCategory object.
+
+</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 0.5.4</p>
+</div>
+</div>
+<div class="refsect1" title="Property Details">
+<a name="PkCategory.property-details"></a><h2>Property Details</h2>
+<div class="refsect2" title='The "cat-id" property'>
+<a name="PkCategory--cat-id"></a><h3>The <code class="literal">"cat-id"</code> property</h3>
+<pre class="programlisting">  "cat-id"                   <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p></p>
+<p>Default value: NULL</p>
+<p class="since">Since 0.5.4</p>
+</div>
+<hr>
+<div class="refsect2" title='The "icon" property'>
+<a name="PkCategory--icon"></a><h3>The <code class="literal">"icon"</code> property</h3>
+<pre class="programlisting">  "icon"                     <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p></p>
+<p>Default value: NULL</p>
+<p class="since">Since 0.5.4</p>
+</div>
+<hr>
+<div class="refsect2" title='The "name" property'>
+<a name="PkCategory--name"></a><h3>The <code class="literal">"name"</code> property</h3>
+<pre class="programlisting">  "name"                     <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p></p>
+<p>Default value: NULL</p>
+<p class="since">Since 0.5.4</p>
+</div>
+<hr>
+<div class="refsect2" title='The "parent-id" property'>
+<a name="PkCategory--parent-id"></a><h3>The <code class="literal">"parent-id"</code> property</h3>
+<pre class="programlisting">  "parent-id"                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p></p>
+<p>Default value: NULL</p>
+<p class="since">Since 0.5.4</p>
+</div>
+<hr>
+<div class="refsect2" title='The "summary" property'>
+<a name="PkCategory--summary"></a><h3>The <code class="literal">"summary"</code> property</h3>
+<pre class="programlisting">  "summary"                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p></p>
+<p>Default value: NULL</p>
+<p class="since">Since 0.5.4</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.13</div>
+</body>
+</html>

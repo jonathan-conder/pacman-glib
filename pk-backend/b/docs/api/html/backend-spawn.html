@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Spawned Backends</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="PackageKit Reference Manual">
+<link rel="up" href="specification.html" title="PackageKit Specification">
+<link rel="prev" href="backend-compiled.html" title="Compiled Backends">
+<link rel="next" href="backends-spawn-methods.html" title="Methods">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="reference" href="specification.html" title="PackageKit Specification">
+<link rel="chapter" href="introduction.html" title="PackageKit Introduction">
+<link rel="chapter" href="concepts.html" title="Important Concepts">
+<link rel="chapter" href="backend-compiled.html" title="Compiled Backends">
+<link rel="chapter" href="backend-spawn.html" title="Spawned Backends">
+<link rel="reference" href="api-reference.html" title="D-Bus API Reference">
+<link rel="reference" href="libpackagekit-gobject.html" title="libpackagekit GObjects">
+<link rel="reference" href="libpackagekit-helpers.html" title="libpackagekit glib helpers">
+<link rel="reference" href="faq.html" title="Frequently asked questions">
+<link rel="chapter" href="developer-faq.html" title="Developer FAQ">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
+<td><a accesskey="p" href="backend-compiled.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="specification.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">PackageKit Reference Manual</th>
+<td><a accesskey="n" href="backends-spawn-methods.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="chapter" title="Spawned Backends">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="backend-spawn"></a>Spawned Backends</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="sect1"><a href="backend-spawn.html#backends-spawn-intro">Introduction</a></span></dt>
+<dt><span class="sect1"><a href="backends-spawn-methods.html">Methods</a></span></dt>
+<dt><span class="sect1"><a href="backends-spawn-common.html">Common function outputs</a></span></dt>
+</dl></div>
+<div class="sect1" title="Introduction">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="backends-spawn-intro"></a>Introduction</h2></div></div></div>
+<p>
+      If you do not have a C or C++ language binding, PackageKit executes
+      helper scripts written in pretty much any language.
+      It then watches the standard out and standard error and parses the
+      output into compiled backend commands.
+      This means a python library can be interfaced easily with a C backend.
+    </p>
+<p>
+      Even when using helpers, a compiled backend stub is still used for
+      two reasons:
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem"><p>
+          It is still needed for the dlopen internally in PackageKit.
+        </p></li>
+<li class="listitem"><p>
+          You can add cleverness in the C backend that you might not want to
+          do in the scripted backend, for example using a hash table in C
+          rather than checking all the names in awk.
+        </p></li>
+</ul></div>
+<p>
+      Backends are typically open-programmable, which means we can define a
+      standard for what goes on stdin and stdout to try and maximise
+      the common code between the backends.
+      The following section will explain the convention used on
+      <code class="literal">backends/conary</code> and <code class="literal">backends/yum</code>.
+    </p>
+<p>
+      If you are unable to write scripts that conform to these specifications
+      then just launch a PkSpawn object in the compiled helper with stdout
+      callbacks and then try to do screenscraping in the backend.
+      This screen-scraping is least popular for obvious reasons.
+    </p>
+<p>
+      Backends scripts are run with arguments and data is sent to standard out
+      and standard error asynchronously so that PackageKit can proxy this to DBUS.
+      A method has command line arguments separated with tabs, and data is also
+      separated with tabs.
+    </p>
+<p>
+      It is important to flush the standard output after each output, else
+      Linux will helpfully buffer the output into more efficient size chunks.
+      If you do not flush, then there will be a long IPC delay.
+      Flushing can be achieved in C using <code class="literal">fflush</code> or in python
+      using <code class="literal">sys.stdout.flush()</code>.
+    </p>
+<p>
+      There are two modes of operation for a spawned backend, a one shot mode and
+      a dispatcher mode.
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+          The "one-shot" mode is where commands are executed
+          (e.g. <code class="literal">search-name.py none power</code>), which then
+          initialises the package backend, returns results and then exits.
+          This is obviously not ideal, as some backends like smart can take
+          several hundred ms to initialise, and this leads to a "laggy"
+          GUI applications.
+        </p>
+<p>
+          This however is the easiest mode to implement, and the original one
+          supported by all versions of PackageKit.
+        </p>
+</li>
+<li class="listitem">
+<p>
+          The "dispatcher" mode is where a command is used to startup the
+          backend, for instance <code class="literal">yumBackend.py search-name none power</code>
+          and then the backend then sits and waits for more standard input.
+          Further operations can be done on the loaded backend sending commands
+          to stdin, e.g. <code class="literal">search-name none power</code>.
+          If there are no more operations after a preset time (default 5 seconds)
+          then the backend is sent <code class="literal">exit</code> over stdin, and the
+          backend terminates.
+          The daemon will ensure the operations are serialised, and that backends
+          not sending <code class="literal">finished</code> are cleaned up properly.
+        </p>
+<p>
+          This is quite easy to implement (see the end of yumBackend.py), and
+          is supported from PackageKit version 0.3.2.
+          The dispatcher mode does not have to implemented in python; any
+          language that can read from stdin can block and be used in this way.
+        </p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.13</div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+# Contributor: PirateJonno <j@skurvy.no-ip.org>
+# Contributor: onestep_ua <onestep@ukr.net>
+
+pkgname=gnome-packagekit
+pkgver=2.29.3
+pkgrel=1
+pkgdesc='Collection of graphical tools for PackageKit to be used in the GNOME desktop'
+arch=('i686' 'x86_64')
+url='http://www.packagekit.org/'
+license=('GPL')
+depends=('packagekit>=0.5.5' 'gconf>=2.28.0' 'gnome-icon-theme>=2.28.0'
+         'dbus-glib>=0.73' 'libnotify>=0.4.3' 'libunique>=1.0.0'
+         'libcanberra>=0.10' 'gnome-menus>=2.24.1' 'devicekit-power>=007')
+makedepends=('gtk-doc' 'intltool')
+install="${pkgname}.install"
+source=("http://www.packagekit.org/releases/${pkgname}-${pkgver}.tar.gz"
+        'no-gtk-module-by-default.patch'
+        'autoremove.patch'
+        'gtk-2.28.patch')
+md5sums=('07bfff1e7989c645f57c36c876c87794'
+         '1553d735f4e0f32418c180a8fc82bbe1'
+         'ef252748e534d0c30e7aac4b823ccf9d'
+         'c5bc119d97d919cc1ed46851bb7ae03f')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	
+	patch -Np1 -i "${srcdir}/no-gtk-module-by-default.patch" || return 1
+	patch -Np1 -i "${srcdir}/autoremove.patch" || return 1
+	patch -Np1 -i "${srcdir}/gtk-2.28.patch" || return 1
+	
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--disable-gtk-doc \
+		--disable-scrollkeeper || return 1
+	make -s || return 1
+	make -s GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1 DESTDIR="${pkgdir}" install || return 1
+	
+	install -m 755 -d "${pkgdir}/usr/share/gconf/schemas"
+	gconf-merge-schema "${pkgdir}/usr/share/gconf/schemas/${pkgname}.schemas" "${pkgdir}"/etc/gconf/schemas/*.schemas || return 1
+	rm -rf "${pkgdir}/etc"
+}

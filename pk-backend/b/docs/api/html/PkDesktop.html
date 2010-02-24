@@ -1,0 +1,287 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>PkDesktop</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="PackageKit Reference Manual">
+<link rel="up" href="libpackagekit-gobject.html" title="libpackagekit GObjects">
+<link rel="prev" href="PkControl.html" title="PkControl">
+<link rel="next" href="PkDetails.html" title="PkDetails">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="reference" href="specification.html" title="PackageKit Specification">
+<link rel="chapter" href="introduction.html" title="PackageKit Introduction">
+<link rel="chapter" href="concepts.html" title="Important Concepts">
+<link rel="chapter" href="backend-compiled.html" title="Compiled Backends">
+<link rel="chapter" href="backend-spawn.html" title="Spawned Backends">
+<link rel="reference" href="api-reference.html" title="D-Bus API Reference">
+<link rel="reference" href="libpackagekit-gobject.html" title="libpackagekit GObjects">
+<link rel="reference" href="libpackagekit-helpers.html" title="libpackagekit glib helpers">
+<link rel="reference" href="faq.html" title="Frequently asked questions">
+<link rel="chapter" href="developer-faq.html" title="Developer FAQ">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="PkControl.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="libpackagekit-gobject.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">PackageKit Reference Manual</th>
+<td><a accesskey="n" href="PkDetails.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#PkDesktop.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#PkDesktop.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#PkDesktop.object-hierarchy" class="shortcut">Object Hierarchy</a>
+</td></tr>
+</table>
+<div class="refentry" title="PkDesktop">
+<a name="PkDesktop"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="PkDesktop.top_of_page"></a>PkDesktop</span></h2>
+<p>PkDesktop — Find desktop metadata about a package</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="PkDesktop.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">#define             <a class="link" href="PkDesktop.html#PK-DESKTOP-DEFAULT-DATABASE:CAPS" title="PK_DESKTOP_DEFAULT_DATABASE">PK_DESKTOP_DEFAULT_DATABASE</a>
+#define             <a class="link" href="PkDesktop.html#PK-DESKTOP-DEFAULT-APPLICATION-DIR:CAPS" title="PK_DESKTOP_DEFAULT_APPLICATION_DIR">PK_DESKTOP_DEFAULT_APPLICATION_DIR</a>
+                    <a class="link" href="PkDesktop.html#PkDesktopPrivate" title="PkDesktopPrivate">PkDesktopPrivate</a>;
+                    <a class="link" href="PkDesktop.html#PkDesktop-struct" title="PkDesktop">PkDesktop</a>;
+<a class="link" href="PkDesktop.html" title="PkDesktop"><span class="returnvalue">PkDesktop</span></a> *         <a class="link" href="PkDesktop.html#pk-desktop-new" title="pk_desktop_new ()">pk_desktop_new</a>                      (void);
+<span class="returnvalue">void</span>                <a class="link" href="PkDesktop.html#pk-desktop-test" title="pk_desktop_test ()">pk_desktop_test</a>                     (<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="PkDesktop.html#pk-desktop-open-database" title="pk_desktop_open_database ()">pk_desktop_open_database</a>            (<a class="link" href="PkDesktop.html" title="PkDesktop"><span class="returnvalue">PkDesktop</span></a> *desktop,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Pointer-Arrays.html#GPtrArray"><span class="returnvalue">GPtrArray</span></a> *         <a class="link" href="PkDesktop.html#pk-desktop-get-files-for-package" title="pk_desktop_get_files_for_package ()">pk_desktop_get_files_for_package</a>    (<a class="link" href="PkDesktop.html" title="PkDesktop"><span class="returnvalue">PkDesktop</span></a> *desktop,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *package,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Pointer-Arrays.html#GPtrArray"><span class="returnvalue">GPtrArray</span></a> *         <a class="link" href="PkDesktop.html#pk-desktop-get-shown-for-package" title="pk_desktop_get_shown_for_package ()">pk_desktop_get_shown_for_package</a>    (<a class="link" href="PkDesktop.html" title="PkDesktop"><span class="returnvalue">PkDesktop</span></a> *desktop,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *package,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="PkDesktop.html#pk-desktop-get-package-for-file" title="pk_desktop_get_package_for_file ()">pk_desktop_get_package_for_file</a>     (<a class="link" href="PkDesktop.html" title="PkDesktop"><span class="returnvalue">PkDesktop</span></a> *desktop,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *filename,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);
+</pre>
+</div>
+<div class="refsect1" title="Object Hierarchy">
+<a name="PkDesktop.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----PkDesktop
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="PkDesktop.description"></a><h2>Description</h2>
+<p>
+Desktop metadata such as icon name and localised summary may be stored in
+a local sqlite cache, and this module allows applications to query this.</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="PkDesktop.details"></a><h2>Details</h2>
+<div class="refsect2" title="PK_DESKTOP_DEFAULT_DATABASE">
+<a name="PK-DESKTOP-DEFAULT-DATABASE:CAPS"></a><h3>PK_DESKTOP_DEFAULT_DATABASE</h3>
+<pre class="programlisting">#define PK_DESKTOP_DEFAULT_DATABASE		LOCALSTATEDIR "/lib/PackageKit/desktop-files.db"
+</pre>
+<p>
+The default location for the database</p>
+</div>
+<hr>
+<div class="refsect2" title="PK_DESKTOP_DEFAULT_APPLICATION_DIR">
+<a name="PK-DESKTOP-DEFAULT-APPLICATION-DIR:CAPS"></a><h3>PK_DESKTOP_DEFAULT_APPLICATION_DIR</h3>
+<pre class="programlisting">#define             PK_DESKTOP_DEFAULT_APPLICATION_DIR</pre>
+<p>
+The default location for the desktop files</p>
+</div>
+<hr>
+<div class="refsect2" title="PkDesktopPrivate">
+<a name="PkDesktopPrivate"></a><h3>PkDesktopPrivate</h3>
+<pre class="programlisting">typedef struct _PkDesktopPrivate PkDesktopPrivate;</pre>
+<p>
+Private <a class="link" href="PkDesktop.html" title="PkDesktop"><span class="type">PkDesktop</span></a> data</p>
+</div>
+<hr>
+<div class="refsect2" title="PkDesktop">
+<a name="PkDesktop-struct"></a><h3>PkDesktop</h3>
+<pre class="programlisting">typedef struct _PkDesktop PkDesktop;</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_desktop_new ()">
+<a name="pk-desktop-new"></a><h3>pk_desktop_new ()</h3>
+<pre class="programlisting"><a class="link" href="PkDesktop.html" title="PkDesktop"><span class="returnvalue">PkDesktop</span></a> *         pk_desktop_new                      (void);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>
+</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 0.5.3</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_desktop_test ()">
+<a name="pk-desktop-test"></a><h3>pk_desktop_test ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                pk_desktop_test                     (<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a> user_data);</pre>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="pk_desktop_open_database ()">
+<a name="pk-desktop-open-database"></a><h3>pk_desktop_open_database ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            pk_desktop_open_database            (<a class="link" href="PkDesktop.html" title="PkDesktop"><span class="returnvalue">PkDesktop</span></a> *desktop,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desktop</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkDesktop.html" title="PkDesktop"><span class="type">PkDesktop</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if opened correctly
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.3</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_desktop_get_files_for_package ()">
+<a name="pk-desktop-get-files-for-package"></a><h3>pk_desktop_get_files_for_package ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Pointer-Arrays.html#GPtrArray"><span class="returnvalue">GPtrArray</span></a> *         pk_desktop_get_files_for_package    (<a class="link" href="PkDesktop.html" title="PkDesktop"><span class="returnvalue">PkDesktop</span></a> *desktop,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *package,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);</pre>
+<p>
+Return all desktop files owned by a package, regardless if they are shown
+in the main menu or not.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desktop</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkDesktop.html" title="PkDesktop"><span class="type">PkDesktop</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>package</code></em> :</span></p></td>
+<td> the package name, e.g. "gnome-power-manager"
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td> a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><code class="literal">GError</code></a> to put the error code and message in, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> string array of results, free with <a href="http://library.gnome.org/devel/glib/unstable/glib-Pointer-Arrays.html#g-ptr-array-unref"><code class="function">g_ptr_array_unref()</code></a>
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.3</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_desktop_get_shown_for_package ()">
+<a name="pk-desktop-get-shown-for-package"></a><h3>pk_desktop_get_shown_for_package ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Pointer-Arrays.html#GPtrArray"><span class="returnvalue">GPtrArray</span></a> *         pk_desktop_get_shown_for_package    (<a class="link" href="PkDesktop.html" title="PkDesktop"><span class="returnvalue">PkDesktop</span></a> *desktop,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *package,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);</pre>
+<p>
+Return all desktop files owned by a package that would be shown in a menu,
+i.e are an application</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desktop</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkDesktop.html" title="PkDesktop"><span class="type">PkDesktop</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>package</code></em> :</span></p></td>
+<td> the package name, e.g. "gnome-power-manager"
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td> a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><code class="literal">GError</code></a> to put the error code and message in, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> string array of results, free with <a href="http://library.gnome.org/devel/glib/unstable/glib-Pointer-Arrays.html#g-ptr-array-unref"><code class="function">g_ptr_array_unref()</code></a>
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.3</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_desktop_get_package_for_file ()">
+<a name="pk-desktop-get-package-for-file"></a><h3>pk_desktop_get_package_for_file ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             pk_desktop_get_package_for_file     (<a class="link" href="PkDesktop.html" title="PkDesktop"><span class="returnvalue">PkDesktop</span></a> *desktop,
+                                                         const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *filename,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);</pre>
+<p>
+Returns the package name that owns the desktop file. Fast.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>desktop</code></em> :</span></p></td>
+<td> a valid <a class="link" href="PkDesktop.html" title="PkDesktop"><span class="type">PkDesktop</span></a> instance
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td> a fully qualified filename
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td> a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><code class="literal">GError</code></a> to put the error code and message in, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> package name, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.5.3</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.13</div>
+</body>
+</html>

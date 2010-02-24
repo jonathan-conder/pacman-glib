@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>PkDistroUpgrade</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="PackageKit Reference Manual">
+<link rel="up" href="libpackagekit-gobject.html" title="libpackagekit GObjects">
+<link rel="prev" href="PkDetails.html" title="PkDetails">
+<link rel="next" href="PkError.html" title="PkError">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="reference" href="specification.html" title="PackageKit Specification">
+<link rel="chapter" href="introduction.html" title="PackageKit Introduction">
+<link rel="chapter" href="concepts.html" title="Important Concepts">
+<link rel="chapter" href="backend-compiled.html" title="Compiled Backends">
+<link rel="chapter" href="backend-spawn.html" title="Spawned Backends">
+<link rel="reference" href="api-reference.html" title="D-Bus API Reference">
+<link rel="reference" href="libpackagekit-gobject.html" title="libpackagekit GObjects">
+<link rel="reference" href="libpackagekit-helpers.html" title="libpackagekit glib helpers">
+<link rel="reference" href="faq.html" title="Frequently asked questions">
+<link rel="chapter" href="developer-faq.html" title="Developer FAQ">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="PkDetails.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="libpackagekit-gobject.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">PackageKit Reference Manual</th>
+<td><a accesskey="n" href="PkError.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#PkDistroUpgrade.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#PkDistroUpgrade.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#PkDistroUpgrade.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#PkDistroUpgrade.properties" class="shortcut">Properties</a>
+</td></tr>
+</table>
+<div class="refentry" title="PkDistroUpgrade">
+<a name="PkDistroUpgrade"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="PkDistroUpgrade.top_of_page"></a>PkDistroUpgrade</span></h2>
+<p>PkDistroUpgrade — DistroUpgrade object</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="PkDistroUpgrade.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">                    <a class="link" href="PkDistroUpgrade.html#PkDistroUpgradePrivate" title="PkDistroUpgradePrivate">PkDistroUpgradePrivate</a>;
+                    <a class="link" href="PkDistroUpgrade.html#PkDistroUpgrade-struct" title="PkDistroUpgrade">PkDistroUpgrade</a>;
+<a class="link" href="PkDistroUpgrade.html" title="PkDistroUpgrade"><span class="returnvalue">PkDistroUpgrade</span></a> *   <a class="link" href="PkDistroUpgrade.html#pk-distro-upgrade-new" title="pk_distro_upgrade_new ()">pk_distro_upgrade_new</a>               (void);
+</pre>
+</div>
+<div class="refsect1" title="Object Hierarchy">
+<a name="PkDistroUpgrade.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----PkSource
+         +----PkDistroUpgrade
+</pre>
+</div>
+<div class="refsect1" title="Properties">
+<a name="PkDistroUpgrade.properties"></a><h2>Properties</h2>
+<pre class="synopsis">
+  "<a class="link" href="PkDistroUpgrade.html#PkDistroUpgrade--name" title='The "name" property'>name</a>"                     <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+  "<a class="link" href="PkDistroUpgrade.html#PkDistroUpgrade--state" title='The "state" property'>state</a>"                    <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write
+  "<a class="link" href="PkDistroUpgrade.html#PkDistroUpgrade--summary" title='The "summary" property'>summary</a>"                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="PkDistroUpgrade.description"></a><h2>Description</h2>
+<p>
+This GObject represents a distro_upgrade from a transaction.
+These objects represent single items of data from the transaction, and are
+often present in lists (<a class="link" href="PkResults.html" title="PkResults"><span class="type">PkResults</span></a>) or just refcounted in client programs.</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="PkDistroUpgrade.details"></a><h2>Details</h2>
+<div class="refsect2" title="PkDistroUpgradePrivate">
+<a name="PkDistroUpgradePrivate"></a><h3>PkDistroUpgradePrivate</h3>
+<pre class="programlisting">typedef struct _PkDistroUpgradePrivate PkDistroUpgradePrivate;</pre>
+<p>
+Private <a class="link" href="PkDistroUpgrade.html" title="PkDistroUpgrade"><span class="type">PkDistroUpgrade</span></a> data</p>
+</div>
+<hr>
+<div class="refsect2" title="PkDistroUpgrade">
+<a name="PkDistroUpgrade-struct"></a><h3>PkDistroUpgrade</h3>
+<pre class="programlisting">typedef struct _PkDistroUpgrade PkDistroUpgrade;</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_distro_upgrade_new ()">
+<a name="pk-distro-upgrade-new"></a><h3>pk_distro_upgrade_new ()</h3>
+<pre class="programlisting"><a class="link" href="PkDistroUpgrade.html" title="PkDistroUpgrade"><span class="returnvalue">PkDistroUpgrade</span></a> *   pk_distro_upgrade_new               (void);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new PkDistroUpgrade object.
+
+</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 0.5.4</p>
+</div>
+</div>
+<div class="refsect1" title="Property Details">
+<a name="PkDistroUpgrade.property-details"></a><h2>Property Details</h2>
+<div class="refsect2" title='The "name" property'>
+<a name="PkDistroUpgrade--name"></a><h3>The <code class="literal">"name"</code> property</h3>
+<pre class="programlisting">  "name"                     <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p></p>
+<p>Default value: NULL</p>
+<p class="since">Since 0.5.4</p>
+</div>
+<hr>
+<div class="refsect2" title='The "state" property'>
+<a name="PkDistroUpgrade--state"></a><h3>The <code class="literal">"state"</code> property</h3>
+<pre class="programlisting">  "state"                    <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write</pre>
+<p></p>
+<p>Default value: 0</p>
+<p class="since">Since 0.5.4</p>
+</div>
+<hr>
+<div class="refsect2" title='The "summary" property'>
+<a name="PkDistroUpgrade--summary"></a><h3>The <code class="literal">"summary"</code> property</h3>
+<pre class="programlisting">  "summary"                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p></p>
+<p>Default value: NULL</p>
+<p class="since">Since 0.5.4</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.13</div>
+</body>
+</html>

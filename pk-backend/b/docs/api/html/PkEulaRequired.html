@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>PkEulaRequired</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="PackageKit Reference Manual">
+<link rel="up" href="libpackagekit-gobject.html" title="libpackagekit GObjects">
+<link rel="prev" href="PkError.html" title="PkError">
+<link rel="next" href="PkFiles.html" title="PkFiles">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="reference" href="specification.html" title="PackageKit Specification">
+<link rel="chapter" href="introduction.html" title="PackageKit Introduction">
+<link rel="chapter" href="concepts.html" title="Important Concepts">
+<link rel="chapter" href="backend-compiled.html" title="Compiled Backends">
+<link rel="chapter" href="backend-spawn.html" title="Spawned Backends">
+<link rel="reference" href="api-reference.html" title="D-Bus API Reference">
+<link rel="reference" href="libpackagekit-gobject.html" title="libpackagekit GObjects">
+<link rel="reference" href="libpackagekit-helpers.html" title="libpackagekit glib helpers">
+<link rel="reference" href="faq.html" title="Frequently asked questions">
+<link rel="chapter" href="developer-faq.html" title="Developer FAQ">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="PkError.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="libpackagekit-gobject.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">PackageKit Reference Manual</th>
+<td><a accesskey="n" href="PkFiles.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#PkEulaRequired.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#PkEulaRequired.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#PkEulaRequired.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#PkEulaRequired.properties" class="shortcut">Properties</a>
+</td></tr>
+</table>
+<div class="refentry" title="PkEulaRequired">
+<a name="PkEulaRequired"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="PkEulaRequired.top_of_page"></a>PkEulaRequired</span></h2>
+<p>PkEulaRequired — EulaRequired object</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="PkEulaRequired.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">                    <a class="link" href="PkEulaRequired.html#PkEulaRequiredPrivate" title="PkEulaRequiredPrivate">PkEulaRequiredPrivate</a>;
+                    <a class="link" href="PkEulaRequired.html#PkEulaRequired-struct" title="PkEulaRequired">PkEulaRequired</a>;
+<a class="link" href="PkEulaRequired.html" title="PkEulaRequired"><span class="returnvalue">PkEulaRequired</span></a> *    <a class="link" href="PkEulaRequired.html#pk-eula-required-new" title="pk_eula_required_new ()">pk_eula_required_new</a>                (void);
+</pre>
+</div>
+<div class="refsect1" title="Object Hierarchy">
+<a name="PkEulaRequired.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----PkSource
+         +----PkEulaRequired
+</pre>
+</div>
+<div class="refsect1" title="Properties">
+<a name="PkEulaRequired.properties"></a><h2>Properties</h2>
+<pre class="synopsis">
+  "<a class="link" href="PkEulaRequired.html#PkEulaRequired--eula-id" title='The "eula-id" property'>eula-id</a>"                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+  "<a class="link" href="PkEulaRequired.html#PkEulaRequired--license-agreement" title='The "license-agreement" property'>license-agreement</a>"        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+  "<a class="link" href="PkEulaRequired.html#PkEulaRequired--package-id" title='The "package-id" property'>package-id</a>"               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+  "<a class="link" href="PkEulaRequired.html#PkEulaRequired--vendor-name" title='The "vendor-name" property'>vendor-name</a>"              <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="PkEulaRequired.description"></a><h2>Description</h2>
+<p>
+This GObject represents a eula_required from a transaction.
+These objects represent single items of data from the transaction, and are
+often present in lists (<a class="link" href="PkResults.html" title="PkResults"><span class="type">PkResults</span></a>) or just refcounted in client programs.</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="PkEulaRequired.details"></a><h2>Details</h2>
+<div class="refsect2" title="PkEulaRequiredPrivate">
+<a name="PkEulaRequiredPrivate"></a><h3>PkEulaRequiredPrivate</h3>
+<pre class="programlisting">typedef struct _PkEulaRequiredPrivate PkEulaRequiredPrivate;</pre>
+<p>
+Private <a class="link" href="PkEulaRequired.html" title="PkEulaRequired"><span class="type">PkEulaRequired</span></a> data</p>
+</div>
+<hr>
+<div class="refsect2" title="PkEulaRequired">
+<a name="PkEulaRequired-struct"></a><h3>PkEulaRequired</h3>
+<pre class="programlisting">typedef struct _PkEulaRequired PkEulaRequired;</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" title="pk_eula_required_new ()">
+<a name="pk-eula-required-new"></a><h3>pk_eula_required_new ()</h3>
+<pre class="programlisting"><a class="link" href="PkEulaRequired.html" title="PkEulaRequired"><span class="returnvalue">PkEulaRequired</span></a> *    pk_eula_required_new                (void);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new PkEulaRequired object.
+
+</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 0.5.4</p>
+</div>
+</div>
+<div class="refsect1" title="Property Details">
+<a name="PkEulaRequired.property-details"></a><h2>Property Details</h2>
+<div class="refsect2" title='The "eula-id" property'>
+<a name="PkEulaRequired--eula-id"></a><h3>The <code class="literal">"eula-id"</code> property</h3>
+<pre class="programlisting">  "eula-id"                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p></p>
+<p>Default value: NULL</p>
+<p class="since">Since 0.5.4</p>
+</div>
+<hr>
+<div class="refsect2" title='The "license-agreement" property'>
+<a name="PkEulaRequired--license-agreement"></a><h3>The <code class="literal">"license-agreement"</code> property</h3>
+<pre class="programlisting">  "license-agreement"        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p></p>
+<p>Default value: NULL</p>
+<p class="since">Since 0.5.4</p>
+</div>
+<hr>
+<div class="refsect2" title='The "package-id" property'>
+<a name="PkEulaRequired--package-id"></a><h3>The <code class="literal">"package-id"</code> property</h3>
+<pre class="programlisting">  "package-id"               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p></p>
+<p>Default value: NULL</p>
+<p class="since">Since 0.5.4</p>
+</div>
+<hr>
+<div class="refsect2" title='The "vendor-name" property'>
+<a name="PkEulaRequired--vendor-name"></a><h3>The <code class="literal">"vendor-name"</code> property</h3>
+<pre class="programlisting">  "vendor-name"              <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p></p>
+<p>Default value: NULL</p>
+<p class="since">Since 0.5.4</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.13</div>
+</body>
+</html>
