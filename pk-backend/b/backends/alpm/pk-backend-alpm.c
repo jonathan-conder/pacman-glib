@@ -716,7 +716,7 @@ static PacmanPackage *list_find_provider (const PacmanList *packages, PacmanDepe
 	return NULL;
 }
 
-static PacmanPackage *databases_find_provider (const PacmanList *databases, PacmanDependency *depend, const gchar **repo) {
+static PacmanPackage *databases_find_provider (PkBackend *backend, const PacmanList *databases, PacmanDependency *depend, const gchar **repo) {
 	const PacmanList *list;
 	for (list = databases; list != NULL; list = pacman_list_next (list)) {
 		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (list);
@@ -735,6 +735,10 @@ static PacmanPackage *databases_find_provider (const PacmanList *databases, Pacm
 		PacmanPackage *provider = list_find_provider (pacman_database_get_packages (database), depend);
 
 		if (provider != NULL) {
+			gchar *message = g_strdup_printf ("%s was selected to provide %s\n", pacman_package_get_name (provider), pacman_dependency_get_name (depend));
+			backend_message (backend, message);
+			g_free (message);
+
 			*repo = pacman_database_get_name (database);
 			return provider;
 		}
@@ -793,9 +797,8 @@ backend_get_depends (PkBackend *backend, PkBitfield filters, gchar **package_ids
 
 			if (provider == NULL) {
 				const gchar *repo = NULL;
-				PkInfoEnum info;
+				provider = databases_find_provider (backend, databases, depend, &repo);
 
-				provider = databases_find_provider (databases, depend, &repo);
 				if (provider == NULL) {
 					gchar *depend_id = pacman_dependency_to_string (depend);
 					pk_backend_error_code (backend, PK_ERROR_ENUM_DEP_RESOLUTION_FAILED, "Could not resolve dependency %s", depend_id);
@@ -807,18 +810,19 @@ backend_get_depends (PkBackend *backend, PkBitfield filters, gchar **package_ids
 				}
 
 				if (pacman_package_get_database (provider) == local || sync_package_installed (local, provider)) {
-					if (search_not_installed)
-						continue;
-					info = PK_INFO_ENUM_INSTALLED;
+					/* don't emit when not needed and forget about uninstalled dependencies */
+					if (!search_not_installed) {
+						emit_package (backend, provider, repo, PK_INFO_ENUM_INSTALLED);
+						if (recursive)
+							packages = pacman_list_add (packages, provider);
+					}
 				} else {
-					if (search_installed)
-						continue;
-					info = PK_INFO_ENUM_AVAILABLE;
+					/* don't emit when not needed but still look for installed dependencies */
+					if (!search_installed)
+						emit_package (backend, provider, repo, PK_INFO_ENUM_AVAILABLE);
+					if (recursive)
+						packages = pacman_list_add (packages, provider);
 				}
-
-				if (recursive)
-					packages = pacman_list_add (packages, provider);
-				emit_package (backend, provider, repo, info);
 			}
 		}
 	}

@@ -13,7 +13,7 @@ diff -ru a/backends/alpm/Makefile.am b/backends/alpm/Makefile.am
  
 diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 --- a/backends/alpm/pk-backend-alpm.c	2010-01-28 10:00:41.000000000 +1300
-+++ b/backends/alpm/pk-backend-alpm.c	2010-02-25 01:31:58.449756676 +1300
++++ b/backends/alpm/pk-backend-alpm.c	2010-02-25 01:58:12.086268251 +1300
 @@ -2,6 +2,7 @@
   *
   * Copyright (C) 2007 Andreas Obergrusberger <tradiaz@yahoo.de>
@@ -1160,7 +1160,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  }
  
  /**
-@@ -832,61 +706,126 @@
+@@ -832,61 +706,130 @@
  	pk_backend_thread_create (backend, backend_download_packages_thread);
  }
  
@@ -1174,7 +1174,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 +	return NULL;
 +}
 +
-+static PacmanPackage *databases_find_provider (const PacmanList *databases, PacmanDependency *depend, const gchar **repo) {
++static PacmanPackage *databases_find_provider (PkBackend *backend, const PacmanList *databases, PacmanDependency *depend, const gchar **repo) {
 +	const PacmanList *list;
 +	for (list = databases; list != NULL; list = pacman_list_next (list)) {
 +		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (list);
@@ -1193,6 +1193,10 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 +		PacmanPackage *provider = list_find_provider (pacman_database_get_packages (database), depend);
 +
 +		if (provider != NULL) {
++			gchar *message = g_strdup_printf ("%s was selected to provide %s\n", pacman_package_get_name (provider), pacman_dependency_get_name (depend));
++			backend_message (backend, message);
++			g_free (message);
++
 +			*repo = pacman_database_get_name (database);
 +			return provider;
 +		}
@@ -1285,9 +1289,8 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 +
 +			if (provider == NULL) {
 +				const gchar *repo = NULL;
-+				PkInfoEnum info;
++				provider = databases_find_provider (backend, databases, depend, &repo);
 +
-+				provider = databases_find_provider (databases, depend, &repo);
 +				if (provider == NULL) {
 +					gchar *depend_id = pacman_dependency_to_string (depend);
 +					pk_backend_error_code (backend, PK_ERROR_ENUM_DEP_RESOLUTION_FAILED, "Could not resolve dependency %s", depend_id);
@@ -1296,21 +1299,22 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 +					pacman_list_free (packages);
 +					pk_backend_finished (backend);
 +					return;
- 				}
-+
-+				if (pacman_package_get_database (provider) == local || sync_package_installed (local, provider)) {
-+					if (search_not_installed)
-+						continue;
-+					info = PK_INFO_ENUM_INSTALLED;
-+				} else {
-+					if (search_installed)
-+						continue;
-+					info = PK_INFO_ENUM_AVAILABLE;
 +				}
 +
-+				if (recursive)
-+					packages = pacman_list_add (packages, provider);
-+				emit_package (backend, provider, repo, info);
++				if (pacman_package_get_database (provider) == local || sync_package_installed (local, provider)) {
++					/* don't emit when not needed and forget about uninstalled dependencies */
++					if (!search_not_installed) {
++						emit_package (backend, provider, repo, PK_INFO_ENUM_INSTALLED);
++						if (recursive)
++							packages = pacman_list_add (packages, provider);
++					}
++				} else {
++					/* don't emit when not needed but still look for installed dependencies */
++					if (!search_installed)
++						emit_package (backend, provider, repo, PK_INFO_ENUM_AVAILABLE);
++					if (recursive)
++						packages = pacman_list_add (packages, provider);
+ 				}
  			}
  		}
  	}
@@ -1321,7 +1325,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	pk_backend_finished (backend);
  }
  
-@@ -896,45 +835,36 @@
+@@ -896,45 +839,36 @@
  static void
  backend_get_details (PkBackend *backend, gchar **package_ids)
  {
@@ -1373,11 +1377,11 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -
 -		/* get licenses_str content to licenses array */
 -		licenses = g_string_free (licenses_str, FALSE);
--
--		/* return details */
--		pk_backend_details (backend, package_ids[iterator], licenses, PK_GROUP_ENUM_OTHER, alpm_pkg_get_desc (pkg), alpm_pkg_get_url (pkg), alpm_pkg_get_size (pkg));
 +		}	
  
+-		/* return details */
+-		pk_backend_details (backend, package_ids[iterator], licenses, PK_GROUP_ENUM_OTHER, alpm_pkg_get_desc (pkg), alpm_pkg_get_url (pkg), alpm_pkg_get_size (pkg));
+-
 -		/* free licenses array as we no longer need it */
 -		g_free (licenses);
 +		result = g_string_free (licenses, FALSE);
@@ -1386,7 +1390,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	}
  
  	pk_backend_finished (backend);
-@@ -946,117 +876,131 @@
+@@ -946,117 +880,131 @@
  static void
  backend_get_files (PkBackend *backend, gchar **package_ids)
  {
@@ -1587,7 +1591,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	}
  }
  
-@@ -1064,11 +1008,11 @@
+@@ -1064,11 +1012,11 @@
   * backend_search_values:
   */
  static void
@@ -1603,7 +1607,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  }
  
  /**
-@@ -1079,20 +1023,16 @@
+@@ -1079,20 +1027,16 @@
  {
  	PkBitfield filters = pk_backend_get_uint (backend, "filters");
  
@@ -1630,7 +1634,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	}
  
  	pk_backend_finished (backend);
-@@ -1117,15 +1057,14 @@
+@@ -1117,15 +1061,14 @@
  static void
  backend_get_repo_list (PkBackend *backend, PkBitfield filters)
  {
@@ -1650,7 +1654,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	}
  
  	pk_backend_finished (backend);
-@@ -1137,24 +1076,49 @@
+@@ -1137,24 +1080,49 @@
  static void
  backend_get_update_detail (PkBackend *backend, gchar **package_ids)
  {
@@ -1681,8 +1685,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 +		}
 +		database = pacman_package_get_database (package);
 +		upgrades = pacman_database_find_package (local, pacman_package_get_name (package));
- 
--		pmpkg_t *installed_pkg = alpm_db_get_pkg (alpm_option_get_localdb (), package_id_data[PK_PACKAGE_ID_NAME]);
++
 +		upgrades_id = (upgrades != NULL) ? package_to_package_id (upgrades, PACMAN_LOCAL_DB_ALIAS) : NULL;
 +		for (list = pacman_package_get_replaces (package); list != NULL; list = pacman_list_next (list)) {
 +			PacmanPackage *replaces = pacman_database_find_package (local, (const gchar *) pacman_list_get (list));
@@ -1692,18 +1695,19 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 +			}
 +		}
  
+-		pmpkg_t *installed_pkg = alpm_db_get_pkg (alpm_option_get_localdb (), package_id_data[PK_PACKAGE_ID_NAME]);
++		vendor_url = pacman_package_get_url (package);
++		message = (upgrades != NULL) ? "Update to latest available version" : "Install as a dependency for another update";
+ 
 -		gchar *installed_package_id = installed_pkg ? pkg_to_package_id_str (installed_pkg, ALPM_LOCAL_DB_ALIAS) : NULL;
 -		pk_backend_update_detail (backend, package_ids[iterator], installed_package_id, "", "", "", "", PK_RESTART_ENUM_NONE,
 -			installed_pkg ? "Update to latest available version" : "Install as a dependency for another update",
 -			NULL, PK_UPDATE_STATE_ENUM_UNKNOWN, NULL, NULL);
 -		g_free (installed_package_id);
-+		vendor_url = pacman_package_get_url (package);
-+		message = (upgrades != NULL) ? "Update to latest available version" : "Install as a dependency for another update";
- 
--		g_strfreev (package_id_data);
 +		restart = (strstr (pacman_package_get_name (package), "kernel") != NULL) ? PK_RESTART_ENUM_SYSTEM : PK_RESTART_ENUM_NONE;
 +		state = (strstr (pacman_database_get_name (database), "testing") != NULL) ? PK_UPDATE_STATE_ENUM_TESTING : PK_UPDATE_STATE_ENUM_STABLE;
-+
+ 
+-		g_strfreev (package_id_data);
 +		pk_backend_update_detail (backend, package_ids[iterator], upgrades_id, replaces_id, vendor_url, NULL, NULL, restart, message, NULL, state, NULL, NULL);
 +
 +		g_free (replaces_id);
@@ -1711,7 +1715,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	}
  
  	pk_backend_finished (backend);
-@@ -1166,29 +1130,19 @@
+@@ -1166,29 +1134,19 @@
  static void
  backend_get_updates (PkBackend *backend, PkBitfield filters)
  {
@@ -1749,7 +1753,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	}
  
  	pk_backend_finished (backend);
-@@ -1200,41 +1154,36 @@
+@@ -1200,41 +1158,36 @@
  static gboolean
  backend_install_files_thread (PkBackend *backend)
  {
@@ -1807,7 +1811,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  }
  
  /**
-@@ -1255,45 +1204,38 @@
+@@ -1255,45 +1208,38 @@
  static gboolean
  backend_install_packages_thread (PkBackend *backend)
  {
@@ -1867,7 +1871,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  }
  
  /**
-@@ -1313,27 +1255,29 @@
+@@ -1313,27 +1259,29 @@
  static gboolean
  backend_refresh_cache_thread (PkBackend *backend)
  {
@@ -1910,7 +1914,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  }
  
  /**
-@@ -1360,87 +1304,43 @@
+@@ -1360,87 +1308,43 @@
  static gboolean
  backend_remove_packages_thread (PkBackend *backend)
  {
@@ -2018,7 +2022,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  }
  
  /**
-@@ -1461,7 +1361,7 @@
+@@ -1461,7 +1365,7 @@
  static gboolean
  backend_resolve_thread (PkBackend *backend)
  {
@@ -2027,7 +2031,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  
  	gchar **package_ids = pk_backend_get_strv (backend, "package_ids");
  	PkBitfield filters = pk_backend_get_uint (backend, "filters");
-@@ -1469,38 +1369,21 @@
+@@ -1469,38 +1373,21 @@
  	gboolean search_installed = pk_bitfield_contain (filters, PK_FILTER_ENUM_INSTALLED);
  	gboolean search_not_installed = pk_bitfield_contain (filters, PK_FILTER_ENUM_NOT_INSTALLED);
  
@@ -2079,7 +2083,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	}
  
  	pk_backend_finished (backend);
-@@ -1525,7 +1408,7 @@
+@@ -1525,7 +1412,7 @@
  static gboolean
  backend_search_thread (PkBackend *backend)
  {
@@ -2088,7 +2092,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	PkBitfield filters = pk_backend_get_uint (backend, "filters");
  	PkAlpmSearchType search_type = pk_backend_get_uint (backend, "search-type");
  
-@@ -1534,15 +1417,14 @@
+@@ -1534,15 +1421,14 @@
  
  	if (!search_not_installed) {
  		/* search in local db */
@@ -2108,7 +2112,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	}
  
  	pk_backend_finished (backend);
-@@ -1558,7 +1440,6 @@
+@@ -1558,7 +1444,6 @@
  	pk_backend_set_status (backend, PK_STATUS_ENUM_QUERY);
  	pk_backend_set_percentage (backend, PK_BACKEND_PERCENTAGE_INVALID);
  	pk_backend_set_uint (backend, "search-type", PK_ALPM_SEARCH_TYPE_DETAILS);
@@ -2116,7 +2120,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  
  	pk_backend_thread_create (backend, backend_search_thread);
  }
-@@ -1572,7 +1453,6 @@
+@@ -1572,7 +1457,6 @@
  	pk_backend_set_status (backend, PK_STATUS_ENUM_QUERY);
  	pk_backend_set_percentage (backend, PK_BACKEND_PERCENTAGE_INVALID);
  	pk_backend_set_uint (backend, "search-type", PK_ALPM_SEARCH_TYPE_GROUP);
@@ -2124,7 +2128,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  
  	pk_backend_thread_create (backend, backend_search_thread);
  }
-@@ -1586,7 +1466,6 @@
+@@ -1586,7 +1470,6 @@
  	pk_backend_set_status (backend, PK_STATUS_ENUM_QUERY);
  	pk_backend_set_percentage (backend, PK_BACKEND_PERCENTAGE_INVALID);
  	pk_backend_set_uint (backend, "search-type", PK_ALPM_SEARCH_TYPE_NAME);
@@ -2132,7 +2136,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  
  	pk_backend_thread_create (backend, backend_search_thread);
  }
-@@ -1608,32 +1487,27 @@
+@@ -1608,32 +1491,27 @@
  static gboolean
  backend_update_system_thread (PkBackend *backend)
  {
@@ -2174,7 +2178,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  }
  
  /**
-@@ -1654,7 +1528,6 @@
+@@ -1654,7 +1532,6 @@
  	pk_backend_set_status (backend, PK_STATUS_ENUM_QUERY);
  	pk_backend_set_percentage (backend, PK_BACKEND_PERCENTAGE_INVALID);
  	pk_backend_set_uint (backend, "search-type", PK_ALPM_SEARCH_TYPE_PROVIDES);
