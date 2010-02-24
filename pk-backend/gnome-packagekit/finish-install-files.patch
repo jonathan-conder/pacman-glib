@@ -1,0 +1,13 @@
+diff -ru a/src/gpk-dbus-task.c b/src/gpk-dbus-task.c
+--- a/src/gpk-dbus-task.c	2010-01-28 05:29:02.000000000 +1300
++++ b/src/gpk-dbus-task.c	2010-02-24 17:42:36.215906528 +1300
+@@ -557,6 +557,9 @@
+ 		g_error_free (error_dbus);
+ 		goto out;
+ 	}
++
++	/* we're done */
++	gpk_dbus_task_dbus_return_value (dtask, TRUE);
+ out:
+ 	if (error_code != NULL)
+ 		g_object_unref (error_code);
