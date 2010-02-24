@@ -1,0 +1,10 @@
+diff -ru a/data/gpk-install-file.desktop.in b/data/gpk-install-file.desktop.in
+--- a/data/gpk-install-file.desktop.in	2010-01-28 05:29:15.000000000 +1300
++++ b/data/gpk-install-file.desktop.in	2010-02-24 16:02:18.333169558 +1300
+@@ -10,5 +10,5 @@
+ Icon=system-software-install
+ StartupNotify=true
+ NoDisplay=true
+-MimeType=application/x-rpm;application/x-redhat-package-manager;application/x-servicepack;application/x-deb;
++MimeType=application/x-compressed-tar;application/x-servicepack;
+ 
