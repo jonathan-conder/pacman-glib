@@ -24,11 +24,7 @@
 #define _GNU_SOURCE
 
 #include <string.h>
-#include <gmodule.h>
-#include <glib.h>
 #include <pk-backend.h>
-#include <egg-debug.h>
-
 #include <gpacman.h>
 
 #define PACMAN_LOCAL_DB_ALIAS "installed"
@@ -45,24 +41,16 @@ typedef enum {
 	PK_ALPM_SEARCH_TYPE_PROVIDES
 } PkAlpmSearchType;
 
-static int
-package_compare (PacmanPackage *first, PacmanPackage *second) {
-	int result;
+static gboolean
+sync_package_installed (PacmanDatabase *local, PacmanPackage *package) {
+	PacmanPackage *installed = pacman_database_find_package (local, pacman_package_get_name (package));
 
-	/* check for no package */
-	if (first == NULL)
-		return (second == NULL) ? 0 : -1;
-	if (second == NULL)
-		return 1;
+	if (installed == NULL)
+		return FALSE;
+	if (pacman_package_compare_version (pacman_package_get_version (installed), pacman_package_get_version (package)) != 0)
+		return FALSE;
 
-	/* compare package names */
-	result = g_strcmp0 (pacman_package_get_name (first), pacman_package_get_name (second));
-	if (result != 0)
-		return result;
-
-	/* compare package versions */
-	result = pacman_package_compare_version (pacman_package_get_version (first), pacman_package_get_version (second));
-	return result;
+	return TRUE;
 }
 
 static gchar *
@@ -718,6 +706,43 @@ backend_download_packages (PkBackend *backend, gchar **package_ids, const gchar 
 	pk_backend_thread_create (backend, backend_download_packages_thread);
 }
 
+static PacmanPackage *list_find_provider (const PacmanList *packages, PacmanDependency *depend) {
+	for (; packages != NULL; packages = pacman_list_next (packages)) {
+		PacmanPackage *provider = (PacmanPackage *) pacman_list_get (packages);
+		if (pacman_dependency_satisfied_by (depend, provider))
+			return provider;
+	}
+
+	return NULL;
+}
+
+static PacmanPackage *databases_find_provider (const PacmanList *databases, PacmanDependency *depend, const gchar **repo) {
+	const PacmanList *list;
+	for (list = databases; list != NULL; list = pacman_list_next (list)) {
+		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (list);
+		PacmanPackage *provider = pacman_database_find_package (database, pacman_dependency_get_name (depend));
+
+		/* TODO: possibly check for IgnorePkg */
+		if (provider != NULL && pacman_dependency_satisfied_by (depend, provider)) {
+			*repo = pacman_database_get_name (database);
+			return provider;
+		}
+	}
+
+	/* find provider with a different name */
+	for (list = databases; list != NULL; list = pacman_list_next (list)) {
+		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (list);
+		PacmanPackage *provider = list_find_provider (pacman_database_get_packages (database), depend);
+
+		if (provider != NULL) {
+			*repo = pacman_database_get_name (database);
+			return provider;
+		}
+	}
+
+	return NULL;
+}
+
 /**
  * backend_get_depends:
  */
@@ -725,52 +750,81 @@ static void
 backend_get_depends (PkBackend *backend, PkBitfield filters, gchar **package_ids, gboolean recursive)
 {
 	guint iterator;
+	PacmanList *list, *packages = NULL, *databases = NULL;
 	PacmanDatabase *local = pacman_manager_get_local_database (pacman);
+
+	gboolean search_installed = pk_bitfield_contain (filters, PK_FILTER_ENUM_INSTALLED);
+	gboolean search_not_installed = pk_bitfield_contain (filters, PK_FILTER_ENUM_NOT_INSTALLED);
 
 	pk_backend_set_status (backend, PK_STATUS_ENUM_QUERY);
 	pk_backend_set_allow_cancel (backend, FALSE);
 
-	/* TODO: recursive */
 	for (iterator = 0; package_ids[iterator] != NULL; ++iterator) {
-		const PacmanList *depends;
-
 		PacmanPackage *package = package_from_package_id (package_ids[iterator]);
 		if (package == NULL) {
 			pk_backend_error_code (backend, PK_ERROR_ENUM_PACKAGE_ID_INVALID, "Could not find package with ID %s", package_ids[iterator]);
+			pacman_list_free (packages);
 			pk_backend_finished (backend);
 			return;
 		}
 
+		packages = pacman_list_add (packages, package);
+	}
+
+	if (packages == NULL) {
+		pk_backend_finished (backend);
+		return;
+	}
+
+	/* define the list of databases to search, local goes first for efficiency */
+	if (!search_not_installed)
+		databases = pacman_list_add (databases, local);
+	if (!search_installed)
+		databases = pacman_list_concat (databases, pacman_list_copy (pacman_manager_get_sync_databases (pacman)));
+
+	/* packages might be modified along the way but that is ok */
+	for (list = packages; list != NULL; list = pacman_list_next (list)) {
+		PacmanPackage *package = (PacmanPackage *) pacman_list_get (list);
+		const PacmanList *depends;
+
 		for (depends = pacman_package_get_dependencies (package); depends != NULL; depends = pacman_list_next (depends)) {
 			PacmanDependency *depend = (PacmanDependency *) pacman_list_get (depends);
-			PacmanPackage *provider = NULL;
+			PacmanPackage *provider = list_find_provider (packages, depend);
 
-			if (!pk_bitfield_contain (filters, PK_FILTER_ENUM_INSTALLED)) {
-				/* search in sync dbs */
-				const PacmanList *databases;
-				for (databases = pacman_manager_get_sync_databases (pacman); databases != NULL; databases = pacman_list_next (databases)) {
-					PacmanDatabase *sync = (PacmanDatabase *) pacman_list_get (databases);
+			if (provider == NULL) {
+				const gchar *repo = NULL;
+				PkInfoEnum info;
 
-					egg_debug ("alpm: searching for %s in %s", pacman_dependency_get_name (depend), pacman_database_get_name (sync));
-
-					provider = pacman_database_find_package (sync, pacman_dependency_get_name (depend));
-					if (provider != NULL && pacman_dependency_satisfied_by (depend, provider) && package_compare (provider, pacman_database_find_package (local, pacman_package_get_name (provider))) != 0) {
-						emit_package (backend, provider, pacman_database_get_name (sync), PK_INFO_ENUM_AVAILABLE);
-						break;
-					}
+				provider = databases_find_provider (databases, depend, &repo);
+				if (provider == NULL) {
+					gchar *depend_id = pacman_dependency_to_string (depend);
+					pk_backend_error_code (backend, PK_ERROR_ENUM_DEP_RESOLUTION_FAILED, "Could not resolve dependency %s", depend_id);
+					g_free (depend_id);
+					pacman_list_free (databases);
+					pacman_list_free (packages);
+					pk_backend_finished (backend);
+					return;
 				}
-			}
 
-			if (!pk_bitfield_contain (filters, PK_FILTER_ENUM_NOT_INSTALLED)) {
-				egg_debug ("alpm: searching for %s in local db", pacman_dependency_get_name (depend));
+				if (pacman_package_get_database (provider) == local || sync_package_installed (local, provider)) {
+					if (search_not_installed)
+						continue;
+					info = PK_INFO_ENUM_INSTALLED;
+				} else {
+					if (search_installed)
+						continue;
+					info = PK_INFO_ENUM_AVAILABLE;
+				}
 
-				/* search in local db */
-				provider = pacman_database_find_package (local, pacman_dependency_get_name (depend));
-				if (provider != NULL && pacman_dependency_satisfied_by (depend, provider))
-					emit_package (backend, provider, PACMAN_LOCAL_DB_ALIAS, PK_INFO_ENUM_INSTALLED);
+				if (recursive)
+					packages = pacman_list_add (packages, provider);
+				emit_package (backend, provider, repo, info);
 			}
 		}
 	}
+
+	pacman_list_free (databases);
+	pacman_list_free (packages);
 
 	pk_backend_finished (backend);
 }
@@ -907,18 +961,25 @@ backend_search (PkBackend *backend, PacmanDatabase *database, const gchar *needl
 			}
 			case PK_ALPM_SEARCH_TYPE_GROUP:
 			{
+				gboolean found_group = FALSE;
 				const PacmanList *groups;
+
+				/* determine whether package is in the needle group */
 				for (groups = pacman_package_get_groups (package); groups != NULL; groups = pacman_list_next (groups)) {
 					const gchar *group = g_hash_table_lookup (group_map, (const gchar *) pacman_list_get (groups));
-					if (group == NULL)
-						group = "other";
-					if (g_strcmp0 (needle, group) == 0)
-						break;
+
+					if (group != NULL) {
+						found_group = TRUE;
+						if (g_strcmp0 (needle, group) == 0)
+							break;
+					}
 				}
 
-				/* groups is still set if the loop finished prematurely */
-				if (groups == NULL)
-					package = NULL;
+				if (groups == NULL) {
+					/* package was not in needle, but if it isn't in another group we put it in other */
+					if (found_group || g_strcmp0 (needle, "other") != 0)
+						package = NULL;
+				}
 				break;
 			}
 			case PK_ALPM_SEARCH_TYPE_PROVIDES:
@@ -938,7 +999,7 @@ backend_search (PkBackend *backend, PacmanDatabase *database, const gchar *needl
 				package = NULL;
 		}
 
-		if (package != NULL && (local == NULL || package_compare (package, pacman_database_find_package (local, pacman_package_get_name (package))) != 0))
+		if (package != NULL && (local == NULL || !sync_package_installed (local, package)))
 			emit_package (backend, package, repo, info);
 	}
 }
@@ -1078,7 +1139,8 @@ backend_get_updates (PkBackend *backend, PkBitfield filters)
 	for (list = pacman_database_get_packages (pacman_manager_get_local_database (pacman)); list != NULL; list = pacman_list_next (list)) {
 		PacmanPackage *upgrade, *package = (PacmanPackage *) pacman_list_get (list);
 		upgrade = pacman_package_find_new_version (package, databases);
-		
+
+		/* TODO: BLOCKED for ignorepkg */
 		if (upgrade != NULL)
 			emit_package (backend, upgrade, NULL, PK_INFO_ENUM_NORMAL);
 	}

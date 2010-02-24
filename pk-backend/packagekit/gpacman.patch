@@ -13,7 +13,7 @@ diff -ru a/backends/alpm/Makefile.am b/backends/alpm/Makefile.am
  
 diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 --- a/backends/alpm/pk-backend-alpm.c	2010-01-28 10:00:41.000000000 +1300
-+++ b/backends/alpm/pk-backend-alpm.c	2010-02-24 15:26:52.633384864 +1300
++++ b/backends/alpm/pk-backend-alpm.c	2010-02-25 01:31:58.449756676 +1300
 @@ -2,6 +2,7 @@
   *
   * Copyright (C) 2007 Andreas Obergrusberger <tradiaz@yahoo.de>
@@ -22,7 +22,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
   *
   * Licensed under the GNU General Public License Version 2
   *
-@@ -22,46 +23,18 @@
+@@ -22,46 +23,14 @@
  
  #define _GNU_SOURCE
  
@@ -38,13 +38,12 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -
 -#define ALPM_PROGRESS_UPDATE_INTERVAL 400
 -
-+#include <string.h>
- #include <gmodule.h>
- #include <glib.h>
--#include <string.h>
+-#include <gmodule.h>
+-#include <glib.h>
+ #include <string.h>
  #include <pk-backend.h>
- #include <egg-debug.h>
- 
+-#include <egg-debug.h>
+-
 -#include <alpm.h>
 -#include <alpm_list.h>
 -
@@ -59,38 +58,33 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -
 -alpm_list_t *syncfirst = NULL;
 -alpm_list_t *holdpkg = NULL;
-+#include <gpacman.h>
- 
+-
 -alpm_list_t *downloaded_files = NULL;
 -gchar *current_file = NULL;
-+#define PACMAN_LOCAL_DB_ALIAS "installed"
++#include <gpacman.h>
  
 -off_t trans_xfered;
 -off_t trans_total;
--
++#define PACMAN_LOCAL_DB_ALIAS "installed"
+ 
 -int trans_subprogress;
 +PacmanManager *pacman = NULL;
 +GHashTable *group_map = NULL;
  
  typedef enum {
  	PK_ALPM_SEARCH_TYPE_NULL,
-@@ -73,533 +46,485 @@
+@@ -72,534 +41,478 @@
+ 	PK_ALPM_SEARCH_TYPE_PROVIDES
  } PkAlpmSearchType;
  
- static int
+-static int
 -pkg_cmp (pmpkg_t *pkg1, pmpkg_t *pkg2) {
 -	int comparison;
-+package_compare (PacmanPackage *first, PacmanPackage *second) {
-+	int result;
-+
- 	/* check for no package */
+-	/* check for no package */
 -	if (pkg1 == NULL)
 -		return -1;
 -	if (pkg2 == NULL)
-+	if (first == NULL)
-+		return (second == NULL) ? 0 : -1;
-+	if (second == NULL)
- 		return 1;
+-		return 1;
 -	/* compare package names */
 -	comparison = g_strcmp0 (alpm_pkg_get_name (pkg1), alpm_pkg_get_name (pkg2));
 -	if (comparison != 0)
@@ -102,10 +96,10 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -	/* packages are equal */
 -	return 0;
 -}
- 
+-
 -/* temporary commented to not produce compilation errors :) */
 -/*
--static gboolean
+ static gboolean
 -pkg_equal (pmpkg_t *p1, pmpkg_t *p2)
 -{
 -	if (g_strcmp0 (alpm_pkg_get_name (p1), alpm_pkg_get_name (p2)) != 0)
@@ -115,25 +109,23 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -	return TRUE;
 -}
 -*/
-+	/* compare package names */
-+	result = g_strcmp0 (pacman_package_get_name (first), pacman_package_get_name (second));
-+	if (result != 0)
-+		return result;
++sync_package_installed (PacmanDatabase *local, PacmanPackage *package) {
++	PacmanPackage *installed = pacman_database_find_package (local, pacman_package_get_name (package));
  
 -static gboolean
 -pkg_equals_to (pmpkg_t *pkg, const gchar *name, const gchar *version)
 -{
 -	if (pkg == NULL)
--		return FALSE;
++	if (installed == NULL)
+ 		return FALSE;
 -	if (g_strcmp0 (alpm_pkg_get_name (pkg), name) != 0)
--		return FALSE;
++	if (pacman_package_compare_version (pacman_package_get_version (installed), pacman_package_get_version (package)) != 0)
+ 		return FALSE;
 -	if (version != NULL)
 -		if (g_strcmp0 (alpm_pkg_get_version (pkg), version) != 0)
 -			return FALSE;
--	return TRUE;
-+	/* compare package versions */
-+	result = pacman_package_compare_version (pacman_package_get_version (first), pacman_package_get_version (second));
-+	return result;
++
+ 	return TRUE;
  }
  
  static gchar *
@@ -210,9 +202,12 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	return result;
  }
  
+-static void
+-emit_package (PkBackend *backend, pmpkg_t *pkg, const gchar *repo, PkInfoEnum info)
 +static gboolean
 +str_has_prefixes (const gchar *str, const gchar *prefix, ...)
-+{
+ {
+-	gchar *package_id_str;
 +	va_list args;
 +	va_start (args, prefix);
 +	
@@ -223,27 +218,81 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 +			++str;
 +			++prefix;
 +		}
-+
+ 
+-	egg_debug ("alpm: emitting package with name %s", alpm_pkg_get_name (pkg));
 +		/* didn't match */
 +		if (*prefix != '\0')
 +			break;
 +		else
 +			prefix = va_arg (args, const gchar *);
 +	}
-+
+ 
+-	package_id_str = pkg_to_package_id_str (pkg, repo);
+-	pk_backend_package (backend, info, package_id_str, alpm_pkg_get_desc (pkg));
+-	g_free (package_id_str);
 +	va_end (args);
 +	/* matched all if prefix is NULL */
 +	return prefix == NULL;
-+}
-+
+ }
+ 
+-static void
+-cb_trans_evt (pmtransevt_t event, void *data1, void *data2)
 +static PacmanPackage *
 +package_from_filename (const gchar *filename, const gchar **repo)
-+{
+ {
+-	gchar **package_ids;
+-
+-	/* TODO: add more code here */
+-	switch (event) {
+-		case PM_TRANS_EVT_REMOVE_START:
+-			pk_backend_set_allow_cancel (backend_instance, FALSE);
+-
+-			/* reset transaction subprogress */
+-			trans_subprogress = -1;
+-
+-			emit_package (backend_instance, data1, ALPM_LOCAL_DB_ALIAS, PK_INFO_ENUM_REMOVING);
+-			break;
+-		case PM_TRANS_EVT_ADD_START:
+-			pk_backend_set_allow_cancel (backend_instance, FALSE);
+-
+-			/* reset transaction subprogress */
+-			trans_subprogress = -1;
+-
+-			pk_backend_set_status (backend_instance, PK_STATUS_ENUM_INSTALL);
 +	const PacmanList *databases;
 +	for (databases = pacman_manager_get_sync_databases (pacman); databases != NULL; databases = pacman_list_next (databases)) {
 +		const PacmanList *packages;
 +		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (databases);
-+
+ 
+-			package_ids = pk_backend_get_strv (backend_instance, "package_ids");
+-			if (package_ids != NULL) {
+-				unsigned int iterator;
+-
+-				/* search for package in package_ids */
+-				gchar *package_id_needle = pkg_to_package_id_str (data1, "");
+-
+-				egg_debug ("needle is %s", package_id_needle);
+-				for (iterator = 0; iterator < g_strv_length (package_ids); ++iterator)
+-					if (strstr (package_ids[iterator], package_id_needle) != NULL) {
+-						pk_backend_package (backend_instance, PK_INFO_ENUM_INSTALLING, package_ids[iterator], alpm_pkg_get_desc (data1));
+-						break;
+-					}
+-
+-				g_free (package_id_needle);
+-			} else
+-				/* we are installing a local file */
+-				emit_package (backend_instance, data1, "local", PK_INFO_ENUM_INSTALLING);
+-
+-			break;
+-		case PM_TRANS_EVT_UPGRADE_START:
+-			pk_backend_set_allow_cancel (backend_instance, FALSE);
+-
+-			/* reset transaction subprogress */
+-			trans_subprogress = -1;
+-
+-			emit_package (backend_instance, data1, ALPM_LOCAL_DB_ALIAS, PK_INFO_ENUM_UPDATING);
+-			break;
+-		default: egg_debug ("alpm: event %i happened", event);
 +		for (packages = pacman_database_get_packages (database); packages != NULL; packages = pacman_list_next (packages)) {
 +			PacmanPackage *package = (PacmanPackage *) pacman_list_get (packages);
 +			/* TODO: could we speed this up because the list is sorted? */
@@ -252,66 +301,70 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 +				return package;
 +			}
 +		}
-+	}
+ 	}
 +	egg_debug ("alpm: failed to find package from filename %s", filename);
 +	return NULL;
-+}
-+
+ }
+ 
  static void
--emit_package (PkBackend *backend, pmpkg_t *pkg, const gchar *repo, PkInfoEnum info)
+-cb_trans_conv (pmtransconv_t conv, void *data1, void *data2, void *data3, int *response)
 +emit_package (PkBackend *backend, PacmanPackage *package, const gchar *repo, PkInfoEnum info)
  {
--	gchar *package_id_str;
+-	/* TODO: check if some code needs to be placed there */
 +	gchar *package_id;
- 
--	egg_debug ("alpm: emitting package with name %s", alpm_pkg_get_name (pkg));
++
 +	egg_debug ("alpm: emitting package with name %s", pacman_package_get_name (package));
- 
--	package_id_str = pkg_to_package_id_str (pkg, repo);
--	pk_backend_package (backend, info, package_id_str, alpm_pkg_get_desc (pkg));
--	g_free (package_id_str);
++
 +	package_id = package_to_package_id (package, repo);
 +	pk_backend_package (backend, info, package_id, pacman_package_get_description (package));
 +	g_free (package_id);
  }
  
  static void
--cb_trans_evt (pmtransevt_t event, void *data1, void *data2)
+-cb_trans_progress (pmtransprog_t event, const char *pkgname, int percent, int howmany, int current)
 +backend_message (PkBackend *backend, const gchar *message)
  {
--	gchar **package_ids;
+-	if (trans_subprogress != percent) {
+-		/* avoid duplicates */
+-		trans_subprogress = percent;
 +	gchar **messages = g_strsplit_set (message, "\r\n", -1);
 +	guint iterator;
  
--	/* TODO: add more code here */
--	switch (event) {
--		case PM_TRANS_EVT_REMOVE_START:
--			pk_backend_set_allow_cancel (backend_instance, FALSE);
+-		if (event == PM_TRANS_PROGRESS_ADD_START || event == PM_TRANS_PROGRESS_UPGRADE_START || event == PM_TRANS_PROGRESS_REMOVE_START) {
+-			int trans_percent;
+-
+-			egg_debug ("alpm: transaction percentage for %s is %i", pkgname, percent);
+-			trans_percent = (int) ((float) ((current - 1) * 100 + percent)) / ((float) (howmany * 100)) * 100;
+-			pk_backend_set_sub_percentage ((PkBackend *) backend_instance, percent);
+-			pk_backend_set_percentage ((PkBackend *) backend_instance, trans_percent);
+-		}
 +	for (iterator = 0; messages[iterator] != NULL; ++iterator) {
 +		g_strstrip (messages[iterator]);
 +		if (*messages[iterator] != '\0')
 +			pk_backend_message (backend, PK_MESSAGE_ENUM_UNKNOWN, "%s", messages[iterator]);
-+	}
- 
--			/* reset transaction subprogress */
--			trans_subprogress = -1;
+ 	}
++
 +	g_strfreev (messages);
-+}
+ }
  
--			emit_package (backend_instance, data1, ALPM_LOCAL_DB_ALIAS, PK_INFO_ENUM_REMOVING);
-+static void
+ static void
+-cb_dl_progress (const char *filename, off_t file_xfered, off_t file_total)
 +backend_error (PkBackend *backend, GError *error)
-+{
+ {
+-	int file_percent;
+-	int trans_percent;
 +	PkErrorEnum code = PK_ERROR_ENUM_UNKNOWN;
 +	switch (error->code) {
 +		case PACMAN_ERROR_MEMORY:
 +			code = PK_ERROR_ENUM_OOM;
- 			break;
--		case PM_TRANS_EVT_ADD_START:
--			pk_backend_set_allow_cancel (backend_instance, FALSE);
++			break;
  
--			/* reset transaction subprogress */
--			trans_subprogress = -1;
+-	if (g_str_has_suffix (filename, ALPM_PKG_EXT)) {
+-		if (g_strcmp0 (filename, current_file) != 0) {
+-			alpm_list_t *repos;
+-			alpm_list_t *packages;
+-			pmpkg_t *current_pkg = NULL;
+-			const gchar *repo_name = NULL;
 +		case PACMAN_ERROR_SYSTEM:
 +		case PACMAN_ERROR_INVALID_ARGS:
 +		case PACMAN_ERROR_NOT_INITIALIZED:
@@ -323,86 +376,100 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 +		case PACMAN_ERROR_DOWNLOAD_HANDLER:
 +			code = PK_ERROR_ENUM_INTERNAL_ERROR;
 +			break;
- 
--			pk_backend_set_status (backend_instance, PK_STATUS_ENUM_INSTALL);
++
 +		case PACMAN_ERROR_NOT_PERMITTED:
 +			code = PK_ERROR_ENUM_NOT_AUTHORIZED;
 +			break;
  
--			package_ids = pk_backend_get_strv (backend_instance, "package_ids");
--			if (package_ids != NULL) {
--				unsigned int iterator;
+-			g_free (current_file);
+-			current_file = g_strdup (filename);
 +		case PACMAN_ERROR_FILE_NOT_FOUND:
 +		case PACMAN_ERROR_DIRECTORY_NOT_FOUND:
 +			code = PK_ERROR_ENUM_FILE_NOT_FOUND;
 +			break;
  
--				/* search for package in package_ids */
--				gchar *package_id_needle = pkg_to_package_id_str (data1, "");
+-			/* iterate repos */
+-			for (repos = alpm_option_get_syncdbs (); current_pkg == NULL && repos; repos = alpm_list_next (repos)) {
+-				pmdb_t *db = alpm_list_getdata (repos);
 +		case PACMAN_ERROR_ALREADY_INITIALIZED:
 +		case PACMAN_ERROR_DATABASE_ALREADY_INITIALIZED:
 +			code = PK_ERROR_ENUM_FAILED_INITIALIZATION;
 +			break;
  
--				egg_debug ("needle is %s", package_id_needle);
--				for (iterator = 0; iterator < g_strv_length (package_ids); ++iterator)
--					if (strstr (package_ids[iterator], package_id_needle) != NULL) {
--						pk_backend_package (backend_instance, PK_INFO_ENUM_INSTALLING, package_ids[iterator], alpm_pkg_get_desc (data1));
--						break;
--					}
+-				/* iterate pkgs */
+-				for (packages = alpm_db_get_pkgcache (db); current_pkg == NULL && packages; packages = alpm_list_next (packages)) {
+-					pmpkg_t *pkg = alpm_list_getdata (packages);
 +		case PACMAN_ERROR_ALREADY_RUNNING:
 +			code = PK_ERROR_ENUM_CANNOT_GET_LOCK;
 +			break;
  
--				g_free (package_id_needle);
--			} else
--				/* we are installing a local file */
--				emit_package (backend_instance, data1, "local", PK_INFO_ENUM_INSTALLING);
+-					/* compare package information with file name */
+-					gchar *needle = g_strjoin ("-", alpm_pkg_get_name (pkg), alpm_pkg_get_version (pkg), NULL);
+-					if (needle != NULL && strcmp (needle, "") != 0)
+-						egg_debug ("matching %s with %s", filename, needle);
+-					if (g_str_has_prefix (filename, needle)) {
+-						current_pkg = pkg;
+-						repo_name = alpm_db_get_name (db);
+-					}
+-					g_free (needle);
+-				}
+-			}
 +		case PACMAN_ERROR_DATABASE_OPEN_FAILED:
 +			code = PK_ERROR_ENUM_REPO_NOT_FOUND;
 +			break;
  
+-			if (current_pkg != NULL)
+-				emit_package (backend_instance, current_pkg, repo_name, PK_INFO_ENUM_DOWNLOADING);
+-		}
+-	}
 +		case PACMAN_ERROR_DATABASE_CREATE_FAILED:
 +			code = PK_ERROR_ENUM_CANNOT_WRITE_REPO_CONFIG;
- 			break;
--		case PM_TRANS_EVT_UPGRADE_START:
--			pk_backend_set_allow_cancel (backend_instance, FALSE);
++			break;
  
--			/* reset transaction subprogress */
--			trans_subprogress = -1;
+-	file_percent = (int) ((float) file_xfered) / ((float) file_total) * 100;
+-	trans_percent = (int) ((float) (trans_xfered + file_xfered)) / ((float) trans_total) * 100;
+-	pk_backend_set_sub_percentage ((PkBackend *) backend_instance, file_percent);
+-	pk_backend_set_percentage ((PkBackend *) backend_instance, trans_percent);
 +		case PACMAN_ERROR_DATABASE_NOT_FOUND:
 +			code = PK_ERROR_ENUM_REPO_NOT_FOUND;
 +			break;
  
--			emit_package (backend_instance, data1, ALPM_LOCAL_DB_ALIAS, PK_INFO_ENUM_UPDATING);
-+		case PACMAN_ERROR_DATABASE_UPDATE_FAILED:
-+			code = PK_ERROR_ENUM_REPO_NOT_AVAILABLE;
- 			break;
--		default: egg_debug ("alpm: event %i happened", event);
+-	if (file_xfered == file_total) {
+-		downloaded_files = alpm_list_add (downloaded_files, g_strdup (filename));
+-		trans_xfered = trans_xfered + file_total;
 -	}
 -}
++		case PACMAN_ERROR_DATABASE_UPDATE_FAILED:
++			code = PK_ERROR_ENUM_REPO_NOT_AVAILABLE;
++			break;
  
 -static void
--cb_trans_conv (pmtransconv_t conv, void *data1, void *data2, void *data3, int *response)
+-cb_dl_total (off_t total)
 -{
--	/* TODO: check if some code needs to be placed there */
+-	trans_total = total;
+-	/* zero total size means that download is finished, so clear trans_xfered */
+-	if (total == 0)
+-		trans_xfered = 0;
 -}
 +		case PACMAN_ERROR_DATABASE_REMOVE_FAILED:
 +			code = PK_ERROR_ENUM_REPO_CONFIGURATION_ERROR;
 +			break;
  
--static void
--cb_trans_progress (pmtransprog_t event, const char *pkgname, int percent, int howmany, int current)
+-/**
+- * strtrim:
+- * Trim whitespaces and newlines from a string
+- */
+-static char *
+-strtrim (char *str)
 -{
--	if (trans_subprogress != percent) {
--		/* avoid duplicates */
--		trans_subprogress = percent;
+-	char *pch = str;
 +		case PACMAN_ERROR_SERVER_NONE_AVAILABLE:
 +			code = PK_ERROR_ENUM_NO_MORE_MIRRORS_TO_TRY;
 +			break;
  
--		if (event == PM_TRANS_PROGRESS_ADD_START || event == PM_TRANS_PROGRESS_UPGRADE_START || event == PM_TRANS_PROGRESS_REMOVE_START) {
--			int trans_percent;
+-	if (str == NULL || *str == '\0')
+-		/* string is empty, so we're done. */
+-		return (str);
 +		case PACMAN_ERROR_TRANSACTION_ALREADY_INITIALIZED:
 +		case PACMAN_ERROR_TRANSACTION_NOT_INITIALIZED:
 +		case PACMAN_ERROR_TRANSACTION_DUPLICATE_TARGET:
@@ -413,114 +480,150 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 +			code = PK_ERROR_ENUM_TRANSACTION_ERROR;
 +			break;
  
--			egg_debug ("alpm: transaction percentage for %s is %i", pkgname, percent);
--			trans_percent = (int) ((float) ((current - 1) * 100 + percent)) / ((float) (howmany * 100)) * 100;
--			pk_backend_set_sub_percentage ((PkBackend *) backend_instance, percent);
--			pk_backend_set_percentage ((PkBackend *) backend_instance, trans_percent);
--		}
+-	while (isspace (*pch))
+-		pch++;
 +		case PACMAN_ERROR_TRANSACTION_ABORTED:
 +			code = PK_ERROR_ENUM_TRANSACTION_CANCELLED;
 +			break;
-+
+ 
+-	if (pch != str)
+-		memmove (str, pch, (strlen (pch) + 1));
 +		case PACMAN_ERROR_PACKAGE_NOT_FOUND:
 +			code = PK_ERROR_ENUM_PACKAGE_NOT_FOUND;
 +			break;
-+
+ 
+-	/* check if there wasn't anything but whitespace in the string. */
+-	if (*str == '\0')
+-		return (str);
 +		case PACMAN_ERROR_PACKAGE_IGNORED:
 +			code = PK_ERROR_ENUM_PACKAGE_INSTALL_BLOCKED;
 +			break;
-+
+ 
+-	pch = (str + (strlen (str) - 1));
 +		case PACMAN_ERROR_DELTA_INVALID:
 +		case PACMAN_ERROR_PACKAGE_INVALID:
 +			code = PK_ERROR_ENUM_INVALID_PACKAGE_FILE;
 +			break;
-+
+ 
+-	while (isspace (*pch))
+-		pch--;
 +		case PACMAN_ERROR_PACKAGE_OPEN_FAILED:
 +			code = PK_ERROR_ENUM_PACKAGE_NOT_FOUND;
 +			break;
-+
+ 
+-	*++pch = '\0';
 +		case PACMAN_ERROR_PACKAGE_REMOVE_FAILED:
 +			code = PK_ERROR_ENUM_PACKAGE_FAILED_TO_REMOVE;
 +			break;
-+
+ 
+-	return (str);
+-}
 +		case PACMAN_ERROR_PACKAGE_UNKNOWN_FILENAME:
 +		case PACMAN_ERROR_PACKAGE_DATABASE_NOT_FOUND:
 +			code = PK_ERROR_ENUM_PACKAGE_FAILED_TO_CONFIGURE;
 +			break;
-+
+ 
+-/**
+- * _strnadd:
+- * Helper function for strreplace
+- */
+-static void
+-_strnadd (char **str, const char *append, unsigned int count)
+-{
+-	if (*str)
+-		*str = realloc (*str, strlen (*str) + count + 1);
+-	else
+-		*str = calloc (sizeof (char), count + 1);
 +		case PACMAN_ERROR_DELTA_PATCH_FAILED:
 +			code = PK_ERROR_ENUM_PACKAGE_FAILED_TO_BUILD;
 +			break;
-+
+ 
+-	strncat (*str, append, count);
+-}
 +		case PACMAN_ERROR_DEPENDENCY_UNSATISFIED:
 +			code = PK_ERROR_ENUM_DEP_RESOLUTION_FAILED;
 +			break;
-+
+ 
+-/**
+- * strreplace:
+- * Replace all occurences of 'needle' with 'replace' in 'str', returning
+- * a new string (must be free'd)
+- */
+-static char *
+-strreplace (const char *str, const char *needle, const char *replace)
+-{
+-	const char *p, *q;
+-	char *newstr = NULL;
+-	unsigned int needlesz = strlen (needle), replacesz = strlen (replace);
 +		case PACMAN_ERROR_CONFLICT:
 +			code = PK_ERROR_ENUM_PACKAGE_CONFLICTS;
 +			break;
-+
+ 
+-	p = q = str;
 +		case PACMAN_ERROR_FILE_CONFLICT:
 +			code = PK_ERROR_ENUM_FILE_CONFLICTS;
 +			break;
-+
+ 
+-	while (1) {
+-		q = strstr (p, needle);
+-		if (!q) {
+-			/* not found */
+-			if (*p) /* add the rest of 'p' */
+-				_strnadd (&newstr, p, strlen (p));
 +		case PACMAN_ERROR_DOWNLOAD_FAILED:
 +			code = PK_ERROR_ENUM_PACKAGE_DOWNLOAD_FAILED;
 +			break;
-+
+ 
 +		case PACMAN_ERROR_CONFIG_INVALID:
 +			code = PK_ERROR_ENUM_FAILED_CONFIG_PARSING;
-+			break;
-+
+ 			break;
+-		} else { /* found match */
+-			if (q > p) /* add chars between this occurance and last occurance, if any */
+-				_strnadd (&newstr, p, q - p);
+ 
+-			_strnadd (&newstr, replace, replacesz);
+-			p = q + needlesz;
+-		}
 +		case PACMAN_ERROR_PACKAGE_HELD:
 +			code = PK_ERROR_ENUM_CANNOT_REMOVE_SYSTEM_PACKAGE;
 +			break;
  	}
-+
+ 
+-	return newstr;
 +	/* TODO: various transaction errors report extra information */
 +	pk_backend_error_code (backend, code, "%s", error->message);
 +	g_error_free (error);
  }
  
+-/**
+- * set_repeating_option:
+- * Add repeating options such as NoExtract, NoUpgrade, etc to alpm settings.
+- * @param ptr a pointer to the start of the multiple options
+- * @param option the string (friendly) name of the option, used for messages
+- * @param optionfunc a function pointer to an alpm_option_add_* function
+- */
  static void
--cb_dl_progress (const char *filename, off_t file_xfered, off_t file_total)
+-set_repeating_option (const char *ptr, const char *option, void (*optionfunc) (const char*))
 +transaction_download_cb (PacmanTransaction *transaction, const gchar *filename, guint complete, guint total, gpointer user_data)
  {
--	int file_percent;
--	int trans_percent;
+-	char *p = (char*) ptr;
+-	char *q;
 +	static guint total_complete = 0, total_total = 0;
 +	
 +	if (filename == NULL) {
 +		pk_backend_set_sub_percentage ((PkBackend *) user_data, 0);
 +		pk_backend_set_percentage ((PkBackend *) user_data, 0);
  
--	if (g_str_has_suffix (filename, ALPM_PKG_EXT)) {
--		if (g_strcmp0 (filename, current_file) != 0) {
--			alpm_list_t *repos;
--			alpm_list_t *packages;
--			pmpkg_t *current_pkg = NULL;
--			const gchar *repo_name = NULL;
--
--			g_free (current_file);
--			current_file = g_strdup (filename);
--
--			/* iterate repos */
--			for (repos = alpm_option_get_syncdbs (); current_pkg == NULL && repos; repos = alpm_list_next (repos)) {
--				pmdb_t *db = alpm_list_getdata (repos);
--
--				/* iterate pkgs */
--				for (packages = alpm_db_get_pkgcache (db); current_pkg == NULL && packages; packages = alpm_list_next (packages)) {
--					pmpkg_t *pkg = alpm_list_getdata (packages);
--
--					/* compare package information with file name */
--					gchar *needle = g_strjoin ("-", alpm_pkg_get_name (pkg), alpm_pkg_get_version (pkg), NULL);
--					if (needle != NULL && strcmp (needle, "") != 0)
--						egg_debug ("matching %s with %s", filename, needle);
--					if (g_str_has_prefix (filename, needle)) {
--						current_pkg = pkg;
--						repo_name = alpm_db_get_name (db);
--					}
--					g_free (needle);
+-	while ((q = strchr (p, ' '))) {
+-		*q = '\0';
+-		(*optionfunc) (p);
+-		egg_debug ("config: %s: %s", option, p);
+-		p = q;
+-		p++;
+-	}
+-	(*optionfunc) (p);
+-	egg_debug ("config: %s: %s", option, p);
+-}
 +		total_complete = complete;
 +		total_total = total;
 +	} else {
@@ -546,43 +649,42 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 +				if (package != NULL && (pacman_transaction_get_flags (transaction) & PACMAN_TRANSACTION_FLAGS_SYNC_DOWNLOAD_ONLY)) {
 +					gchar *path, *package_id = package_to_package_id (package, repo);
 +					const gchar *directory = pk_backend_get_string ((PkBackend *) user_data, "directory");
-+
+ 
+-/**
+- * option_add_syncfirst:
+- * Add package name to SyncFirst list
+- * @param name name of the package to be added
+- */
+-static void
+-option_add_syncfirst (const char *name) {
+-	syncfirst = alpm_list_add (syncfirst, strdup (name));
 +					path = g_build_filename (directory, filename, NULL);
 +					pk_backend_files ((PkBackend *) user_data, package_id, path);
 +
 +					g_free (path);
 +					g_free (package_id);
- 				}
- 			}
- 
--			if (current_pkg != NULL)
--				emit_package (backend_instance, current_pkg, repo_name, PK_INFO_ENUM_DOWNLOADING);
++				}
++			}
++
 +			if (package != NULL)
 +				emit_package ((PkBackend *) user_data, package, repo, info);
- 		}
--	}
--
--	file_percent = (int) ((float) file_xfered) / ((float) file_total) * 100;
--	trans_percent = (int) ((float) (trans_xfered + file_xfered)) / ((float) trans_total) * 100;
--	pk_backend_set_sub_percentage ((PkBackend *) backend_instance, file_percent);
--	pk_backend_set_percentage ((PkBackend *) backend_instance, trans_percent);
- 
--	if (file_xfered == file_total) {
--		downloaded_files = alpm_list_add (downloaded_files, g_strdup (filename));
--		trans_xfered = trans_xfered + file_total;
++		}
++
 +		if (complete == total)
 +			total_complete += total;
- 	}
++	}
  }
  
+-/**
+- * option_add_holdpkg:
+- * Add package name to HoldPkg list
+- * @param name name of the package to be added
+- */
  static void
--cb_dl_total (off_t total)
+-option_add_holdpkg (const char *name) {
+-	holdpkg = alpm_list_add (holdpkg, strdup (name));
 +transaction_progress_cb (PacmanTransaction *transaction, PacmanTransactionProgress type, const gchar *target, guint percent, guint current, guint targets, gpointer user_data)
- {
--	trans_total = total;
--	/* zero total size means that download is finished, so clear trans_xfered */
--	if (total == 0)
--		trans_xfered = 0;
++{
 +	switch (type) {
 +		case PACMAN_TRANSACTION_PROGRESS_INSTALL:
 +		case PACMAN_TRANSACTION_PROGRESS_UPGRADE:
@@ -598,224 +700,6 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  }
  
 -/**
-- * strtrim:
-- * Trim whitespaces and newlines from a string
-- */
--static char *
--strtrim (char *str)
-+static gboolean
-+transaction_question_cb (PacmanTransaction *transaction, PacmanTransactionQuestion question, const gchar *message, gpointer user_data)
- {
--	char *pch = str;
-+	switch (question) {
-+		case PACMAN_TRANSACTION_QUESTION_INSTALL_IGNORE_PACKAGE:
-+		{
-+			gchar *packages = pacman_package_make_list (pacman_transaction_get_marked_packages (transaction));
-+			gchar *warning = g_strdup_printf ("The following packages are marked as ignored:\n%s\n", packages);
- 
--	if (str == NULL || *str == '\0')
--		/* string is empty, so we're done. */
--		return (str);
-+			backend_message ((PkBackend *) user_data, warning);
- 
--	while (isspace (*pch))
--		pch++;
-+			g_free (warning);
-+			g_free (packages);
-+			return TRUE;
-+		}
-+		case PACMAN_TRANSACTION_QUESTION_REPLACE_PACKAGE:
-+		{
-+			PacmanConflict *conflict = (PacmanConflict *) pacman_list_get (pacman_transaction_get_conflicts (transaction));
-+			const gchar *first = pacman_conflict_get_second_package (conflict), *second = pacman_conflict_get_first_package (conflict);
-+			gchar *warning = g_strdup_printf ("Package %s will be replaced with %s\n", second, first);
- 
--	if (pch != str)
--		memmove (str, pch, (strlen (pch) + 1));
-+			backend_message ((PkBackend *) user_data, warning);
- 
--	/* check if there wasn't anything but whitespace in the string. */
--	if (*str == '\0')
--		return (str);
-+			g_free (warning);
-+			return TRUE;
-+		}
-+		case PACMAN_TRANSACTION_QUESTION_SYNC_FIRST:
-+		{
-+			gchar *packages = pacman_package_make_list (pacman_transaction_get_marked_packages (transaction));
-+			gchar *warning = g_strdup_printf ("The following packages should probably be installed first:\n%s\n", packages);
- 
--	pch = (str + (strlen (str) - 1));
-+			pk_backend_message ((PkBackend *) user_data, PK_MESSAGE_ENUM_UNKNOWN, warning);
- 
--	while (isspace (*pch))
--		pch--;
-+			g_free (warning);
-+			g_free (packages);
-+			return FALSE;
-+		}
-+		case PACMAN_TRANSACTION_QUESTION_REMOVE_CONFLICTING_PACKAGE:
-+		case PACMAN_TRANSACTION_QUESTION_SKIP_UNRESOLVABLE_PACKAGES:
-+		case PACMAN_TRANSACTION_QUESTION_REMOVE_HOLD_PACKAGES:
-+			return FALSE;
- 
--	*++pch = '\0';
-+		case PACMAN_TRANSACTION_QUESTION_INSTALL_OLDER_PACKAGE:
-+		case PACMAN_TRANSACTION_QUESTION_DELETE_CORRUPTED_PACKAGE:
-+			return TRUE;
- 
--	return (str);
-+		default:
-+			egg_debug ("alpm question: %s", message);
-+			return FALSE;
-+	}
- }
- 
--/**
-- * _strnadd:
-- * Helper function for strreplace
-- */
- static void
--_strnadd (char **str, const char *append, unsigned int count)
--{
--	if (*str)
--		*str = realloc (*str, strlen (*str) + count + 1);
--	else
--		*str = calloc (sizeof (char), count + 1);
--
--	strncat (*str, append, count);
--}
--
--/**
-- * strreplace:
-- * Replace all occurences of 'needle' with 'replace' in 'str', returning
-- * a new string (must be free'd)
-- */
--static char *
--strreplace (const char *str, const char *needle, const char *replace)
-+transaction_status_cb (PacmanTransaction *transaction, PacmanTransactionStatus status, const gchar *message, gpointer user_data)
- {
--	const char *p, *q;
--	char *newstr = NULL;
--	unsigned int needlesz = strlen (needle), replacesz = strlen (replace);
--
--	p = q = str;
--
--	while (1) {
--		q = strstr (p, needle);
--		if (!q) {
--			/* not found */
--			if (*p) /* add the rest of 'p' */
--				_strnadd (&newstr, p, strlen (p));
--
-+	/* TODO: add more code here, and possibly allow cancel */
-+	switch (status) {
-+		case PACMAN_TRANSACTION_STATUS_INSTALL_START:
-+		{
-+			const PacmanList *packages;
-+			pk_backend_set_allow_cancel ((PkBackend *) user_data, FALSE);
-+
-+			for (packages = pacman_transaction_get_marked_packages (transaction); packages != NULL; packages = pacman_list_next (packages)) {
-+				PacmanPackage *package = (PacmanPackage *) pacman_list_get (packages);
-+				emit_package ((PkBackend *) user_data, package, NULL, PK_INFO_ENUM_INSTALLING);
-+			}
-+			break;
-+		}
-+		case PACMAN_TRANSACTION_STATUS_UPGRADE_START:
-+		{
-+			const PacmanList *packages;
-+			pk_backend_set_allow_cancel ((PkBackend *) user_data, FALSE);
-+
-+			for (packages = pacman_transaction_get_marked_packages (transaction); packages != NULL; packages = pacman_list_next (packages)) {
-+				PacmanPackage *package = (PacmanPackage *) pacman_list_get (packages);
-+				emit_package ((PkBackend *) user_data, package, PACMAN_LOCAL_DB_ALIAS, PK_INFO_ENUM_UPDATING);
-+			}
- 			break;
--		} else { /* found match */
--			if (q > p) /* add chars between this occurance and last occurance, if any */
--				_strnadd (&newstr, p, q - p);
--
--			_strnadd (&newstr, replace, replacesz);
--			p = q + needlesz;
- 		}
-+		case PACMAN_TRANSACTION_STATUS_REMOVE_START:
-+		{
-+			const PacmanList *packages;
-+			pk_backend_set_allow_cancel ((PkBackend *) user_data, FALSE);
-+
-+			for (packages = pacman_transaction_get_marked_packages (transaction); packages != NULL; packages = pacman_list_next (packages)) {
-+				PacmanPackage *package = (PacmanPackage *) pacman_list_get (packages);
-+				emit_package ((PkBackend *) user_data, package, PACMAN_LOCAL_DB_ALIAS, PK_INFO_ENUM_REMOVING);
-+			}
-+			break;
-+		}
-+		default:
-+			egg_debug ("alpm status: %s", message);
-+			break;
- 	}
--
--	return newstr;
- }
- 
--/**
-- * set_repeating_option:
-- * Add repeating options such as NoExtract, NoUpgrade, etc to alpm settings.
-- * @param ptr a pointer to the start of the multiple options
-- * @param option the string (friendly) name of the option, used for messages
-- * @param optionfunc a function pointer to an alpm_option_add_* function
-- */
- static void
--set_repeating_option (const char *ptr, const char *option, void (*optionfunc) (const char*))
-+pacman_message_cb (const gchar *domain, GLogLevelFlags level, const gchar *message, gpointer user_data)
- {
--	char *p = (char*) ptr;
--	char *q;
--
--	while ((q = strchr (p, ' '))) {
--		*q = '\0';
--		(*optionfunc) (p);
--		egg_debug ("config: %s: %s", option, p);
--		p = q;
--		p++;
-+	switch (level) {
-+		case G_LOG_LEVEL_WARNING:
-+		case G_LOG_LEVEL_MESSAGE:
-+		{
-+			backend_message ((PkBackend *) user_data, message);
-+			break;
-+		}
-+		case G_LOG_LEVEL_INFO:
-+		case G_LOG_LEVEL_DEBUG:
-+			egg_debug ("alpm: %s", message);
-+			break;
-+		default:
-+			break;
- 	}
--	(*optionfunc) (p);
--	egg_debug ("config: %s: %s", option, p);
--}
--
--/**
-- * option_add_syncfirst:
-- * Add package name to SyncFirst list
-- * @param name name of the package to be added
-- */
--static void
--option_add_syncfirst (const char *name) {
--	syncfirst = alpm_list_add (syncfirst, strdup (name));
--}
--
--/**
-- * option_add_holdpkg:
-- * Add package name to HoldPkg list
-- * @param name name of the package to be added
-- */
--static void
--option_add_holdpkg (const char *name) {
--	holdpkg = alpm_list_add (holdpkg, strdup (name));
- }
- 
--/**
 - * parse_config:
 - * Parse config file and set all the needed options
 - * Based heavily on the pacman source code
@@ -826,20 +710,26 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -static int
 -parse_config (const char *file, const char *givensection, pmdb_t * const givendb)
 +static gboolean
-+backend_transaction_run (PkBackend *backend, PacmanTransaction *transaction, const PacmanList *targets, GError **error)
++transaction_question_cb (PacmanTransaction *transaction, PacmanTransactionQuestion question, const gchar *message, gpointer user_data)
  {
 -	FILE *fp = NULL;
 -	char line[PATH_MAX + 1];
 -	int linenum = 0;
 -	char *ptr, *section = NULL;
 -	pmdb_t *db = NULL;
--
++	switch (question) {
++		case PACMAN_TRANSACTION_QUESTION_INSTALL_IGNORE_PACKAGE:
++		{
++			gchar *packages = pacman_package_make_list (pacman_transaction_get_marked_packages (transaction));
++			gchar *warning = g_strdup_printf ("The following packages are marked as ignored:\n%s\n", packages);
+ 
 -	/* set default options */
 -	alpm_option_set_root (ALPM_ROOT);
 -	alpm_option_set_dbpath (ALPM_DBPATH);
 -	alpm_option_add_cachedir (ALPM_CACHEDIR);
 -	alpm_option_set_logfile (ALPM_LOGFILE);
--
++			backend_message ((PkBackend *) user_data, warning);
+ 
 -	fp = fopen (file, "r");
 -	if (fp == NULL) {
 -		egg_error ("config file %s could not be read", file);
@@ -849,28 +739,57 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -	/* if we are passed a section, use it as our starting point */
 -	if (givensection != NULL)
 -		section = strdup (givensection);
--
++			g_free (warning);
++			g_free (packages);
++			return TRUE;
++		}
++		case PACMAN_TRANSACTION_QUESTION_REPLACE_PACKAGE:
++		{
++			PacmanConflict *conflict = (PacmanConflict *) pacman_list_get (pacman_transaction_get_conflicts (transaction));
++			const gchar *first = pacman_conflict_get_second_package (conflict), *second = pacman_conflict_get_first_package (conflict);
++			gchar *warning = g_strdup_printf ("Package %s will be replaced with %s\n", second, first);
+ 
 -	/* if we are passed a db, use it as our starting point */
 -	if (givendb != NULL)
 -		db = givendb;
--
++			backend_message ((PkBackend *) user_data, warning);
+ 
 -	while (fgets (line, PATH_MAX, fp)) {
 -		linenum++;
 -		strtrim (line);
--
++			g_free (warning);
++			return TRUE;
++		}
++		case PACMAN_TRANSACTION_QUESTION_SYNC_FIRST:
++		{
++			gchar *packages = pacman_package_make_list (pacman_transaction_get_marked_packages (transaction));
++			gchar *warning = g_strdup_printf ("The following packages should probably be installed first:\n%s\n", packages);
+ 
 -		if (strlen (line) == 0 || line[0] == '#')
 -			continue;
--
++			pk_backend_message ((PkBackend *) user_data, PK_MESSAGE_ENUM_UNKNOWN, warning);
+ 
 -		if ((ptr = strchr (line, '#')))
 -			*ptr = '\0';
--
++			g_free (warning);
++			g_free (packages);
++			return FALSE;
++		}
++		case PACMAN_TRANSACTION_QUESTION_REMOVE_CONFLICTING_PACKAGE:
++		case PACMAN_TRANSACTION_QUESTION_SKIP_UNRESOLVABLE_PACKAGES:
++		case PACMAN_TRANSACTION_QUESTION_REMOVE_HOLD_PACKAGES:
++			return FALSE;
+ 
 -		if (line[0] == '[' && line[strlen (line) - 1] == ']') {
 -			/* new config section, skip the '[' */
 -			ptr = line;
 -			ptr++;
 -			if (section)
 -				free (section);
--
++		case PACMAN_TRANSACTION_QUESTION_INSTALL_OLDER_PACKAGE:
++		case PACMAN_TRANSACTION_QUESTION_DELETE_CORRUPTED_PACKAGE:
++			return TRUE;
+ 
 -			section = strdup (ptr);
 -			section[strlen (section) - 1] = '\0';
 -			egg_debug ("config: new section '%s'", section);
@@ -878,7 +797,12 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -				egg_debug ("config file %s, line %d: bad section name", file, linenum);
 -				return 1;
 -			}
--
++		default:
++			egg_debug ("alpm question: %s", message);
++			return FALSE;
++	}
++}
+ 
 -			/* if we are not looking at the options section, register a db */
 -			if (g_strcmp0 (section, "options") != 0)
 -				db = alpm_db_register_sync (section);
@@ -895,11 +819,34 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -			if (key == NULL) {
 -				egg_error ("config file %s, line %d: syntax error in config file - missing key.", file, linenum);
 -				return 1;
--			}
++static void
++transaction_status_cb (PacmanTransaction *transaction, PacmanTransactionStatus status, const gchar *message, gpointer user_data)
++{
++	/* TODO: add more code here, and possibly allow cancel */
++	switch (status) {
++		case PACMAN_TRANSACTION_STATUS_INSTALL_START:
++		{
++			const PacmanList *packages;
++			pk_backend_set_allow_cancel ((PkBackend *) user_data, FALSE);
++
++			for (packages = pacman_transaction_get_marked_packages (transaction); packages != NULL; packages = pacman_list_next (packages)) {
++				PacmanPackage *package = (PacmanPackage *) pacman_list_get (packages);
++				emit_package ((PkBackend *) user_data, package, NULL, PK_INFO_ENUM_INSTALLING);
+ 			}
 -			if (section == NULL) {
 -				egg_error ("config file %s, line %d: all directives must belong to a section.", file, linenum);
 -				return 1;
--			}
++			break;
++		}
++		case PACMAN_TRANSACTION_STATUS_UPGRADE_START:
++		{
++			const PacmanList *packages;
++			pk_backend_set_allow_cancel ((PkBackend *) user_data, FALSE);
++
++			for (packages = pacman_transaction_get_marked_packages (transaction); packages != NULL; packages = pacman_list_next (packages)) {
++				PacmanPackage *package = (PacmanPackage *) pacman_list_get (packages);
++				emit_package ((PkBackend *) user_data, package, PACMAN_LOCAL_DB_ALIAS, PK_INFO_ENUM_UPDATING);
+ 			}
 -
 -			if (ptr == NULL && g_strcmp0 (section, "options") == 0) {
 -				/* directives without settings, all in [options] */
@@ -968,8 +915,52 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -					egg_error ("config file %s, line %d: directive '%s' not recognized.", file, linenum, key);
 -					return 1;
 -				}
--			}
--		}
++			break;
++		}
++		case PACMAN_TRANSACTION_STATUS_REMOVE_START:
++		{
++			const PacmanList *packages;
++			pk_backend_set_allow_cancel ((PkBackend *) user_data, FALSE);
++
++			for (packages = pacman_transaction_get_marked_packages (transaction); packages != NULL; packages = pacman_list_next (packages)) {
++				PacmanPackage *package = (PacmanPackage *) pacman_list_get (packages);
++				emit_package ((PkBackend *) user_data, package, PACMAN_LOCAL_DB_ALIAS, PK_INFO_ENUM_REMOVING);
+ 			}
++			break;
+ 		}
++		default:
++			egg_debug ("alpm status: %s", message);
++			break;
+ 	}
++}
+ 
+-	fclose (fp);
+-	if (section)
+-		free (section);
++static void
++pacman_message_cb (const gchar *domain, GLogLevelFlags level, const gchar *message, gpointer user_data)
++{
++	switch (level) {
++		case G_LOG_LEVEL_WARNING:
++		case G_LOG_LEVEL_MESSAGE:
++		{
++			backend_message ((PkBackend *) user_data, message);
++			break;
++		}
++		case G_LOG_LEVEL_INFO:
++		case G_LOG_LEVEL_DEBUG:
++			egg_debug ("alpm: %s", message);
++			break;
++		default:
++			break;
++	}
++}
+ 
+-	egg_debug ("config: finished parsing %s", file);
+-	return 0;
++static gboolean
++backend_transaction_run (PkBackend *backend, PacmanTransaction *transaction, const PacmanList *targets, GError **error)
++{
 +	g_signal_connect (transaction, "download", G_CALLBACK (transaction_download_cb), backend);
 +	g_signal_connect (transaction, "progress", G_CALLBACK (transaction_progress_cb), backend);
 +	g_signal_connect (transaction, "question", G_CALLBACK (transaction_question_cb), backend);
@@ -978,20 +969,13 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 +	if (!pacman_transaction_prepare (transaction, targets, error) || !pacman_transaction_commit (transaction, error)) {
 +		backend_error (backend, *error);
 +		return FALSE;
- 	}
--
--	fclose (fp);
--	if (section)
--		free (section);
--
--	egg_debug ("config: finished parsing %s", file);
--	return 0;
++	}
 +	
 +	return TRUE;
  }
  
  /**
-@@ -608,34 +533,24 @@
+@@ -608,34 +521,24 @@
  static void
  backend_initialize (PkBackend *backend)
  {
@@ -1035,7 +1019,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	/* fill in group mapping */
  	group_map = g_hash_table_new (g_str_hash, g_str_equal);
  	g_hash_table_insert (group_map, (gchar *) "gnome", (gchar *) "desktop-gnome");
-@@ -679,11 +594,8 @@
+@@ -679,11 +582,8 @@
  backend_destroy (PkBackend *backend)
  {
  	g_hash_table_destroy (group_map);
@@ -1049,7 +1033,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  }
  
  /**
-@@ -729,7 +641,15 @@
+@@ -729,7 +629,15 @@
  static void
  backend_cancel (PkBackend *backend)
  {
@@ -1065,7 +1049,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  }
  
  /**
-@@ -740,84 +660,50 @@
+@@ -740,84 +648,50 @@
  {
  	gchar **package_ids = pk_backend_get_strv (backend, "package_ids");
  	const gchar *directory = pk_backend_get_string (backend, "directory");
@@ -1131,8 +1115,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -		pk_backend_finished (backend);
 -		return FALSE;
 -	}
-+	result = backend_transaction_run (backend, transaction, list, &error);
- 
+-
 -	alpm_trans_release ();
 -
 -	/* emit downloaded packages */
@@ -1144,7 +1127,8 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -		for (iterator = 0; package_id == NULL && iterator < g_strv_length (package_ids); ++iterator) {
 -			gchar **package_id_data = pk_package_id_split (package_ids[iterator]);
 -			gchar *needle = g_strjoin ("-", package_id_data[PK_PACKAGE_ID_NAME], package_id_data[PK_PACKAGE_ID_VERSION], NULL);
--
++	result = backend_transaction_run (backend, transaction, list, &error);
+ 
 -			if (needle != NULL && strcmp (needle, "") != 0)
 -				egg_debug ("matching %s with %s", (char *) alpm_list_getdata (list_iterator), needle);
 -			if (g_str_has_prefix ((char *) alpm_list_getdata (list_iterator), needle))
@@ -1176,13 +1160,60 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  }
  
  /**
-@@ -838,51 +724,50 @@
+@@ -832,61 +706,126 @@
+ 	pk_backend_thread_create (backend, backend_download_packages_thread);
+ }
+ 
++static PacmanPackage *list_find_provider (const PacmanList *packages, PacmanDependency *depend) {
++	for (; packages != NULL; packages = pacman_list_next (packages)) {
++		PacmanPackage *provider = (PacmanPackage *) pacman_list_get (packages);
++		if (pacman_dependency_satisfied_by (depend, provider))
++			return provider;
++	}
++
++	return NULL;
++}
++
++static PacmanPackage *databases_find_provider (const PacmanList *databases, PacmanDependency *depend, const gchar **repo) {
++	const PacmanList *list;
++	for (list = databases; list != NULL; list = pacman_list_next (list)) {
++		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (list);
++		PacmanPackage *provider = pacman_database_find_package (database, pacman_dependency_get_name (depend));
++
++		/* TODO: possibly check for IgnorePkg */
++		if (provider != NULL && pacman_dependency_satisfied_by (depend, provider)) {
++			*repo = pacman_database_get_name (database);
++			return provider;
++		}
++	}
++
++	/* find provider with a different name */
++	for (list = databases; list != NULL; list = pacman_list_next (list)) {
++		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (list);
++		PacmanPackage *provider = list_find_provider (pacman_database_get_packages (database), depend);
++
++		if (provider != NULL) {
++			*repo = pacman_database_get_name (database);
++			return provider;
++		}
++	}
++
++	return NULL;
++}
++
+ /**
+  * backend_get_depends:
+  */
  static void
  backend_get_depends (PkBackend *backend, PkBitfield filters, gchar **package_ids, gboolean recursive)
  {
 -	unsigned int iterator;
 +	guint iterator;
++	PacmanList *list, *packages = NULL, *databases = NULL;
 +	PacmanDatabase *local = pacman_manager_get_local_database (pacman);
++
++	gboolean search_installed = pk_bitfield_contain (filters, PK_FILTER_ENUM_INSTALLED);
++	gboolean search_not_installed = pk_bitfield_contain (filters, PK_FILTER_ENUM_NOT_INSTALLED);
  
  	pk_backend_set_status (backend, PK_STATUS_ENUM_QUERY);
  	pk_backend_set_allow_cancel (backend, FALSE);
@@ -1193,13 +1224,11 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -		pmpkg_t *pkg = pkg_from_package_id (package_ids[iterator]);
 -		if (pkg == NULL) {
 -			pk_backend_error_code (backend, PK_ERROR_ENUM_PACKAGE_ID_INVALID, alpm_strerrorlast ());
-+	/* TODO: recursive */
 +	for (iterator = 0; package_ids[iterator] != NULL; ++iterator) {
-+		const PacmanList *depends;
-+
 +		PacmanPackage *package = package_from_package_id (package_ids[iterator]);
 +		if (package == NULL) {
 +			pk_backend_error_code (backend, PK_ERROR_ENUM_PACKAGE_ID_INVALID, "Could not find package with ID %s", package_ids[iterator]);
++			pacman_list_free (packages);
  			pk_backend_finished (backend);
  			return;
  		}
@@ -1208,12 +1237,9 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -			pmdepend_t *dep = alpm_list_getdata (list_iterator);
 -			pmpkg_t *dep_pkg;
 -			gboolean found = FALSE;
-+		for (depends = pacman_package_get_dependencies (package); depends != NULL; depends = pacman_list_next (depends)) {
-+			PacmanDependency *depend = (PacmanDependency *) pacman_list_get (depends);
-+			PacmanPackage *provider = NULL;
- 
- 			if (!pk_bitfield_contain (filters, PK_FILTER_ENUM_INSTALLED)) {
- 				/* search in sync dbs */
+-
+-			if (!pk_bitfield_contain (filters, PK_FILTER_ENUM_INSTALLED)) {
+-				/* search in sync dbs */
 -				alpm_list_t *db_iterator;
 -				for (db_iterator = alpm_option_get_syncdbs (); found == FALSE && db_iterator; db_iterator = alpm_list_next (db_iterator)) {
 -					pmdb_t *syncdb = alpm_list_getdata (db_iterator);
@@ -1224,37 +1250,78 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -					if (dep_pkg && alpm_depcmp (dep_pkg, dep) && pkg_cmp (dep_pkg, alpm_db_get_pkg (alpm_option_get_localdb (), alpm_dep_get_name (dep))) != 0) {
 -						found = TRUE;
 -						emit_package (backend, dep_pkg, alpm_db_get_name (syncdb), PK_INFO_ENUM_AVAILABLE);
-+				const PacmanList *databases;
-+				for (databases = pacman_manager_get_sync_databases (pacman); databases != NULL; databases = pacman_list_next (databases)) {
-+					PacmanDatabase *sync = (PacmanDatabase *) pacman_list_get (databases);
-+
-+					egg_debug ("alpm: searching for %s in %s", pacman_dependency_get_name (depend), pacman_database_get_name (sync));
-+
-+					provider = pacman_database_find_package (sync, pacman_dependency_get_name (depend));
-+					if (provider != NULL && pacman_dependency_satisfied_by (depend, provider) && package_compare (provider, pacman_database_find_package (local, pacman_package_get_name (provider))) != 0) {
-+						emit_package (backend, provider, pacman_database_get_name (sync), PK_INFO_ENUM_AVAILABLE);
-+						break;
- 					}
- 				}
- 			}
+-					}
+-				}
+-			}
++		packages = pacman_list_add (packages, package);
++	}
  
- 			if (!pk_bitfield_contain (filters, PK_FILTER_ENUM_NOT_INSTALLED)) {
+-			if (!pk_bitfield_contain (filters, PK_FILTER_ENUM_NOT_INSTALLED)) {
 -				egg_debug ("alpm: searching for %s in local db", alpm_dep_get_name (dep));
-+				egg_debug ("alpm: searching for %s in local db", pacman_dependency_get_name (depend));
++	if (packages == NULL) {
++		pk_backend_finished (backend);
++		return;
++	}
  
- 				/* search in local db */
+-				/* search in local db */
 -				dep_pkg = alpm_db_get_pkg (alpm_option_get_localdb (), alpm_dep_get_name (dep));
 -				if (dep_pkg && alpm_depcmp (dep_pkg, dep)) {
 -					found = TRUE;
 -					emit_package (backend, dep_pkg, ALPM_LOCAL_DB_ALIAS, PK_INFO_ENUM_INSTALLED);
--				}
-+				provider = pacman_database_find_package (local, pacman_dependency_get_name (depend));
-+				if (provider != NULL && pacman_dependency_satisfied_by (depend, provider))
-+					emit_package (backend, provider, PACMAN_LOCAL_DB_ALIAS, PK_INFO_ENUM_INSTALLED);
++	/* define the list of databases to search, local goes first for efficiency */
++	if (!search_not_installed)
++		databases = pacman_list_add (databases, local);
++	if (!search_installed)
++		databases = pacman_list_concat (databases, pacman_list_copy (pacman_manager_get_sync_databases (pacman)));
++
++	/* packages might be modified along the way but that is ok */
++	for (list = packages; list != NULL; list = pacman_list_next (list)) {
++		PacmanPackage *package = (PacmanPackage *) pacman_list_get (list);
++		const PacmanList *depends;
++
++		for (depends = pacman_package_get_dependencies (package); depends != NULL; depends = pacman_list_next (depends)) {
++			PacmanDependency *depend = (PacmanDependency *) pacman_list_get (depends);
++			PacmanPackage *provider = list_find_provider (packages, depend);
++
++			if (provider == NULL) {
++				const gchar *repo = NULL;
++				PkInfoEnum info;
++
++				provider = databases_find_provider (databases, depend, &repo);
++				if (provider == NULL) {
++					gchar *depend_id = pacman_dependency_to_string (depend);
++					pk_backend_error_code (backend, PK_ERROR_ENUM_DEP_RESOLUTION_FAILED, "Could not resolve dependency %s", depend_id);
++					g_free (depend_id);
++					pacman_list_free (databases);
++					pacman_list_free (packages);
++					pk_backend_finished (backend);
++					return;
+ 				}
++
++				if (pacman_package_get_database (provider) == local || sync_package_installed (local, provider)) {
++					if (search_not_installed)
++						continue;
++					info = PK_INFO_ENUM_INSTALLED;
++				} else {
++					if (search_installed)
++						continue;
++					info = PK_INFO_ENUM_AVAILABLE;
++				}
++
++				if (recursive)
++					packages = pacman_list_add (packages, provider);
++				emit_package (backend, provider, repo, info);
  			}
  		}
  	}
-@@ -896,45 +781,36 @@
+ 
++	pacman_list_free (databases);
++	pacman_list_free (packages);
++
+ 	pk_backend_finished (backend);
+ }
+ 
+@@ -896,45 +835,36 @@
  static void
  backend_get_details (PkBackend *backend, gchar **package_ids)
  {
@@ -1306,11 +1373,11 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -
 -		/* get licenses_str content to licenses array */
 -		licenses = g_string_free (licenses_str, FALSE);
-+		}	
- 
+-
 -		/* return details */
 -		pk_backend_details (backend, package_ids[iterator], licenses, PK_GROUP_ENUM_OTHER, alpm_pkg_get_desc (pkg), alpm_pkg_get_url (pkg), alpm_pkg_get_size (pkg));
--
++		}	
+ 
 -		/* free licenses array as we no longer need it */
 -		g_free (licenses);
 +		result = g_string_free (licenses, FALSE);
@@ -1319,7 +1386,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	}
  
  	pk_backend_finished (backend);
-@@ -946,117 +822,124 @@
+@@ -946,117 +876,131 @@
  static void
  backend_get_files (PkBackend *backend, gchar **package_ids)
  {
@@ -1464,21 +1531,29 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -				/* iterate groups */
 -				for (groups = alpm_pkg_get_groups (pkg); groups && !match; groups = alpm_list_next (groups)) {
 -					gchar *group = (gchar *) g_hash_table_lookup (group_map, (char *) alpm_list_getdata (groups));
-+			{
-+				const PacmanList *groups;
-+				for (groups = pacman_package_get_groups (package); groups != NULL; groups = pacman_list_next (groups)) {
-+					const gchar *group = g_hash_table_lookup (group_map, (const gchar *) pacman_list_get (groups));
- 					if (group == NULL)
+-					if (group == NULL)
 -						group = (gchar *) "other";
 -					match = (g_strcmp0 (group, needle) == 0);
-+						group = "other";
-+					if (g_strcmp0 (needle, group) == 0)
-+						break;
- 				}
++			{
++				gboolean found_group = FALSE;
++				const PacmanList *groups;
 +
-+				/* groups is still set if the loop finished prematurely */
-+				if (groups == NULL)
-+					package = NULL;
++				/* determine whether package is in the needle group */
++				for (groups = pacman_package_get_groups (package); groups != NULL; groups = pacman_list_next (groups)) {
++					const gchar *group = g_hash_table_lookup (group_map, (const gchar *) pacman_list_get (groups));
++
++					if (group != NULL) {
++						found_group = TRUE;
++						if (g_strcmp0 (needle, group) == 0)
++							break;
++					}
++				}
++
++				if (groups == NULL) {
++					/* package was not in needle, but if it isn't in another group we put it in other */
++					if (found_group || g_strcmp0 (needle, "other") != 0)
++						package = NULL;
+ 				}
  				break;
 +			}
  			case PK_ALPM_SEARCH_TYPE_PROVIDES:
@@ -1507,12 +1582,12 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -			/* we found what we wanted */
 -			emit_package (backend, pkg, repo_name, info);
 -		}
-+		if (package != NULL && (local == NULL || package_compare (package, pacman_database_find_package (local, pacman_package_get_name (package))) != 0))
++		if (package != NULL && (local == NULL || !sync_package_installed (local, package)))
 +			emit_package (backend, package, repo, info);
  	}
  }
  
-@@ -1064,11 +947,11 @@
+@@ -1064,11 +1008,11 @@
   * backend_search_values:
   */
  static void
@@ -1528,7 +1603,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  }
  
  /**
-@@ -1079,20 +962,16 @@
+@@ -1079,20 +1023,16 @@
  {
  	PkBitfield filters = pk_backend_get_uint (backend, "filters");
  
@@ -1555,7 +1630,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	}
  
  	pk_backend_finished (backend);
-@@ -1117,15 +996,14 @@
+@@ -1117,15 +1057,14 @@
  static void
  backend_get_repo_list (PkBackend *backend, PkBitfield filters)
  {
@@ -1575,7 +1650,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	}
  
  	pk_backend_finished (backend);
-@@ -1137,24 +1015,49 @@
+@@ -1137,24 +1076,49 @@
  static void
  backend_get_update_detail (PkBackend *backend, gchar **package_ids)
  {
@@ -1636,7 +1711,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	}
  
  	pk_backend_finished (backend);
-@@ -1166,29 +1069,18 @@
+@@ -1166,29 +1130,19 @@
  static void
  backend_get_updates (PkBackend *backend, PkBitfield filters)
  {
@@ -1667,13 +1742,14 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 +	for (list = pacman_database_get_packages (pacman_manager_get_local_database (pacman)); list != NULL; list = pacman_list_next (list)) {
 +		PacmanPackage *upgrade, *package = (PacmanPackage *) pacman_list_get (list);
 +		upgrade = pacman_package_find_new_version (package, databases);
-+		
++
++		/* TODO: BLOCKED for ignorepkg */
 +		if (upgrade != NULL)
 +			emit_package (backend, upgrade, NULL, PK_INFO_ENUM_NORMAL);
  	}
  
  	pk_backend_finished (backend);
-@@ -1200,41 +1092,36 @@
+@@ -1200,41 +1154,36 @@
  static gboolean
  backend_install_files_thread (PkBackend *backend)
  {
@@ -1731,7 +1807,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  }
  
  /**
-@@ -1255,45 +1142,38 @@
+@@ -1255,45 +1204,38 @@
  static gboolean
  backend_install_packages_thread (PkBackend *backend)
  {
@@ -1791,7 +1867,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  }
  
  /**
-@@ -1313,27 +1193,29 @@
+@@ -1313,27 +1255,29 @@
  static gboolean
  backend_refresh_cache_thread (PkBackend *backend)
  {
@@ -1800,12 +1876,12 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 +	PacmanTransactionFlags flags = PACMAN_TRANSACTION_FLAGS_NONE;
 +	gboolean result;
 +	GError *error = NULL;
-+
-+	if (pk_backend_get_bool (backend, "force"))
-+		flags |= PACMAN_TRANSACTION_FLAGS_UPDATE_ALLOW_DOWNGRADE;
  
 -	if (alpm_trans_init (PM_TRANS_TYPE_SYNC, PM_TRANS_FLAG_NOSCRIPTLET, cb_trans_evt, cb_trans_conv, cb_trans_progress) != 0) {
 -		pk_backend_error_code (backend, PK_ERROR_ENUM_TRANSACTION_ERROR, alpm_strerrorlast ());
++	if (pk_backend_get_bool (backend, "force"))
++		flags |= PACMAN_TRANSACTION_FLAGS_UPDATE_ALLOW_DOWNGRADE;
++
 +	/* create a new transaction */
 +	transaction = pacman_manager_update (pacman, flags, &error);
 +	if (transaction == NULL) {
@@ -1834,7 +1910,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  }
  
  /**
-@@ -1360,87 +1242,43 @@
+@@ -1360,87 +1304,43 @@
  static gboolean
  backend_remove_packages_thread (PkBackend *backend)
  {
@@ -1942,7 +2018,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  }
  
  /**
-@@ -1461,7 +1299,7 @@
+@@ -1461,7 +1361,7 @@
  static gboolean
  backend_resolve_thread (PkBackend *backend)
  {
@@ -1951,7 +2027,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  
  	gchar **package_ids = pk_backend_get_strv (backend, "package_ids");
  	PkBitfield filters = pk_backend_get_uint (backend, "filters");
-@@ -1469,38 +1307,21 @@
+@@ -1469,38 +1369,21 @@
  	gboolean search_installed = pk_bitfield_contain (filters, PK_FILTER_ENUM_INSTALLED);
  	gboolean search_not_installed = pk_bitfield_contain (filters, PK_FILTER_ENUM_NOT_INSTALLED);
  
@@ -1959,7 +2035,9 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -		if (pk_package_id_check (package_ids[iterator])) {
 -			/* skip all the db iterations and so on - we already know everything */
 -			pmpkg_t *pkg = pkg_from_package_id (package_ids[iterator]);
--
++	for (iterator = 0; package_ids[iterator] != NULL; ++iterator) {
++		PacmanDatabase *database;
+ 
 -			if (pkg != NULL) {
 -				gchar **package_id_data = pk_package_id_split (package_ids[iterator]);
 -
@@ -1978,9 +2056,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
 -				/* search in local db */
 -				backend_search (backend, alpm_option_get_localdb (), package_ids[iterator], PK_ALPM_SEARCH_TYPE_RESOLVE);
 -			}
-+	for (iterator = 0; package_ids[iterator] != NULL; ++iterator) {
-+		PacmanDatabase *database;
- 
+-
 -			if (!search_installed) {
 -				/* search in sync repos */
 -				alpm_list_t *repos;
@@ -2003,7 +2079,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	}
  
  	pk_backend_finished (backend);
-@@ -1525,7 +1346,7 @@
+@@ -1525,7 +1408,7 @@
  static gboolean
  backend_search_thread (PkBackend *backend)
  {
@@ -2012,7 +2088,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	PkBitfield filters = pk_backend_get_uint (backend, "filters");
  	PkAlpmSearchType search_type = pk_backend_get_uint (backend, "search-type");
  
-@@ -1534,15 +1355,14 @@
+@@ -1534,15 +1417,14 @@
  
  	if (!search_not_installed) {
  		/* search in local db */
@@ -2032,7 +2108,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  	}
  
  	pk_backend_finished (backend);
-@@ -1558,7 +1378,6 @@
+@@ -1558,7 +1440,6 @@
  	pk_backend_set_status (backend, PK_STATUS_ENUM_QUERY);
  	pk_backend_set_percentage (backend, PK_BACKEND_PERCENTAGE_INVALID);
  	pk_backend_set_uint (backend, "search-type", PK_ALPM_SEARCH_TYPE_DETAILS);
@@ -2040,7 +2116,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  
  	pk_backend_thread_create (backend, backend_search_thread);
  }
-@@ -1572,7 +1391,6 @@
+@@ -1572,7 +1453,6 @@
  	pk_backend_set_status (backend, PK_STATUS_ENUM_QUERY);
  	pk_backend_set_percentage (backend, PK_BACKEND_PERCENTAGE_INVALID);
  	pk_backend_set_uint (backend, "search-type", PK_ALPM_SEARCH_TYPE_GROUP);
@@ -2048,7 +2124,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  
  	pk_backend_thread_create (backend, backend_search_thread);
  }
-@@ -1586,7 +1404,6 @@
+@@ -1586,7 +1466,6 @@
  	pk_backend_set_status (backend, PK_STATUS_ENUM_QUERY);
  	pk_backend_set_percentage (backend, PK_BACKEND_PERCENTAGE_INVALID);
  	pk_backend_set_uint (backend, "search-type", PK_ALPM_SEARCH_TYPE_NAME);
@@ -2056,7 +2132,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  
  	pk_backend_thread_create (backend, backend_search_thread);
  }
-@@ -1608,32 +1425,27 @@
+@@ -1608,32 +1487,27 @@
  static gboolean
  backend_update_system_thread (PkBackend *backend)
  {
@@ -2098,7 +2174,7 @@ diff -ru a/backends/alpm/pk-backend-alpm.c b/backends/alpm/pk-backend-alpm.c
  }
  
  /**
-@@ -1654,7 +1466,6 @@
+@@ -1654,7 +1528,6 @@
  	pk_backend_set_status (backend, PK_STATUS_ENUM_QUERY);
  	pk_backend_set_percentage (backend, PK_BACKEND_PERCENTAGE_INVALID);
  	pk_backend_set_uint (backend, "search-type", PK_ALPM_SEARCH_TYPE_PROVIDES);
