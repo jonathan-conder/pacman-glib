@@ -15,7 +15,7 @@ options=('!libtool')
 source=("http://www.packagekit.org/releases/PackageKit-${pkgver}.tar.bz2"
         'gpacman.patch')
 md5sums=('d3835290e88e534a60ca18bd4efa0479'
-         '33203c911038ec6911a56362ed06b593')
+         '62af211fcfbe4749b5b0e3c8ce7b24d8')
 
 build() {
 	cd "${srcdir}/PackageKit-${pkgver}"
@@ -23,7 +23,7 @@ build() {
 	patch -p1 -i "${srcdir}/gpacman.patch" || return 1
 	sed -i 's/SUBDIRS = test/SUBDIRS =/' backends/Makefile.in || return 1
 	
-	./configure --prefix=/usr \
+	./autogen.sh --prefix=/usr \
 		--sysconfdir=/etc \
 		--localstatedir=/var \
 		--libexecdir=/usr/lib/PackageKit \
@@ -53,4 +53,7 @@ build() {
 	
 	# rename bash completion script
 	mv "${pkgdir}/etc/bash_completion.d/pk-completion.bash" "${pkgdir}/etc/bash_completion.d/pkcon"
+	
+	# make sure log gets removed
+	touch "${pkgdir}/var/log/PackageKit"
 }
