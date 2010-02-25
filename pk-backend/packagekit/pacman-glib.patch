@@ -1,6 +1,6 @@
 diff -Nru a/backends/Makefile.am b/backends/Makefile.am
---- a/backends/Makefile.am	2010-02-26 00:52:38.177154000 +1300
-+++ b/backends/Makefile.am	2010-02-26 00:59:05.817114981 +1300
+--- a/backends/Makefile.am	2010-02-26 00:52:38.177154133 +1300
++++ b/backends/Makefile.am	2010-02-26 01:43:19.470181113 +1300
 @@ -28,6 +28,10 @@
  SUBDIRS += opkg
  endif
@@ -14,7 +14,7 @@ diff -Nru a/backends/Makefile.am b/backends/Makefile.am
  endif
 diff -Nru a/backends/pacman-glib/Makefile.am b/backends/pacman-glib/Makefile.am
 --- a/backends/pacman-glib/Makefile.am	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman-glib/Makefile.am	2010-02-26 00:59:46.980443889 +1300
++++ b/backends/pacman-glib/Makefile.am	2010-02-26 01:43:19.474348124 +1300
 @@ -0,0 +1,6 @@
 +plugindir = $(PK_PLUGIN_DIR)
 +plugin_LTLIBRARIES = libpk_backend_pacman_glib.la
@@ -24,7 +24,7 @@ diff -Nru a/backends/pacman-glib/Makefile.am b/backends/pacman-glib/Makefile.am
 +libpk_backend_pacman_glib_la_CFLAGS = $(PK_PLUGIN_CFLAGS) $(PACMAN_CFLAGS) $(WARNINGFLAGS_C)
 diff -Nru a/backends/pacman-glib/pk-backend-pacman-glib.c b/backends/pacman-glib/pk-backend-pacman-glib.c
 --- a/backends/pacman-glib/pk-backend-pacman-glib.c	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman-glib/pk-backend-pacman-glib.c	2010-02-26 01:18:15.860331467 +1300
++++ b/backends/pacman-glib/pk-backend-pacman-glib.c	2010-02-26 01:43:19.477679554 +1300
 @@ -0,0 +1,1580 @@
 +/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
 + *
@@ -1608,7 +1608,7 @@ diff -Nru a/backends/pacman-glib/pk-backend-pacman-glib.c b/backends/pacman-glib
 +);
 diff -Nru a/backends/pacman-glib/TODO b/backends/pacman-glib/TODO
 --- a/backends/pacman-glib/TODO	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman-glib/TODO	2010-02-25 02:18:33.096144000 +1300
++++ b/backends/pacman-glib/TODO	2010-02-26 01:43:19.477679554 +1300
 @@ -0,0 +1,5 @@
 +differentiate between installed_size and download_size in get_details
 +make some more source files and move stuff around?
@@ -1617,7 +1617,7 @@ diff -Nru a/backends/pacman-glib/TODO b/backends/pacman-glib/TODO
 +looks like messaging outside a transaction won't work...
 diff -Nru a/configure.ac b/configure.ac
 --- a/configure.ac	2010-02-02 00:17:25.000000000 +1300
-+++ b/configure.ac	2010-02-26 00:54:07.770474160 +1300
++++ b/configure.ac	2010-02-26 01:43:19.477679554 +1300
 @@ -542,6 +542,7 @@
  AC_ARG_ENABLE(conary, AS_HELP_STRING([--enable-conary],[use the CONARY backend]),enable_conary=$enableval,enable_conary=no)
  AC_ARG_ENABLE(dummy, AS_HELP_STRING([--enable-dummy],[use the dummy backend]),enable_dummy=$enableval,enable_dummy=yes)
@@ -1674,7 +1674,7 @@ diff -Nru a/configure.ac b/configure.ac
          Portage backend:           ${enable_portage}
 diff -Nru a/src/pk-transaction.c b/src/pk-transaction.c
 --- a/src/pk-transaction.c	2010-01-28 10:00:41.000000000 +1300
-+++ b/src/pk-transaction.c	2010-02-23 02:44:37.955640000 +1300
++++ b/src/pk-transaction.c	2010-02-26 01:43:19.481015734 +1300
 @@ -2459,7 +2459,7 @@
  pk_transaction_accept_eula (PkTransaction *transaction, const gchar *eula_id, DBusGMethodInvocation *context)
  {
