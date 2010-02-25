@@ -1,3 +1,0 @@
-#!/bin/bash
-
-exec dbus-send --system --dest=org.freedesktop.PackageKit --print-reply --type=method_call /org/freedesktop/PackageKit org.freedesktop.PackageKit.SuggestDaemonQuit

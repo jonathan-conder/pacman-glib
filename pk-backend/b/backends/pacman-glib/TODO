@@ -1,5 +1,0 @@
-differentiate between installed_size and download_size in get_details
-make some more source files and move stuff around?
-move everything into threads
-implement get_requires the same as get_depends
-looks like messaging outside a transaction won't work...

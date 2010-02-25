@@ -1,4 +1,0 @@
-#!/bin/bash
-
-/usr/bin/pkill -HUP -xu dbus dbus-daemon
-exec /usr/sbin/packagekitd "$@"
