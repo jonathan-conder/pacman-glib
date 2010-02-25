@@ -5,9 +5,9 @@
 ]>
 <book id="index">
 	<bookinfo>
-		<title>gpacman Reference Manual</title>
+		<title>pacman-glib Reference Manual</title>
 		<releaseinfo>
-			for GPacman @VERSION@.
+			for pacman-glib @VERSION@.
 		</releaseinfo>
 	</bookinfo>
 	<chapter>

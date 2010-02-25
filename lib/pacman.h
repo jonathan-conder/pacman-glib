@@ -1,4 +1,4 @@
-/* gpacman.h
+/* pacman.h
  *
  * Copyright (C) 2010 Jonathan Conder <j@skurvy.no-ip.org>
  *

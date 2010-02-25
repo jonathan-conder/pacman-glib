@@ -17,7 +17,7 @@
  */
 
 #if !defined (__PACMAN_H_INSIDE__) && !defined (PACMAN_COMPILATION)
-#error "Only <gpacman/pacman.h> can be included directly."
+#error "Only <pacman.h> can be included directly."
 #endif
 
 #ifndef __PACMAN_SYNC_H__

@@ -4,6 +4,6 @@
 srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
 
-PKG_NAME="gpacman"
+PKG_NAME="pacman-glib"
 
 . gnome-autogen.sh

@@ -1,5 +1,5 @@
-AC_INIT([GPacman], [3.3.0])
-AC_CONFIG_SRCDIR([lib/gpacman.h])
+AC_INIT([pacman-glib], [3.3.0])
+AC_CONFIG_SRCDIR([lib/pacman.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([1.11 dist-bzip2])
