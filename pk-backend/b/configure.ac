@@ -542,6 +542,7 @@ AC_ARG_ENABLE(box, AS_HELP_STRING([--enable-box],[use the BOX backend]),enable_b
 AC_ARG_ENABLE(conary, AS_HELP_STRING([--enable-conary],[use the CONARY backend]),enable_conary=$enableval,enable_conary=no)
 AC_ARG_ENABLE(dummy, AS_HELP_STRING([--enable-dummy],[use the dummy backend]),enable_dummy=$enableval,enable_dummy=yes)
 AC_ARG_ENABLE(opkg, AS_HELP_STRING([--enable-opkg],[use the OPKG backend]),enable_opkg=$enableval,enable_opkg=no)
+AC_ARG_ENABLE(pacman-glib, AS_HELP_STRING([--enable-pacman-glib],[use the pacman-glib backend]),enable_pacman_glib=$enableval,enable_pacman_glib=no)
 AC_ARG_ENABLE(pisi, AS_HELP_STRING([--enable-pisi],[use the PiSi backend]),enable_pisi=$enableval,enable_pisi=no)
 AC_ARG_ENABLE(poldek, AS_HELP_STRING([--enable-poldek],[use the poldek backend]),enable_poldek=$enableval,enable_poldek=no)
 AC_ARG_ENABLE(portage, AS_HELP_STRING([--enable-portage],[use the portage backend]),enable_portage=$enableval,enable_portage=no)
@@ -561,6 +562,7 @@ AM_CONDITIONAL(BACKEND_TYPE_BOX, [test x$enable_box = xyes])
 AM_CONDITIONAL(BACKEND_TYPE_CONARY, [test x$enable_conary = xyes])
 AM_CONDITIONAL(BACKEND_TYPE_DUMMY, [test x$enable_dummy = xyes])
 AM_CONDITIONAL(BACKEND_TYPE_OPKG, [test x$enable_opkg = xyes])
+AM_CONDITIONAL(BACKEND_TYPE_PACMAN_GLIB, [test x$enable_pacman_glib = xyes])
 AM_CONDITIONAL(BACKEND_TYPE_PISI, [test x$enable_pisi = xyes])
 AM_CONDITIONAL(BACKEND_TYPE_POLDEK, [test x$enable_poldek = xyes])
 AM_CONDITIONAL(BACKEND_TYPE_PORTAGE, [test x$enable_portage = xyes])
@@ -637,7 +639,7 @@ AC_ARG_WITH([default_backend],
 if test x$with_default_backend = x; then
 	if test -f /usr/bin/yum ; then
 		with_default_backend=yum
-	elif test -f /usr/lib/libgpacman.so; then
+	elif test -f /usr/lib/libalpm.so; then
 		with_default_backend=alpm
 	elif test -f /usr/bin/apt-get ; then
 		with_default_backend=apt
@@ -649,6 +651,8 @@ if test x$with_default_backend = x; then
 		with_default_backend=slapt
 	elif test -f /usr/bin/smart ; then
 		with_default_backend=smart
+	elif test -f /usr/lib/pacman-glib.so ; then
+		with_default_backend=pacman_glib
 	elif test -f /usr/bin/pisi ; then
 		with_default_backend=pisi
 	elif test -f /usr/bin/razor ; then
@@ -724,7 +728,14 @@ if test x$enable_opkg = xyes; then
 fi
 
 if test x$enable_alpm = xyes; then
-	PKG_CHECK_MODULES(PACMAN, gpacman >= 3.3.0)
+	with_default_backend=dummy
+	AC_CHECK_HEADER([alpm.h],
+			[with_default_backend=alpm],
+			[AC_MSG_WARN([No alpm headers found - falling back to dummy backend])])
+fi
+
+if test x$enable_pacman_glib = xyes; then
+	PKG_CHECK_MODULES(PACMAN, pacman-glib >= 3.3.0)
 	AC_SUBST(PACMAN_CFLAGS)
 	AC_SUBST(PACMAN_LIBS)
 fi
@@ -810,6 +821,7 @@ backends/box/Makefile
 backends/conary/Makefile
 backends/dummy/Makefile
 backends/opkg/Makefile
+backends/pacman-glib/Makefile
 backends/slapt/Makefile
 backends/smart/Makefile
 backends/test/Makefile
@@ -885,6 +897,7 @@ echo "
         dummy backend:             ${enable_dummy}
         OPKG backend:              ${enable_opkg}
         Razor backend:             ${enable_razor}
+        pacman-glib backend:       ${enable_pacman_glib}
         PiSi backend:              ${enable_pisi}
         poldek backend:            ${enable_poldek}
         Portage backend:           ${enable_portage}

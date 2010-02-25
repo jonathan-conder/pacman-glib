@@ -1,4 +1,4 @@
 #!/bin/bash
 
 /usr/bin/pkill -HUP -xu dbus dbus-daemon
-/usr/sbin/packagekitd "$@"
+exec /usr/sbin/packagekitd "$@"

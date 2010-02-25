@@ -25,7 +25,7 @@
 
 #include <string.h>
 #include <pk-backend.h>
-#include <gpacman.h>
+#include <pacman.h>
 
 #define PACMAN_LOCAL_DB_ALIAS "installed"
 

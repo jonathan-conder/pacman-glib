@@ -1,10 +1,10 @@
 #!/bin/bash
 
 cd "$(dirname "$0")"
-diff -ru a b > gpacman.patch
+diff -Nru a b > pacman-glib.patch
 
-OLDMD5="$(md5sum packagekit/gpacman.patch | cut -d' ' -f1)"
-NEWMD5="$(md5sum gpacman.patch | cut -d' ' -f1)"
+OLDMD5="$(md5sum packagekit/pacman-glib.patch | cut -d' ' -f1)"
+NEWMD5="$(md5sum pacman-glib.patch | cut -d' ' -f1)"
 
 cd packagekit
-mv ../gpacman.patch . && sed -re "s/$OLDMD5/$NEWMD5/" -i PKGBUILD && makepkg "$@"
+mv ../pacman-glib.patch . && sed -re "s/$OLDMD5/$NEWMD5/" -i PKGBUILD && makepkg "$@"

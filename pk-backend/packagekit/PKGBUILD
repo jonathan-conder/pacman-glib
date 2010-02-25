@@ -8,19 +8,19 @@ pkgdesc='A system designed to make installing and updating software on your comp
 arch=('i686' 'x86_64')
 url='http://www.packagekit.org/'
 license=('GPL')
-depends=('dbus-glib>=0.74' 'polkit>=0.92' 'networkmanager>=0.6.4' 'gpacman>=3.3.0' 'libtar' 'python>=2.6' 'sqlite3')
+depends=('dbus-glib>=0.74' 'polkit>=0.92' 'networkmanager>=0.6.4' 'pacman-glib>=3.3.0' 'libtar' 'python>=2.6' 'sqlite3')
 makedepends=('intltool' 'pm-utils' 'gobject-introspection')
 backup=('var/lib/PackageKit/transactions.db')
 options=('!libtool')
 source=("http://www.packagekit.org/releases/PackageKit-${pkgver}.tar.bz2"
-        'gpacman.patch')
+        'pacman-glib.patch')
 md5sums=('d3835290e88e534a60ca18bd4efa0479'
-         '9264c900bd894fefb515e94f8ff4b86f')
+         '84c7eb0ccefe1fa262475d8710f1a50a')
 
 build() {
 	cd "${srcdir}/PackageKit-${pkgver}"
 	
-	patch -p1 -i "${srcdir}/gpacman.patch" || return 1
+	patch -Np1 -i "${srcdir}/pacman-glib.patch" || return 1
 	sed -i 's/SUBDIRS = test/SUBDIRS =/' backends/Makefile.in || return 1
 	
 	./autogen.sh --prefix=/usr \
@@ -42,8 +42,8 @@ build() {
 		--enable-pm-utils \
 		--disable-ruck \
 		--disable-dummy \
-		--enable-alpm \
-		--with-default-backend=alpm || return 1
+		--enable-pacman-glib \
+		--with-default-backend=pacman_glib || return 1
 	
 	make -s || return 1
 	make -s DESTDIR="${pkgdir}" install || return 1
