@@ -278,6 +278,12 @@ static void pacman_config_database_add_server (PacmanConfig *config, const gchar
 	g_hash_table_insert (config->databases, g_strdup (name), list);
 }
 
+static gboolean pacman_config_read_line (GDataInputStream *data_stream, gchar **line, GError **error) {
+	g_free (*line);
+	*line = g_data_input_stream_read_line (data_stream, NULL, NULL, error);
+	return *line != NULL;
+}
+
 static gboolean pacman_config_parse (PacmanConfig *config, const gchar *filename, gchar *section, GError **error) {
 	GFile *file;
 	GFileInputStream *file_stream;
@@ -286,7 +292,7 @@ static gboolean pacman_config_parse (PacmanConfig *config, const gchar *filename
 	GRegex *repo = NULL;
 	GError *e = NULL;
 	
-	gchar *line, *key, *str;
+	gchar *key, *str, *line = NULL;
 	int i, num = 0;
 	
 	g_return_if_fail (config != NULL);
@@ -304,7 +310,7 @@ static gboolean pacman_config_parse (PacmanConfig *config, const gchar *filename
 	data_stream = g_data_input_stream_new (G_INPUT_STREAM (file_stream));
 	section = g_strdup (section);
 	
-	while ((line = g_data_input_stream_read_line (data_stream, NULL, NULL, &e)) != NULL) {
+	while (pacman_config_read_line (data_stream, &line, &e)) {
 		++num;
 		g_strstrip (line);
 		
@@ -422,10 +428,9 @@ static gboolean pacman_config_parse (PacmanConfig *config, const gchar *filename
 				}
 			}
 		}
-		
-		g_free (line);
 	}
 	
+	g_free (line);
 	g_free (section);
 	if (repo != NULL) {
 		g_regex_unref (repo);
