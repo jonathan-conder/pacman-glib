@@ -350,7 +350,7 @@ static gboolean pacman_config_parse (PacmanConfig *config, const gchar *filename
 			str = line;
 			
 			strsep (&str, "=");
-			g_strstrip (key);
+			g_strchomp (key);
 			
 			if (str == NULL) {
 				if (g_strcmp0 (section, "options") == 0) {
@@ -370,7 +370,7 @@ static gboolean pacman_config_parse (PacmanConfig *config, const gchar *filename
 					break;
 				}
 			} else {
-				g_strstrip (str);
+				g_strchug (str);
 				
 				if (g_strcmp0 (key, "Include") == 0) {
 					/* could get an infinite loop from includes, but root can't be that stupid */
