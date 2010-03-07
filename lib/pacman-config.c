@@ -346,10 +346,8 @@ static gboolean pacman_config_parse (PacmanConfig *config, const gchar *filename
 				break;
 			}
 			
-			key = line;
 			str = line;
-			
-			strsep (&str, "=");
+			key = strsep (&str, "=");
 			g_strchomp (key);
 			
 			if (str == NULL) {
