@@ -120,7 +120,7 @@ static gboolean pacman_update_prepare (PacmanTransaction *transaction, const Pac
 	
 	if (targets != NULL) {
 		for (i = targets; i != NULL; i = pacman_list_next (i)) {
-			gchar *target = (gchar *) pacman_list_get (i);
+			const gchar *target = (const gchar *) pacman_list_get (i);
 			
 			for (j = pacman_manager_get_sync_databases (pacman_manager); j != NULL; j = pacman_list_next (j)) {
 				PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (j);
