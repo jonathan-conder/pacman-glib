@@ -2,20 +2,23 @@
 # Contributor: onestep_ua <onestep@ukr.net>
 
 pkgname=packagekit
-pkgver=0.6.1
+pkgver=0.6.2
 pkgrel=1
 pkgdesc='A system designed to make installing and updating software on your computer easier'
 arch=('i686' 'x86_64')
 url='http://www.packagekit.org/'
 license=('GPL')
-depends=('dbus-glib>=0.74' 'polkit>=0.92' 'networkmanager>=0.6.4' 'pacman-glib>=3.3.0' 'libtar' 'python>=2.6' 'sqlite3')
+depends=('dbus-glib>=0.74' 'polkit>=0.92' 'networkmanager>=0.6.4'
+         'pacman-glib>=3.3.0' 'libtar' 'python>=2.6' 'sqlite3')
 makedepends=('intltool' 'pm-utils' 'gobject-introspection')
-backup=('var/lib/PackageKit/transactions.db')
+backup=('var/lib/PackageKit/transactions.db'
+        'etc/PackageKit/pacman.d/pacman.conf'
+        'etc/PackageKit/pacman.d/repos.list')
 options=('!libtool')
 source=("http://www.packagekit.org/releases/PackageKit-${pkgver}.tar.bz2"
         'pacman-glib.patch')
-md5sums=('d3835290e88e534a60ca18bd4efa0479'
-         'aa3d03664739f27af9864a40ca03988b')
+md5sums=('c5a07b023054882750bb273381000194'
+         '5f7c2c7fc377a0cae6d957d784890e61')
 
 build() {
 	cd "${srcdir}/PackageKit-${pkgver}"
@@ -42,8 +45,8 @@ build() {
 		--enable-pm-utils \
 		--disable-ruck \
 		--disable-dummy \
-		--enable-pacman-glib \
-		--with-default-backend=pacman_glib || return 1
+		--enable-pacman \
+		--with-default-backend=pacman || return 1
 	
 	make -s || return 1
 	make -s DESTDIR="${pkgdir}" install || return 1
