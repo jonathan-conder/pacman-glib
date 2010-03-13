@@ -18,7 +18,7 @@ options=('!libtool')
 source=("http://www.packagekit.org/releases/PackageKit-${pkgver}.tar.bz2"
         'pacman-glib.patch')
 md5sums=('c5a07b023054882750bb273381000194'
-         '5f7c2c7fc377a0cae6d957d784890e61')
+         'df1ad8c08f9313007eb021a5ba9b002c')
 
 build() {
 	cd "${srcdir}/PackageKit-${pkgver}"

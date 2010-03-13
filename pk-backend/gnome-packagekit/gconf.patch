@@ -1,0 +1,66 @@
+diff -ru a/data/gnome-packagekit.schemas.in b/data/gnome-packagekit.schemas.in
+--- a/data/gnome-packagekit.schemas.in	2010-01-28 05:29:15.000000000 +1300
++++ b/data/gnome-packagekit.schemas.in	2010-03-13 18:20:51.129809778 +1300
+@@ -62,6 +62,18 @@
+     </schema>
+ 
+     <schema>
++      <key>/schemas/apps/gnome-packagekit/enable_autoremove</key>
++      <applyto>/apps/gnome-packagekit/enable_autoremove</applyto>
++      <owner>gnome-packagekit</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>Automatically remove unused dependencies</short>
++        <long>When removing a package, also remove those dependencies that are not required by other packages</long>
++      </locale>
++    </schema>
++
++    <schema>
+       <key>/schemas/apps/gnome-packagekit/show_depends</key>
+       <applyto>/apps/gnome-packagekit/show_depends</applyto>
+       <owner>gnome-packagekit</owner>
+@@ -540,7 +552,7 @@
+       <applyto>/apps/gnome_settings_daemon/gtk-modules/pk-gtk-module</applyto>
+       <owner>gnome-packagekit</owner>
+       <type>bool</type>
+-      <default>true</default>
++      <default>false</default>
+       <locale name="C">
+         <short>GTK+ module for font installation</short>
+         <long>This key determines if applications should be able to prompt for fonts</long>
+diff -ru a/src/gpk-application.c b/src/gpk-application.c
+--- a/src/gpk-application.c	2010-02-16 06:54:32.000000000 +1300
++++ b/src/gpk-application.c	2010-03-13 18:18:19.566490575 +1300
+@@ -2115,6 +2115,7 @@
+ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
+ {
+ 	gchar **package_ids = NULL;
++	gboolean autoremove;
+ 
+ 	g_return_if_fail (GPK_IS_APPLICATION (application));
+ 
+@@ -2132,8 +2133,10 @@
+ 
+ 	} else if (application->priv->action == PK_ACTION_REMOVE) {
+ 
+-		/* install */
+-		pk_task_remove_packages_async (application->priv->task, package_ids, TRUE, FALSE, application->priv->cancellable,
++		autoremove = gconf_client_get_bool (application->priv->gconf_client, GPK_CONF_ENABLE_AUTOREMOVE, NULL);
++
++		/* remove */
++		pk_task_remove_packages_async (application->priv->task, package_ids, TRUE, autoremove, application->priv->cancellable,
+ 					       (PkProgressCallback) gpk_application_progress_cb, application,
+ 					       (GAsyncReadyCallback) gpk_application_remove_packages_cb, application);
+ 
+diff -ru a/src/gpk-common.h b/src/gpk-common.h
+--- a/src/gpk-common.h	2010-02-16 06:54:32.000000000 +1300
++++ b/src/gpk-common.h	2010-03-13 18:14:06.213180483 +1300
+@@ -37,6 +37,7 @@
+ #define GPK_CONF_SHOW_COPY_CONFIRM		"/apps/gnome-packagekit/show_copy_confirm"
+ #define GPK_CONF_DBUS_DEFAULT_INTERACTION	"/apps/gnome-packagekit/dbus_default_interaction"
+ #define GPK_CONF_DBUS_ENFORCED_INTERACTION	"/apps/gnome-packagekit/dbus_enforced_interaction"
++#define GPK_CONF_ENABLE_AUTOREMOVE		"/apps/gnome-packagekit/enable_autoremove"
+ #define GPK_CONF_ENABLE_FONT_HELPER		"/apps/gnome-packagekit/enable_font_helper"
+ #define GPK_CONF_ENABLE_CODEC_HELPER		"/apps/gnome-packagekit/enable_codec_helper"
+ #define GPK_CONF_ENABLE_MIME_TYPE_HELPER	"/apps/gnome-packagekit/enable_mime_type_helper"
