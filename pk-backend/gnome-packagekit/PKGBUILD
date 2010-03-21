@@ -16,11 +16,13 @@ install="${pkgname}.install"
 source=("http://www.packagekit.org/releases/${pkgname}-${pkgver}.tar.gz"
         'gconf.patch'
         'gtk-2.28.patch'
-        'install-local-files.patch')
+        'install-local-files.patch'
+        'hide-icon-blocked.patch')
 md5sums=('f79a38ec3c1a0e759b9c7f455ff44310'
          '62ed2fd4bb51645e190479dc86663411'
          '2fac82791bcb7e01ed1d6b0dda54430b'
-         'eda6a002359cb32b621e099b5b9d325a')
+         'eda6a002359cb32b621e099b5b9d325a'
+         'd6b082732c2de096265399c0fa47016a')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
@@ -28,6 +30,7 @@ build() {
 	patch -Np1 -i "${srcdir}/gconf.patch" || return 1
 	patch -Np1 -i "${srcdir}/gtk-2.28.patch" || return 1
 	patch -Np1 -i "${srcdir}/install-local-files.patch" || return 1
+	patch -Np1 -i "${srcdir}/hide-icon-blocked.patch" || return 1
 	
 	autoreconf || return 1
 	./configure --prefix=/usr \
