@@ -162,7 +162,7 @@ static gboolean pacman_update_commit (PacmanTransaction *transaction, GError **e
 		return FALSE;
 	}
 	
-	g_signal_emit_by_name (transaction, "download", NULL, (guint) 0, (guint) 0);
+	g_signal_emit_by_name (transaction, "download", NULL, (guint) 0, (guint) pacman_list_length (databases));
 	pacman_transaction_tell (transaction, PACMAN_TRANSACTION_STATUS_DOWNLOAD_START, _("Downloading databases"));
 	
 	for (i = databases; i != NULL; i = pacman_list_next (i)) {
