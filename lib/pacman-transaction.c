@@ -363,7 +363,7 @@ gboolean pacman_transaction_cancel (PacmanTransaction *transaction, GError **err
 	return TRUE;
 }
 
-static void pacman_transaction_tell (PacmanTransaction *transaction, PacmanTransactionStatus status, const gchar *format, ...) {
+void pacman_transaction_tell (PacmanTransaction *transaction, PacmanTransactionStatus status, const gchar *format, ...) {
 	va_list args;
 	gchar *message;
 	

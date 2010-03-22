@@ -162,6 +162,9 @@ static gboolean pacman_update_commit (PacmanTransaction *transaction, GError **e
 		return FALSE;
 	}
 	
+	g_signal_emit_by_name (transaction, "download", NULL, (guint) 0, (guint) 0);
+	pacman_transaction_tell (transaction, PACMAN_TRANSACTION_STATUS_DOWNLOAD_START, _("Downloading databases"));
+	
 	for (i = databases; i != NULL; i = pacman_list_next (i)) {
 		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (i);
 		int code = alpm_db_update ((int) force, database);
@@ -173,6 +176,9 @@ static gboolean pacman_update_commit (PacmanTransaction *transaction, GError **e
 			return FALSE;
 		}
 	}
+	
+	g_signal_emit_by_name (transaction, "download", NULL, (guint) 0, (guint) 0);
+	pacman_transaction_tell (transaction, PACMAN_TRANSACTION_STATUS_DOWNLOAD_START, _("Finished downloading databases"));
 	
 	return result;
 }

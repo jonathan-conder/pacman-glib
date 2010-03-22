@@ -33,6 +33,7 @@ extern PacmanManager *pacman_manager;
 
 PacmanTransaction *pacman_manager_new_transaction (PacmanManager *manager, GType type);
 gboolean pacman_transaction_ask (PacmanTransaction *transaction, PacmanTransactionQuestion question, const gchar *format, ...);
+void pacman_transaction_tell (PacmanTransaction *transaction, PacmanTransactionStatus status, const gchar *format, ...);
 
 gboolean pacman_transaction_start (pmtranstype_t type, guint32 flags, GError **error);
 gboolean pacman_transaction_end (GError **error);
