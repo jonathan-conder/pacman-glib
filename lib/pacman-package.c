@@ -21,6 +21,8 @@
 #include <alpm.h>
 #include "pacman-error.h"
 #include "pacman-list.h"
+#include "pacman-delta.h"
+#include "pacman-private.h"
 #include "pacman-package.h"
 
 /**
@@ -104,7 +106,7 @@ PacmanDatabase *pacman_package_get_database (PacmanPackage *package) {
  * pacman_package_get_filename:
  * @package: A #PacmanPackage.
  *
- * Gets the location of @package on the filesystem.
+ * Gets the name of the file that contains @package.
  *
  * Returns: A file name, or %NULL if it is not known. Do not free.
  */
@@ -484,6 +486,42 @@ gboolean pacman_package_check_md5sum (PacmanPackage *package, GError **error) {
 	if (pm_errno != PACMAN_ERROR_PACKAGE_INVALID) {
 		g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not calculate MD5 sum: %s"), alpm_strerrorlast ());
 	}
+	return FALSE;
+}
+
+/**
+ * pacman_package_has_filename:
+ * @package: A #PacmanPackage.
+ * @filename: A file name.
+ *
+ * Checks whether @filename contains or is a delta that provides @package. This could be useful determining what package is being downloaded from a #PacmanTransaction::download signal handler.
+ *
+ * Returns: %TRUE if @filename corresponds to @package, or %FALSE otherwise.
+ */
+gboolean pacman_package_has_filename (PacmanPackage *package, const gchar *filename) {
+	const PacmanList *i;
+	
+	g_return_val_if_fail (package != NULL, FALSE);
+	g_return_val_if_fail (filename != NULL, FALSE);
+	
+	if (g_strcmp0 (pacman_package_get_filename (package), filename) == 0) {
+		return TRUE;
+	}
+	
+	g_return_val_if_fail (pacman_manager != NULL, FALSE);
+	
+	if (!pacman_manager_get_use_delta (pacman_manager)) {
+		return FALSE;
+	}
+	
+	for (i = pacman_package_get_deltas (package); i != NULL; i = pacman_list_next (i)) {
+		PacmanDelta *delta = (PacmanDelta *) pacman_list_get (i);
+		
+		if (g_strcmp0 (pacman_delta_get_patch_filename (delta), filename) == 0) {
+			return TRUE;
+		}
+	}
+	
 	return FALSE;
 }
 

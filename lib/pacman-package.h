@@ -66,6 +66,7 @@ const gchar *pacman_package_get_md5sum (PacmanPackage *package);
 gchar *pacman_package_generate_md5sum (const gchar *filename, GError **error);
 gboolean pacman_package_check_md5sum (PacmanPackage *package, GError **error);
 
+gboolean pacman_package_has_filename (PacmanPackage *package, const gchar *filename);
 gboolean pacman_package_has_force (PacmanPackage *package);
 gboolean pacman_package_has_install_scriptlet (PacmanPackage *package);
 gboolean pacman_package_was_explicitly_installed (PacmanPackage *package);

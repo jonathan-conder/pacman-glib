@@ -105,6 +105,7 @@ pacman_transaction_commit
 pacman_transaction_cancel
 <SUBSECTION Private>
 pacman_transaction_ask
+pacman_transaction_tell
 pacman_transaction_start
 pacman_transaction_end
 pacman_transaction_restart
@@ -239,6 +240,7 @@ pacman_package_get_installed_size
 pacman_package_get_md5sum
 pacman_package_generate_md5sum
 pacman_package_check_md5sum
+pacman_package_has_filename
 pacman_package_has_force
 pacman_package_has_install_scriptlet
 pacman_package_was_explicitly_installed
