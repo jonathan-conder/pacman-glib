@@ -2319,8 +2319,8 @@ diff -Nru a/backends/pacman/backend-search.h b/backends/pacman/backend-search.h
 +				 gchar		**values);
 diff -Nru a/backends/pacman/backend-transaction.c b/backends/pacman/backend-transaction.c
 --- a/backends/pacman/backend-transaction.c	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman/backend-transaction.c	2010-03-23 21:34:14.091619803 +1300
-@@ -0,0 +1,407 @@
++++ b/backends/pacman/backend-transaction.c	2010-03-25 00:32:34.796937507 +1300
+@@ -0,0 +1,383 @@
 +/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
 + *
 + * Copyright (C) 2007 Andreas Obergrusberger <tradiaz@yahoo.de>
@@ -2375,32 +2375,6 @@ diff -Nru a/backends/pacman/backend-transaction.c b/backends/pacman/backend-tran
 +	return TRUE;
 +}
 +
-+static gboolean
-+pacman_package_has_file (PacmanPackage *package, const gchar *filename)
-+{
-+	const PacmanList *deltas;
-+	const gchar *tarball = pacman_package_get_filename (package);
-+
-+	if (g_strcmp0 (tarball, filename) == 0) {
-+		return TRUE;
-+	}
-+
-+	if (!pacman_manager_get_use_delta (pacman)) {
-+		return FALSE;
-+	}
-+
-+	for (deltas = pacman_package_get_deltas (package); deltas != NULL; deltas = pacman_list_next (deltas)) {
-+		PacmanDelta *delta = (PacmanDelta *) pacman_list_get (deltas);
-+		const gchar *patch = pacman_delta_get_patch_filename (delta);
-+
-+		if (g_strcmp0 (patch, filename) == 0) {
-+			return TRUE;
-+		}
-+	}
-+
-+	return FALSE;
-+}
-+
 +static void
 +transaction_download_end (PacmanTransaction *transaction, BackendDownloadData *download, PkBackend *backend) {
 +	backend_package (backend, download->package, PK_INFO_ENUM_FINISHED);
@@ -2427,7 +2401,7 @@ diff -Nru a/backends/pacman/backend-transaction.c b/backends/pacman/backend-tran
 +	const PacmanList *packages;
 +
 +	if (download->package != NULL) {
-+		if (pacman_package_has_file (download->package, filename)) {
++		if (pacman_package_has_filename (download->package, filename)) {
 +			if (download->files != NULL) {
 +				const gchar *directory = pk_backend_get_string (backend, "directory");
 +				gchar *path = g_build_filename (directory, filename, NULL);
@@ -2444,7 +2418,7 @@ diff -Nru a/backends/pacman/backend-transaction.c b/backends/pacman/backend-tran
 +
 +	for (packages = pacman_transaction_get_packages (transaction); packages != NULL; packages = pacman_list_next (packages)) {
 +		PacmanPackage *package = (PacmanPackage *) pacman_list_get (packages);
-+		if (pacman_package_has_file (package, filename)) {
++		if (pacman_package_has_filename (package, filename)) {
 +			download->package = package;
 +			break;
 +		}
@@ -2489,38 +2463,40 @@ diff -Nru a/backends/pacman/backend-transaction.c b/backends/pacman/backend-tran
 +	} else if (strstr (filename, ".db.tar.") != NULL) {
 +		g_return_if_fail (download != NULL);
 +
-+		if (complete == 0) {
-+			pk_backend_set_status ((PkBackend *) user_data, PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST);
-+			pk_backend_set_sub_percentage ((PkBackend *) user_data, 0);
-+		} else if (complete == total) {
-+			pk_backend_set_sub_percentage ((PkBackend *) user_data, 100);
++		if (complete == total) {
 +			++download->complete;
 +
-+			if (download->complete == download->total) {
++			pk_backend_set_sub_percentage ((PkBackend *) user_data, 100);
++			if (download->complete == pacman_list_length (sync_databases)) {
 +				pk_backend_set_percentage ((PkBackend *) user_data, 100);
 +			}
-+		} else {
-+			if (total > 0) {
-+				guint percent = complete * 100 / total;
-+				pk_backend_set_sub_percentage ((PkBackend *) user_data, percent);
-+				if (download->total > 0) {
-+					pk_backend_set_percentage ((PkBackend *) user_data, percent / download->total);
-+				}
++		} else if (complete == 0) {
++			pk_backend_set_status ((PkBackend *) user_data, PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST);
++
++			pk_backend_set_sub_percentage ((PkBackend *) user_data, 0);
++		} else if (total > 0) {
++			guint percent = complete * 100 / total;
++			guint databases = pacman_list_length (sync_databases);
++
++			pk_backend_set_sub_percentage ((PkBackend *) user_data, percent);
++			if (databases > 0) {
++				pk_backend_set_percentage ((PkBackend *) user_data, (percent + 100 * download->complete) / databases);
 +			}
 +		}
 +	} else {
 +		g_return_if_fail (download != NULL);
 +
-+		if (complete == 0) {
-+			transaction_download_start (transaction, download, filename, (PkBackend *) user_data);
-+			pk_backend_set_sub_percentage ((PkBackend *) user_data, 0);
-+		} else if (complete == total) {
-+			pk_backend_set_sub_percentage ((PkBackend *) user_data, 100);
++		if (complete == total) {
 +			download->complete += total;
 +
++			pk_backend_set_sub_percentage ((PkBackend *) user_data, 100);
 +			if (download->complete == download->total) {
 +				pk_backend_set_percentage ((PkBackend *) user_data, 100);
 +			}
++		} else if (complete == 0) {
++			transaction_download_start (transaction, download, filename, (PkBackend *) user_data);
++
++			pk_backend_set_sub_percentage ((PkBackend *) user_data, 0);
 +		} else {
 +			if (total > 0) {
 +				pk_backend_set_sub_percentage ((PkBackend *) user_data, complete * 100 / total);
