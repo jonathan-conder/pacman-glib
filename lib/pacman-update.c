@@ -162,7 +162,7 @@ static gboolean pacman_update_commit (PacmanTransaction *transaction, GError **e
 		return FALSE;
 	}
 	
-	g_signal_emit_by_name (transaction, "download", NULL, (guint) 0, (guint) pacman_list_length (databases));
+	g_signal_emit_by_name (transaction, "download", NULL, (guint) 0, (guint) 0);
 	pacman_transaction_tell (transaction, PACMAN_TRANSACTION_STATUS_DOWNLOAD_START, _("Downloading databases"));
 	
 	for (i = databases; i != NULL; i = pacman_list_next (i)) {
@@ -174,6 +174,10 @@ static gboolean pacman_update_commit (PacmanTransaction *transaction, GError **e
 		} else if (code < 0) {
 			g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not update database named [%s]: %s"), pacman_database_get_name (database), alpm_strerrorlast ());
 			return FALSE;
+		} else {
+			gchar *filename = g_strdup_printf ("%s.db.tar.gz", pacman_database_get_name (database));
+			g_signal_emit_by_name (transaction, "download", filename, (guint) 0, (guint) 0);
+			g_free (filename);
 		}
 	}
 	
