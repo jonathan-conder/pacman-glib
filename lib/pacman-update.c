@@ -121,17 +121,11 @@ static gboolean pacman_update_prepare (PacmanTransaction *transaction, const Pac
 	if (targets != NULL) {
 		for (i = targets; i != NULL; i = pacman_list_next (i)) {
 			const gchar *target = (const gchar *) pacman_list_get (i);
+			PacmanDatabase *database = pacman_manager_find_sync_database (pacman_manager, target);
 			
-			for (j = pacman_manager_get_sync_databases (pacman_manager); j != NULL; j = pacman_list_next (j)) {
-				PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (j);
-				
-				if (g_strcmp0 (target, pacman_database_get_name (database)) == 0) {
-					priv->databases = pacman_list_add (priv->databases, database);
-					break;
-				}
-			}
-			
-			if (j == NULL) {
+			if (database != NULL) {
+				priv->databases = pacman_list_add (priv->databases, database);
+			} else {
 				g_set_error (error, PACMAN_ERROR, PACMAN_ERROR_DATABASE_NOT_FOUND, _("Could not find sync database named [%s]"), target);
 				return FALSE;
 			}
