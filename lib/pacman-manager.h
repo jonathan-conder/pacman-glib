@@ -88,7 +88,7 @@ void pacman_manager_set_use_syslog (PacmanManager *manager, gboolean value);
  * @mtime: A modification time.
  * @user_data: User data specified when the transfer handler was set.
  *
- * The type of function used to download files. The function should download a file from @url and save it at @filename. Initially, @mtime is set to the modification time of the most recent file downloaded to @filename, or 0 if this is unknown. The function should update this value if it is able to, and use it to avoid having to download the same file twice.
+ * The type of function used to download files. The function should download a file from @url and save it at @filename. Initially, @mtime is set to the modification time of the most recent file downloaded to @filename, or 0 if this is unknown. The function must update this value to the modification time of the downloaded file, or set it to 0 if this is unknown.
  *
  * Returns: %TRUE if the download succeeded, %FALSE otherwise.
  */

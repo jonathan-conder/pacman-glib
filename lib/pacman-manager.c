@@ -610,6 +610,8 @@ static gboolean pacman_transfer_with_command (PacmanManager *manager, const gcha
 	g_return_val_if_fail (mtime != NULL, FALSE);
 	g_return_val_if_fail (transfer_command != NULL, FALSE);
 	
+	*mtime = 0;
+	
 	old_pwd = g_get_current_dir ();
 	if (g_chdir (path) < 0) {
 		g_warning ("Could not locate download directory %s\n", path);
@@ -676,7 +678,6 @@ static gboolean pacman_transfer_with_command (PacmanManager *manager, const gcha
 	g_chdir (old_pwd);
 	g_free (old_pwd);
 	
-	*mtime = 0;
 	return exit_status == 0;
 }
 
