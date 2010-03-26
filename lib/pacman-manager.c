@@ -544,6 +544,7 @@ static gint pacman_manager_fetch_cb (const gchar *url, const gchar *path, time_t
 		*new_mtime = mtime;
 	}
 	
+	g_warning ("mtime is %ld, old_mtime is %ld\n", mtime, old_mtime);
 	return (mtime == old_mtime) ? 1 : 0;
 }
 
@@ -610,6 +611,7 @@ static gboolean pacman_transfer_with_command (PacmanManager *manager, const gcha
 	g_return_val_if_fail (mtime != NULL, FALSE);
 	g_return_val_if_fail (transfer_command != NULL, FALSE);
 	
+	g_warning ("Setting mtime to 0\n");
 	*mtime = 0;
 	
 	old_pwd = g_get_current_dir ();
