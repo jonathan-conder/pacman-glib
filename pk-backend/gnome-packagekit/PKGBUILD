@@ -21,7 +21,7 @@ source=("http://www.packagekit.org/releases/${pkgname}-${pkgver}.tar.gz"
 md5sums=('f79a38ec3c1a0e759b9c7f455ff44310'
          '62ed2fd4bb51645e190479dc86663411'
          '2fac82791bcb7e01ed1d6b0dda54430b'
-         'eda6a002359cb32b621e099b5b9d325a'
+         '403783bdf7c1192e3cb60a8fb924f6ac'
          'd6b082732c2de096265399c0fa47016a')
 
 build() {

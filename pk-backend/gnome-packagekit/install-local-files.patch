@@ -6,5 +6,5 @@ diff -ru a/data/gpk-install-file.desktop.in b/data/gpk-install-file.desktop.in
  StartupNotify=true
  NoDisplay=true
 -MimeType=application/x-rpm;application/x-redhat-package-manager;application/x-servicepack;application/x-deb;
-+MimeType=application/x-compressed-tar;application/x-servicepack;
++MimeType=application/x-compressed-tar;application/x-xz-compressed-tar;application/x-servicepack;
  
