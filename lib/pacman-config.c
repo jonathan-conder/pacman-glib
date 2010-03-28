@@ -46,14 +46,20 @@ typedef struct {
 	PacmanList *no_upgrades;
 	PacmanList *sync_firsts;
 	
-	GHashTable *databases;
+	PacmanList *databases;
+	GHashTable *servers;
 } PacmanConfig;
 
 static PacmanConfig *pacman_config_new (void) {
 	PacmanConfig *result = (PacmanConfig *) g_new0 (PacmanConfig, 1);
 	
-	result->databases = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+	result->servers = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 	return result;
+}
+
+static gboolean pacman_config_servers_free (gpointer database, gpointer list, gpointer user_data) {
+	pacman_list_free_full ((PacmanList *) list, (GDestroyNotify) g_free);
+	return TRUE;
 }
 
 static void pacman_config_free (PacmanConfig *config) {
@@ -76,12 +82,9 @@ static void pacman_config_free (PacmanConfig *config) {
 	pacman_list_free_full (config->no_upgrades, (GDestroyNotify) g_free);
 	pacman_list_free_full (config->sync_firsts, (GDestroyNotify) g_free);
 	
-	g_hash_table_iter_init (&iter, config->databases);
-	while (g_hash_table_iter_next (&iter, &key, &value)) {
-		pacman_list_free_full ((PacmanList *) value, (GDestroyNotify) g_free);
-		g_hash_table_iter_remove (&iter);
-	}
-	g_hash_table_unref (config->databases);
+	pacman_list_free_full (config->databases, (GDestroyNotify) g_free);
+	g_hash_table_foreach_remove (config->servers, pacman_config_servers_free, NULL);
+	g_hash_table_unref (config->servers);
 }
 
 static void pacman_config_set_i_love_candy (PacmanConfig *config, gboolean value) {
@@ -261,8 +264,8 @@ static void pacman_config_add_database (PacmanConfig *config, const gchar *name)
 	g_return_if_fail (config != NULL);
 	g_return_if_fail (name != NULL);
 	
-	if (g_hash_table_lookup (config->databases, name) == NULL) {
-		g_hash_table_insert (config->databases, g_strdup (name), NULL);
+	if (pacman_list_find_string (config->databases, name) == NULL) {
+		config->databases = pacman_list_add (config->databases, g_strdup (name));
 	}
 }
 
@@ -271,11 +274,12 @@ static void pacman_config_database_add_server (PacmanConfig *config, const gchar
 	
 	g_return_if_fail (config != NULL);
 	g_return_if_fail (name != NULL);
+	g_return_if_fail (pacman_list_find_string (config->databases, name) != NULL);
 	g_return_if_fail (url != NULL);
 	
-	list = (PacmanList *) g_hash_table_lookup (config->databases, name);
+	list = (PacmanList *) g_hash_table_lookup (config->servers, name);
 	list = pacman_list_add (list, g_strdup (url));
-	g_hash_table_insert (config->databases, g_strdup (name), list);
+	g_hash_table_insert (config->servers, g_strdup (name), list);
 }
 
 static gboolean pacman_config_read_line (GDataInputStream *data_stream, gchar **line, GError **error) {
@@ -479,13 +483,12 @@ static gboolean pacman_config_configure_paths (PacmanConfig *config, PacmanManag
 }
 
 static gboolean pacman_config_configure_databases (PacmanConfig *config, PacmanManager *manager, GError **error) {
-	GHashTableIter iter;
-	gpointer key, value;
+	const PacmanList *databases;
 	
 	g_return_val_if_fail (config != NULL, FALSE);
 	g_return_val_if_fail (manager != NULL, FALSE);
 	
-	if (g_hash_table_size (config->databases) == 0) {
+	if (config->databases == NULL) {
 		return TRUE;
 	}
 	
@@ -493,17 +496,17 @@ static gboolean pacman_config_configure_databases (PacmanConfig *config, PacmanM
 		return FALSE;
 	}
 	
-	g_hash_table_iter_init (&iter, config->databases);
-	while (g_hash_table_iter_next (&iter, &key, &value)) {
+	for (databases = config->databases; databases != NULL; databases = pacman_list_next (databases)) {
 		PacmanDatabase *database;
-		const gchar *name = (const gchar *) key;
 		PacmanList *i;
+		const gchar *name = (const gchar *) pacman_list_get (databases);
 		
-		if ((database = pacman_manager_register_sync_database (manager, name, error)) == NULL) {
+		database = pacman_manager_register_sync_database (manager, name, error);
+		if (database == NULL) {
 			return FALSE;
 		}
 		
-		for (i = (PacmanList *) value; i != NULL; i = pacman_list_next (i)) {
+		for (i = (PacmanList *) g_hash_table_lookup (config->servers, name); i != NULL; i = pacman_list_next (i)) {
 			const gchar *url = (const gchar *) pacman_list_get (i);
 			g_return_val_if_fail (url != NULL, FALSE);
 			
