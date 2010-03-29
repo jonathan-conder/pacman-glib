@@ -27,7 +27,7 @@ AC_SUBST([LIB_VERSION_INFO])
 # Earlier versions probably work, but I'm not sure
 GLIB_REQUIRED=[2.22.0]
 ALPM_REQUIRED=[4.0.0]
-GTKDOC_REQUIRED=[1.13]
+GTKDOC_REQUIRED=[1.14]
 
 AM_PATH_GLIB_2_0([$GLIB_REQUIRED], [], [AC_MSG_ERROR([Unable to find glib on your system, please make sure glib2 is installed and up-to-date.])], gobject gio)
 AC_SUBST([GLIB_CFLAGS])
@@ -37,8 +37,7 @@ AC_CHECK_HEADERS([alpm.h alpm_list.h], [ALPM_CFLAGS=[-I$includedir] ALPM_LIBS=[-
 AC_SUBST([ALPM_CFLAGS])
 AC_SUBST([ALPM_LIBS])
 
-# TODO: add no-tmpl option when gtk-doc 1.14 is released
-GTK_DOC_CHECK([$GTKDOC_REQUIRED])
+GTK_DOC_CHECK([$GTKDOC_REQUIRED], [--flavour no-tmpl])
 
 AC_ARG_WITH(root-path, AS_HELP_STRING([--with-root-path=path], [set the default location of the operating root directory]), [PACMAN_ROOT_PATH=[$withval]], [PACMAN_ROOT_PATH=[/]])
 AC_SUBST([PACMAN_ROOT_PATH])

@@ -26,5 +26,4 @@ GTKDOC_LIBS = $(GLIB_LIBS) $(top_builddir)/lib/lib$(PACKAGE_TARNAME).la
 
 include $(top_srcdir)/gtk-doc.make
 
-# TODO: remove overrides.txt when gtk-doc 1.14 comes out
-DISTCLEANFILES = $(DOC_MODULE).types $(DOC_MODULE)-docs.sgml Makefile.in -rf tmpl
+DISTCLEANFILES = $(DOC_MODULE).types $(DOC_MODULE)-docs.sgml $(DOC_MODULE)-overrides.txt Makefile.in
