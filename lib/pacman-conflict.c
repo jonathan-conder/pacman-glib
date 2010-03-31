@@ -17,7 +17,9 @@
  */
 
 #include <stdlib.h>
+#include <glib/gi18n-lib.h>
 #include <alpm.h>
+#include "pacman-list.h"
 #include "pacman-conflict.h"
 
 /**
@@ -87,4 +89,29 @@ PacmanList *pacman_conflict_check_packages (const PacmanList *packages) {
 	g_return_val_if_fail (packages != NULL, NULL);
 	
 	return alpm_checkconflicts ((PacmanList *) packages);
+}
+
+/**
+ * pacman_conflict_make_list:
+ * @conflicts: A list of #PacmanConflict.
+ *
+ * Creates a list of conflict strings from @conflicts.
+ *
+ * Returns: A newline-separated string. Free with g_free().
+ */
+gchar *pacman_conflict_make_list (const PacmanList *conflicts) {
+	GString *result;
+	const PacmanList *i;
+	
+	result = g_string_new (_("Conflicting packages:"));
+	
+	for (i = conflicts; i != NULL; i = pacman_list_next (i)) {
+		PacmanConflict *conflict = (PacmanConflict *) pacman_list_get (i);
+		const gchar *first = pacman_conflict_get_first_package (conflict);
+		const gchar *second = pacman_conflict_get_second_package (conflict);
+		
+		g_string_append_printf (result, _("\n%s conflicts with %s"), first, second);
+	}
+	
+	return g_string_free (result, FALSE);
 }

@@ -482,7 +482,7 @@ gboolean pacman_package_check_md5sum (PacmanPackage *package, GError **error) {
 	if (alpm_pkg_checkmd5sum (package) == 0) {
 		return TRUE;
 	} else if (pm_errno != PACMAN_ERROR_PACKAGE_INVALID) {
-		g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not calculate MD5 sum: %s"), alpm_strerrorlast ());
+		g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not check MD5 sum: %s"), alpm_strerrorlast ());
 	}
 	
 	return FALSE;

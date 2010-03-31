@@ -274,6 +274,7 @@ PacmanConflict
 pacman_conflict_get_first_package
 pacman_conflict_get_second_package
 pacman_conflict_check_packages
+pacman_conflict_make_list
 <SUBSECTION Private>
 pacman_conflict_free
 </SECTION>
@@ -284,6 +285,7 @@ PacmanFileConflict
 pacman_file_conflict_get_package
 pacman_file_conflict_get_file
 pacman_file_conflict_get_second_package
+pacman_file_conflict_make_list
 <SUBSECTION Private>
 pacman_file_conflict_free
 </SECTION>
@@ -311,6 +313,7 @@ pacman_missing_dependency_free
 pacman_missing_dependency_get_package
 pacman_missing_dependency_get_dependency
 pacman_missing_dependency_get_causing_package
+pacman_missing_dependency_make_list
 </SECTION>
 
 <SECTION>

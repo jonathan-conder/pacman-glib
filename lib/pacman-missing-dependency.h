@@ -34,6 +34,8 @@ const gchar *pacman_missing_dependency_get_package (PacmanMissingDependency *dep
 PacmanDependency *pacman_missing_dependency_get_dependency (PacmanMissingDependency *dependency);
 const gchar *pacman_missing_dependency_get_causing_package (PacmanMissingDependency *dependency);
 
+gchar *pacman_missing_dependency_make_list (const PacmanList *dependencies);
+
 G_END_DECLS
 
 #endif

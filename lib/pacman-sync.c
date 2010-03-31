@@ -23,6 +23,9 @@
 #include "pacman-package.h"
 #include "pacman-group.h"
 #include "pacman-database.h"
+#include "pacman-missing-dependency.h"
+#include "pacman-conflict.h"
+#include "pacman-file-conflict.h"
 #include "pacman-manager.h"
 #include "pacman-private.h"
 #include "pacman-sync.h"
@@ -143,9 +146,19 @@ static gboolean pacman_sync_real_prepare (PacmanTransaction *transaction, const 
 	
 	if (alpm_trans_prepare (&data) < 0) {
 		if (pm_errno == PACMAN_ERROR_DEPENDENCY_UNSATISFIED) {
+			gchar *missing = pacman_missing_dependency_make_list (data);
 			pacman_transaction_set_missing_dependencies (transaction, data);
+			
+			g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not prepare transaction: %s"), missing);
+			g_free (missing);
+			return FALSE;
 		} else if (pm_errno == PACMAN_ERROR_CONFLICT) {
+			gchar *conflict = pacman_conflict_make_list (data);
 			pacman_transaction_set_conflicts (transaction, data);
+			
+			g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not prepare transaction: %s"), conflict);
+			g_free (conflict);
+			return FALSE;
 		} else if (data != NULL) {
 			g_debug ("Possible memory leak for sync error: %s\n", alpm_strerrorlast ());
 		}
@@ -198,6 +211,20 @@ static gboolean pacman_sync_prepare (PacmanTransaction *transaction, const Pacma
 	return pacman_sync_real_prepare (transaction, targets, error, TRUE);
 }
 
+static gchar *pacman_file_make_list (const PacmanList *files) {
+	GString *result;
+	const PacmanList *i;
+	
+	result = g_string_new (_("Invalid files:"));
+	
+	for (i = files; i != NULL; i = pacman_list_next (i)) {
+		const gchar *file = (const gchar *) pacman_list_get (i);
+		g_string_append_printf (result, _("\n%s"), file);
+	}
+	
+	return g_string_free (result, FALSE);
+}
+
 static gboolean pacman_sync_commit (PacmanTransaction *transaction, GError **error) {
 	PacmanList *data;
 	
@@ -205,9 +232,19 @@ static gboolean pacman_sync_commit (PacmanTransaction *transaction, GError **err
 	
 	if (alpm_trans_commit (&data) < 0) {
 		if (pm_errno == PACMAN_ERROR_FILE_CONFLICT) {
+			gchar *conflict = pacman_file_conflict_make_list (data);
 			pacman_transaction_set_file_conflicts (transaction, data);
+			
+			g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not commit transaction: %s"), conflict);
+			g_free (conflict);
+			return FALSE;
 		} else if (pm_errno == PACMAN_ERROR_PACKAGE_INVALID || pm_errno == PACMAN_ERROR_DELTA_INVALID) {
+			gchar *file = pacman_file_make_list (data);
 			pacman_transaction_set_invalid_files (transaction, data);
+			
+			g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not commit transaction: %s"), file);
+			g_free (file);
+			return FALSE;
 		}
 		
 		g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not commit transaction: %s"), alpm_strerrorlast ());

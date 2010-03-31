@@ -23,6 +23,7 @@
 #include "pacman-package.h"
 #include "pacman-group.h"
 #include "pacman-database.h"
+#include "pacman-missing-dependency.h"
 #include "pacman-manager.h"
 #include "pacman-private.h"
 #include "pacman-remove.h"
@@ -128,7 +129,12 @@ static gboolean pacman_remove_prepare (PacmanTransaction *transaction, const Pac
 	
 	if (alpm_trans_prepare (&data) < 0) {
 		if (pm_errno == PACMAN_ERROR_DEPENDENCY_UNSATISFIED) {
+			gchar *missing = pacman_missing_dependency_make_list (data);
 			pacman_transaction_set_missing_dependencies (transaction, data);
+			
+			g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not prepare transaction: %s"), missing);
+			g_free (missing);
+			return FALSE;
 		} else if (data != NULL) {
 			g_debug ("Possible memory leak for remove error: %s\n", alpm_strerrorlast ());
 		}
@@ -150,12 +156,13 @@ static gboolean pacman_remove_prepare (PacmanTransaction *transaction, const Pac
 		gchar *packages = pacman_package_make_list (pacman_transaction_get_marked_packages (transaction));
 		gboolean result = pacman_transaction_ask (transaction, PACMAN_TRANSACTION_QUESTION_REMOVE_HOLD_PACKAGES, _("The following packages are marked as held: %s. Do you want to remove them anyway?"), packages);
 		pacman_transaction_set_marked_packages (transaction, NULL);
-		g_free (packages);
 		
 		if (!result) {
-			g_set_error (error, PACMAN_ERROR, PACMAN_ERROR_PACKAGE_HELD, _("Some packages were marked as held."));
+			g_set_error (error, PACMAN_ERROR, PACMAN_ERROR_PACKAGE_HELD, _("The following packages were marked as held: %s."), packages);
+			g_free (packages);
 			return FALSE;
 		}
+		g_free (packages);
 	}
 	
 	return TRUE;

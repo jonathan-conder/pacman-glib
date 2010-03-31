@@ -17,7 +17,10 @@
  */
 
 #include <stdlib.h>
+#include <glib/gi18n-lib.h>
 #include <alpm.h>
+#include "pacman-list.h"
+#include "pacman-dependency.h"
 #include "pacman-missing-dependency.h"
 
 /**
@@ -92,4 +95,37 @@ const gchar *pacman_missing_dependency_get_causing_package (PacmanMissingDepende
 	g_return_val_if_fail (dependency != NULL, NULL);
 	
 	return alpm_miss_get_causingpkg (dependency);
+}
+
+/**
+ * pacman_missing_dependency_make_list:
+ * @dependencies: A list of #PacmanMissingDependency.
+ *
+ * Creates a list of missing dependency strings from @dependencies.
+ *
+ * Returns: A newline-separated string. Free with g_free().
+ */
+gchar *pacman_missing_dependency_make_list (const PacmanList *dependencies) {
+	GString *result;
+	const PacmanList *i;
+	
+	result = g_string_new (_("Unsatisfied dependencies:"));
+	
+	for (i = dependencies; i != NULL; i = pacman_list_next (i)) {
+		PacmanMissingDependency *missing = (PacmanMissingDependency *) pacman_list_get (i);
+		const gchar *package = pacman_missing_dependency_get_package (missing);
+		
+		PacmanDependency *dependency = pacman_missing_dependency_get_dependency (missing);
+		gchar *depend = pacman_dependency_to_string (dependency);
+		
+		g_string_append_printf (result, _("\n%s: requires %s"), package, depend);
+		g_free (depend);
+		
+		package = pacman_missing_dependency_get_causing_package (missing);
+		if (package != NULL) {
+			g_string_append_printf (result, _(" (provided by %s)"), package);
+		}
+	}
+	
+	return g_string_free (result, FALSE);
 }

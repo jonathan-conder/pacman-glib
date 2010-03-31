@@ -32,6 +32,8 @@ const gchar *pacman_file_conflict_get_package (PacmanFileConflict *conflict);
 const gchar *pacman_file_conflict_get_file (PacmanFileConflict *conflict);
 const gchar *pacman_file_conflict_get_second_package (PacmanFileConflict *conflict);
 
+gchar *pacman_file_conflict_make_list (const PacmanList *conflicts);
+
 G_END_DECLS
 
 #endif

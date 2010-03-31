@@ -1143,7 +1143,7 @@ PacmanDatabase *pacman_manager_register_local_database (PacmanManager *manager, 
 		database = alpm_db_register_local ();
 		
 		if (database == NULL) {
-			g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not register database [local]: %s"), alpm_strerrorlast ());
+			g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not register database [%s]: %s"), "local", alpm_strerrorlast ());
 			return NULL;
 		}
 	}

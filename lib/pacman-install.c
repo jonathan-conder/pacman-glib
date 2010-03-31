@@ -21,6 +21,9 @@
 #include <alpm.h>
 #include "pacman-error.h"
 #include "pacman-list.h"
+#include "pacman-missing-dependency.h"
+#include "pacman-conflict.h"
+#include "pacman-file-conflict.h"
 #include "pacman-private.h"
 #include "pacman-install.h"
 
@@ -112,11 +115,26 @@ static gboolean pacman_install_prepare (PacmanTransaction *transaction, const Pa
 	if (alpm_trans_prepare (&data) < 0) {
 		if (pm_errno == PACMAN_ERROR_DEPENDENCY_UNSATISFIED) {
 			/* TODO: offer option to sync dependencies first? (like makepkg -s) */
+			gchar *missing = pacman_missing_dependency_make_list (data);
 			pacman_transaction_set_missing_dependencies (transaction, data);
+			
+			g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not prepare transaction: %s"), missing);
+			g_free (missing);
+			return FALSE;
 		} else if (pm_errno == PACMAN_ERROR_CONFLICT) {
+			gchar *conflict = pacman_conflict_make_list (data);
 			pacman_transaction_set_conflicts (transaction, data);
+			
+			g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not prepare transaction: %s"), conflict);
+			g_free (conflict);
+			return FALSE;
 		} else if (pm_errno == PACMAN_ERROR_FILE_CONFLICT) {
+			gchar *conflict = pacman_file_conflict_make_list (data);
 			pacman_transaction_set_file_conflicts (transaction, data);
+			
+			g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not prepare transaction: %s"), conflict);
+			g_free (conflict);
+			return FALSE;
 		} else if (data != NULL) {
 			g_debug ("Possible memory leak for install error: %s\n", alpm_strerrorlast ());
 		}

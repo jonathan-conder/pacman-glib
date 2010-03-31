@@ -17,7 +17,9 @@
  */
 
 #include <stdlib.h>
+#include <glib/gi18n-lib.h>
 #include <alpm.h>
+#include "pacman-list.h"
 #include "pacman-file-conflict.h"
 
 /**
@@ -90,4 +92,36 @@ const gchar *pacman_file_conflict_get_second_package (PacmanFileConflict *confli
 	} else {
 		return alpm_fileconflict_get_ctarget (conflict);
 	}
+}
+
+/**
+ * pacman_file_conflict_make_list:
+ * @conflicts: A list of #PacmanFileConflict.
+ *
+ * Creates a list of file conflict strings from @conflicts.
+ *
+ * Returns: A newline-separated string. Free with g_free().
+ */
+gchar *pacman_file_conflict_make_list (const PacmanList *conflicts) {
+	GString *result;
+	const PacmanList *i;
+	
+	result = g_string_new (_("Conflicting files:"));
+	
+	for (i = conflicts; i != NULL; i = pacman_list_next (i)) {
+		PacmanFileConflict *conflict = (PacmanFileConflict *) pacman_list_get (i);
+		const gchar *package = pacman_file_conflict_get_package (conflict);
+		const gchar *file = pacman_file_conflict_get_file (conflict);
+		
+		g_string_append_printf (result, _("\n%s contains %s"), package, file);
+		
+		package = pacman_file_conflict_get_second_package (conflict);
+		if (package != NULL) {
+			g_string_append_printf (result, _(", which is also in %s"), package);
+		} else {
+			g_string_append (result, _(", which is on the filesystem"));
+		}
+	}
+	
+	return g_string_free (result, FALSE);
 }
