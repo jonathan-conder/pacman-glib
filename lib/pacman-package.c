@@ -450,9 +450,13 @@ const gchar *pacman_package_get_md5sum (PacmanPackage *package) {
  */
 gchar *pacman_package_generate_md5sum (const gchar *filename, GError **error) {
 	gchar *result, *temp;
+	
 	g_return_val_if_fail (filename != NULL, NULL);
 	
-	result = alpm_compute_md5sum (filename);
+	if (alpm_compute_md5sum (filename) == NULL) {
+		g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not generate the MD5 sum of '%s': %s"), filename, alpm_strerrorlast ());
+		return NULL;
+	}
 	
 	if (!g_mem_is_system_malloc ()) {
 		temp = result;
@@ -470,22 +474,17 @@ gchar *pacman_package_generate_md5sum (const gchar *filename, GError **error) {
  *
  * Checks whether the MD5 sum of @package matches the one it is supposed to satisfy.
  *
- * Returns: %TRUE if the sums matched, or %FALSE if they do not match or @error is set.
+ * Returns: %TRUE if the sums matched, and %FALSE if they do not match or @error is set.
  */
 gboolean pacman_package_check_md5sum (PacmanPackage *package, GError **error) {
-	int result;
-	
 	g_return_val_if_fail (package != NULL, FALSE);
 	
-	result = alpm_pkg_checkmd5sum (package);
-	
-	if (result == 0) {
+	if (alpm_pkg_checkmd5sum (package) == 0) {
 		return TRUE;
-	}
-	
-	if (pm_errno != PACMAN_ERROR_PACKAGE_INVALID) {
+	} else if (pm_errno != PACMAN_ERROR_PACKAGE_INVALID) {
 		g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not calculate MD5 sum: %s"), alpm_strerrorlast ());
 	}
+	
 	return FALSE;
 }
 

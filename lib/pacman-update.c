@@ -144,7 +144,7 @@ static gboolean pacman_update_prepare (PacmanTransaction *transaction, const Pac
 
 static gboolean pacman_update_commit (PacmanTransaction *transaction, GError **error) {
 	PacmanList *i, *databases;
-	gboolean force, result = FALSE;
+	gboolean force;
 	
 	g_return_val_if_fail (transaction != NULL, FALSE);
 	
@@ -161,24 +161,22 @@ static gboolean pacman_update_commit (PacmanTransaction *transaction, GError **e
 	
 	for (i = databases; i != NULL; i = pacman_list_next (i)) {
 		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (i);
-		int code = alpm_db_update ((int) force, database);
+		int result = alpm_db_update ((int) force, database);
 		
-		if (code == 0) {
-			result = TRUE;
-		} else if (code < 0) {
-			g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not update database named [%s]: %s"), pacman_database_get_name (database), alpm_strerrorlast ());
-			return FALSE;
-		} else {
+		if (result > 0) {
 			gchar *filename = g_strdup_printf ("%s.db.tar.gz", pacman_database_get_name (database));
 			g_signal_emit_by_name (transaction, "download", filename, (guint) 0, (guint) 0);
 			g_free (filename);
+		} else if (result < 0) {
+			g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not update database named [%s]: %s"), pacman_database_get_name (database), alpm_strerrorlast ());
+			return FALSE;
 		}
 	}
 	
 	g_signal_emit_by_name (transaction, "download", NULL, (guint) 0, (guint) 0);
 	pacman_transaction_tell (transaction, PACMAN_TRANSACTION_STATUS_DOWNLOAD_START, _("Finished downloading databases"));
 	
-	return result;
+	return TRUE;
 }
 
 static void pacman_update_class_init (PacmanUpdateClass *klass) {
