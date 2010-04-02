@@ -17,12 +17,16 @@ source=("http://www.packagekit.org/releases/${pkgname}-${pkgver}.tar.gz"
         'gconf.patch'
         'gtk-2.28.patch'
         'install-local-files.patch'
-        'hide-icon-blocked.patch')
+        'hide-icon-blocked.patch'
+        'disable-cancel-button.patch'
+        'filters.patch')
 md5sums=('f79a38ec3c1a0e759b9c7f455ff44310'
          '91608b91b46e322eea7f2b8f3c12d5dd'
          '2fac82791bcb7e01ed1d6b0dda54430b'
          '403783bdf7c1192e3cb60a8fb924f6ac'
-         'd6b082732c2de096265399c0fa47016a')
+         'd6b082732c2de096265399c0fa47016a'
+         '80e4186bddac2de3620a6973ae2e1312'
+         '004ae9c5cd063806b02407a77df7d32d')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
@@ -31,6 +35,8 @@ build() {
 	patch -Np1 -i "${srcdir}/gtk-2.28.patch" || return 1
 	patch -Np1 -i "${srcdir}/install-local-files.patch" || return 1
 	patch -Np1 -i "${srcdir}/hide-icon-blocked.patch" || return 1
+	patch -Np1 -i "${srcdir}/disable-cancel-button.patch" || return 1
+	patch -Np1 -i "${srcdir}/filters.patch" || return 1
 	
 	autoreconf || return 1
 	./configure --prefix=/usr \

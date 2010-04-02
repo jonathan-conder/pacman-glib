@@ -1,0 +1,200 @@
+diff -Nru a/src/gpk-application.c b/src/gpk-application.c
+--- a/src/gpk-application.c	2010-02-16 06:54:32.000000000 +1300
++++ b/src/gpk-application.c	2010-03-31 19:01:54.148967056 +1300
+@@ -92,7 +92,6 @@
+ 	PkBitfield		 roles;
+ 	PkBitfield		 filters;
+ 	PkBitfield		 groups;
+-	PkBitfield		 filters_current;
+ 	gboolean		 has_package; /* if we got a package in the search */
+ 	PkSearchType		 search_type;
+ 	PkSearchMode		 search_mode;
+@@ -1653,19 +1652,19 @@
+ 	searches = g_strsplit (application->priv->search_text, " ", -1);
+ 	if (application->priv->search_type == PK_SEARCH_NAME) {
+ 		pk_client_search_names_async (PK_CLIENT(application->priv->task),
+-					     application->priv->filters_current,
++					     application->priv->filters,
+ 					     searches, application->priv->cancellable,
+ 					     (PkProgressCallback) gpk_application_progress_cb, application,
+ 					     (GAsyncReadyCallback) gpk_application_search_cb, application);
+ 	} else if (application->priv->search_type == PK_SEARCH_DETAILS) {
+ 		pk_client_search_details_async (PK_CLIENT(application->priv->task),
+-					     application->priv->filters_current,
++					     application->priv->filters,
+ 					     searches, application->priv->cancellable,
+ 					     (PkProgressCallback) gpk_application_progress_cb, application,
+ 					     (GAsyncReadyCallback) gpk_application_search_cb, application);
+ 	} else if (application->priv->search_type == PK_SEARCH_FILE) {
+ 		pk_client_search_files_async (PK_CLIENT(application->priv->task),
+-					     application->priv->filters_current,
++					     application->priv->filters,
+ 					     searches, application->priv->cancellable,
+ 					     (PkProgressCallback) gpk_application_progress_cb, application,
+ 					     (GAsyncReadyCallback) gpk_application_search_cb, application);
+@@ -1702,13 +1701,13 @@
+ 	if (application->priv->search_mode == PK_MODE_GROUP) {
+ 		groups = g_strsplit (application->priv->group, " ", -1);
+ 		pk_client_search_groups_async (PK_CLIENT(application->priv->task),
+-					      application->priv->filters_current, groups, application->priv->cancellable,
++					      application->priv->filters, groups, application->priv->cancellable,
+ 					      (PkProgressCallback) gpk_application_progress_cb, application,
+ 					      (GAsyncReadyCallback) gpk_application_search_cb, application);
+ 		g_strfreev (groups);
+ 	} else {
+ 		pk_client_get_packages_async (PK_CLIENT(application->priv->task),
+-					      application->priv->filters_current, application->priv->cancellable,
++					      application->priv->filters, application->priv->cancellable,
+ 					      (PkProgressCallback) gpk_application_progress_cb, application,
+ 					      (GAsyncReadyCallback) gpk_application_search_cb, application);
+ 	}
+@@ -2960,14 +2959,14 @@
+ 
+ 	/* set new filter */
+ 	if (g_str_has_suffix (name, "_yes")) {
+-		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_INSTALLED);
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_INSTALLED);
++		pk_bitfield_add (application->priv->filters, PK_FILTER_ENUM_INSTALLED);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_NOT_INSTALLED);
+ 	} else if (g_str_has_suffix (name, "_no")) {
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_INSTALLED);
+-		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_NOT_INSTALLED);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_INSTALLED);
++		pk_bitfield_add (application->priv->filters, PK_FILTER_ENUM_NOT_INSTALLED);
+ 	} else {
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_INSTALLED);
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_INSTALLED);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_INSTALLED);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_NOT_INSTALLED);
+ 	}
+ 
+ 	/* refresh the search results */
+@@ -2993,14 +2992,14 @@
+ 
+ 	/* set new filter */
+ 	if (g_str_has_suffix (name, "_yes")) {
+-		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_DEVELOPMENT);
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_DEVELOPMENT);
++		pk_bitfield_add (application->priv->filters, PK_FILTER_ENUM_DEVELOPMENT);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_NOT_DEVELOPMENT);
+ 	} else if (g_str_has_suffix (name, "_no")) {
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_DEVELOPMENT);
+-		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_NOT_DEVELOPMENT);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_DEVELOPMENT);
++		pk_bitfield_add (application->priv->filters, PK_FILTER_ENUM_NOT_DEVELOPMENT);
+ 	} else {
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_DEVELOPMENT);
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_DEVELOPMENT);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_DEVELOPMENT);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_NOT_DEVELOPMENT);
+ 	}
+ 
+ 	/* refresh the search results */
+@@ -3026,14 +3025,14 @@
+ 
+ 	/* set new filter */
+ 	if (g_str_has_suffix (name, "_yes")) {
+-		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_GUI);
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_GUI);
++		pk_bitfield_add (application->priv->filters, PK_FILTER_ENUM_GUI);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_NOT_GUI);
+ 	} else if (g_str_has_suffix (name, "_no")) {
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_GUI);
+-		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_NOT_GUI);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_GUI);
++		pk_bitfield_add (application->priv->filters, PK_FILTER_ENUM_NOT_GUI);
+ 	} else {
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_GUI);
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_GUI);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_GUI);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_NOT_GUI);
+ 	}
+ 
+ 	/* refresh the search results */
+@@ -3059,14 +3058,14 @@
+ 
+ 	/* set new filter */
+ 	if (g_str_has_suffix (name, "_yes")) {
+-		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_FREE);
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_FREE);
++		pk_bitfield_add (application->priv->filters, PK_FILTER_ENUM_FREE);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_NOT_FREE);
+ 	} else if (g_str_has_suffix (name, "_no")) {
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_FREE);
+-		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_NOT_FREE);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_FREE);
++		pk_bitfield_add (application->priv->filters, PK_FILTER_ENUM_NOT_FREE);
+ 	} else {
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_FREE);
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_FREE);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_FREE);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_NOT_FREE);
+ 	}
+ 
+ 	/* refresh the search results */
+@@ -3092,14 +3091,14 @@
+ 
+ 	/* set new filter */
+ 	if (g_str_has_suffix (name, "_yes")) {
+-		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_SOURCE);
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_SOURCE);
++		pk_bitfield_add (application->priv->filters, PK_FILTER_ENUM_SOURCE);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_NOT_SOURCE);
+ 	} else if (g_str_has_suffix (name, "_no")) {
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_SOURCE);
+-		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_NOT_SOURCE);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_SOURCE);
++		pk_bitfield_add (application->priv->filters, PK_FILTER_ENUM_NOT_SOURCE);
+ 	} else {
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_SOURCE);
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_SOURCE);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_SOURCE);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_NOT_SOURCE);
+ 	}
+ 
+ 	/* refresh the sesource results */
+@@ -3124,9 +3123,9 @@
+ 
+ 	/* change the filter */
+ 	if (enabled)
+-		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_BASENAME);
++		pk_bitfield_add (application->priv->filters, PK_FILTER_ENUM_BASENAME);
+ 	else
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_BASENAME);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_BASENAME);
+ 
+ 	/* refresh the search results */
+ 	gpk_application_perform_search (application);
+@@ -3150,9 +3149,9 @@
+ 
+ 	/* change the filter */
+ 	if (enabled)
+-		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_NEWEST);
++		pk_bitfield_add (application->priv->filters, PK_FILTER_ENUM_NEWEST);
+ 	else
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_NEWEST);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_NEWEST);
+ 
+ 	/* refresh the search results */
+ 	gpk_application_perform_search (application);
+@@ -3176,9 +3175,9 @@
+ 
+ 	/* change the filter */
+ 	if (enabled)
+-		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_ARCH);
++		pk_bitfield_add (application->priv->filters, PK_FILTER_ENUM_ARCH);
+ 	else
+-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_ARCH);
++		pk_bitfield_remove (application->priv->filters, PK_FILTER_ENUM_ARCH);
+ 
+ 	/* refresh the search results */
+ 	gpk_application_perform_search (application);
+@@ -3781,7 +3780,7 @@
+ 
+ 	application->priv->search_type = PK_SEARCH_UNKNOWN;
+ 	application->priv->search_mode = PK_MODE_UNKNOWN;
+-	application->priv->filters_current = PK_FILTER_ENUM_NONE;
++	application->priv->filters = 0;
+ 
+ 	application->priv->markdown = egg_markdown_new ();
+ 	egg_markdown_set_max_lines (application->priv->markdown, 50);
