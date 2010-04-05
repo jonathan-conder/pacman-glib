@@ -14,8 +14,8 @@ diff -Nru a/backends/Makefile.am b/backends/Makefile.am
  endif
 diff -Nru a/backends/pacman/backend-depends.c b/backends/pacman/backend-depends.c
 --- a/backends/pacman/backend-depends.c	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman/backend-depends.c	2010-03-30 00:12:43.081478799 +1300
-@@ -0,0 +1,286 @@
++++ b/backends/pacman/backend-depends.c	2010-04-05 23:51:21.470230606 +1200
+@@ -0,0 +1,288 @@
 +/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
 + *
 + * Copyright (C) 2007 Andreas Obergrusberger <tradiaz@yahoo.de>
@@ -41,6 +41,7 @@ diff -Nru a/backends/pacman/backend-depends.c b/backends/pacman/backend-depends.
 +
 +#include <pacman.h>
 +#include "backend-packages.h"
++#include "backend-pacman.h"
 +#include "backend-repos.h"
 +#include "backend-depends.h"
 +
@@ -64,15 +65,16 @@ diff -Nru a/backends/pacman/backend-depends.c b/backends/pacman/backend-depends.
 +}
 +
 +static PacmanPackage *
-+pacman_databases_find_provider (const PacmanList *databases, PacmanDependency *depend)
++pacman_sync_databases_find_provider (PacmanDependency *depend)
 +{
-+	const PacmanList *list;
++	const PacmanList *databases;
 +
++	g_return_val_if_fail (pacman != NULL, NULL);
 +	g_return_val_if_fail (depend != NULL, NULL);
 +
 +	/* find the default package that provides depend */
-+	for (list = databases; list != NULL; list = pacman_list_next (list)) {
-+		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (list);
++	for (databases = pacman_manager_get_sync_databases (pacman); databases != NULL; databases = pacman_list_next (databases)) {
++		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (databases);
 +		PacmanPackage *provider = pacman_database_find_package (database, pacman_dependency_get_name (depend));
 +
 +		if (provider != NULL && pacman_dependency_satisfied_by (depend, provider)) {
@@ -81,8 +83,8 @@ diff -Nru a/backends/pacman/backend-depends.c b/backends/pacman/backend-depends.
 +	}
 +
 +	/* find any package that provides depend */
-+	for (list = databases; list != NULL; list = pacman_list_next (list)) {
-+		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (list);
++	for (databases = pacman_manager_get_sync_databases (pacman); databases != NULL; databases = pacman_list_next (databases)) {
++		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (databases);
 +		PacmanPackage *provider = pacman_list_find_provider (pacman_database_get_packages (database), depend);
 +
 +		if (provider != NULL) {
@@ -160,7 +162,7 @@ diff -Nru a/backends/pacman/backend-depends.c b/backends/pacman/backend-depends.
 +			}
 +
 +			/* look for non-installed dependencies */
-+			provider = pacman_databases_find_provider (sync_databases, depend);
++			provider = pacman_sync_databases_find_provider (depend);
 +			if (provider != NULL) {
 +				/* don't emit when not needed... */
 +				if (!search_installed) {
@@ -754,8 +756,8 @@ diff -Nru a/backends/pacman/backend-groups.h b/backends/pacman/backend-groups.h
 +PkBitfield	 backend_get_groups		(PkBackend	*backend);
 diff -Nru a/backends/pacman/backend-install.c b/backends/pacman/backend-install.c
 --- a/backends/pacman/backend-install.c	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman/backend-install.c	2010-03-31 23:04:50.675007188 +1300
-@@ -0,0 +1,192 @@
++++ b/backends/pacman/backend-install.c	2010-04-05 23:40:15.536960065 +1200
+@@ -0,0 +1,179 @@
 +/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
 + *
 + * Copyright (C) 2007 Andreas Obergrusberger <tradiaz@yahoo.de>
@@ -821,7 +823,7 @@ diff -Nru a/backends/pacman/backend-install.c b/backends/pacman/backend-install.
 +
 +	/* run the transaction */
 +	if (list != NULL) {
-+		transaction = backend_transaction_run (backend, PACMAN_TYPE_SYNC, flags, list, FALSE);
++		transaction = backend_transaction_run (backend, PACMAN_TYPE_SYNC, flags, list);
 +		pacman_list_free_full (list, g_free);
 +	}
 +
@@ -869,7 +871,7 @@ diff -Nru a/backends/pacman/backend-install.c b/backends/pacman/backend-install.
 +
 +	/* run the transaction */
 +	if (list != NULL) {
-+		transaction = backend_transaction_run (backend, PACMAN_TYPE_INSTALL, flags, list, FALSE);
++		transaction = backend_transaction_run (backend, PACMAN_TYPE_INSTALL, flags, list);
 +		pacman_list_free (list);
 +	}
 +
@@ -916,7 +918,7 @@ diff -Nru a/backends/pacman/backend-install.c b/backends/pacman/backend-install.
 +
 +	/* run the transaction */
 +	if (list != NULL) {
-+		transaction = backend_transaction_run (backend, PACMAN_TYPE_SYNC, flags, list, FALSE);
++		transaction = backend_transaction_run (backend, PACMAN_TYPE_SYNC, flags, list);
 +		pacman_list_free_full (list, g_free);
 +	}
 +
@@ -935,23 +937,10 @@ diff -Nru a/backends/pacman/backend-install.c b/backends/pacman/backend-install.
 +	pk_backend_set_status (backend, PK_STATUS_ENUM_SETUP);
 +	pk_backend_thread_create (backend, backend_install_packages_thread);
 +}
-+
-+/**
-+ * backend_update_packages:
-+ **/
-+void
-+backend_update_packages (PkBackend *backend, gboolean only_trusted, gchar **package_ids)
-+{
-+	g_return_if_fail (backend != NULL);
-+	g_return_if_fail (package_ids != NULL);
-+
-+	pk_backend_set_status (backend, PK_STATUS_ENUM_SETUP);
-+	pk_backend_thread_create (backend, backend_install_packages_thread);
-+}
 diff -Nru a/backends/pacman/backend-install.h b/backends/pacman/backend-install.h
 --- a/backends/pacman/backend-install.h	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman/backend-install.h	2010-03-21 10:23:23.350965319 +1300
-@@ -0,0 +1,38 @@
++++ b/backends/pacman/backend-install.h	2010-04-05 22:34:07.404027204 +1200
+@@ -0,0 +1,34 @@
 +/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
 + *
 + * Copyright (C) 2007 Andreas Obergrusberger <tradiaz@yahoo.de>
@@ -983,17 +972,13 @@ diff -Nru a/backends/pacman/backend-install.h b/backends/pacman/backend-install.
 +void	 backend_install_files		(PkBackend	*backend,
 +					 gboolean	 only_trusted,
 +					 gchar		**full_paths);
-+
 +void	 backend_install_packages	(PkBackend	*backend,
-+					 gboolean	 only_trusted,
-+					 gchar		**package_ids);
-+void	 backend_update_packages	(PkBackend	*backend,
 +					 gboolean	 only_trusted,
 +					 gchar		**package_ids);
 diff -Nru a/backends/pacman/backend-packages.c b/backends/pacman/backend-packages.c
 --- a/backends/pacman/backend-packages.c	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman/backend-packages.c	2010-03-31 19:04:33.485617470 +1300
-@@ -0,0 +1,316 @@
++++ b/backends/pacman/backend-packages.c	2010-04-05 22:36:15.047347139 +1200
+@@ -0,0 +1,318 @@
 +/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
 + *
 + * Copyright (C) 2007 Andreas Obergrusberger <tradiaz@yahoo.de>
@@ -1075,6 +1060,7 @@ diff -Nru a/backends/pacman/backend-packages.c b/backends/pacman/backend-package
 +	PacmanDatabase *database;
 +	PacmanPackage *package;
 +
++	g_return_val_if_fail (pacman != NULL, NULL);
 +	g_return_val_if_fail (local_database != NULL, NULL);
 +	g_return_val_if_fail (backend != NULL, NULL);
 +	g_return_val_if_fail (package_id != NULL, NULL);
@@ -1088,7 +1074,7 @@ diff -Nru a/backends/pacman/backend-packages.c b/backends/pacman/backend-package
 +	} else {
 +		const PacmanList *databases;
 +
-+		for (databases = sync_databases; databases != NULL; databases = pacman_list_next (databases)) {
++		for (databases = pacman_manager_get_sync_databases (pacman); databases != NULL; databases = pacman_list_next (databases)) {
 +			database = (PacmanDatabase *) pacman_list_get (databases);
 +
 +			if (g_strcmp0 (pacman_database_get_name (database), repo) == 0) {
@@ -1129,6 +1115,7 @@ diff -Nru a/backends/pacman/backend-packages.c b/backends/pacman/backend-package
 +	gboolean search_installed;
 +	gboolean search_not_installed;
 +
++	g_return_val_if_fail (pacman != NULL, FALSE);
 +	g_return_val_if_fail (local_database != NULL, FALSE);
 +	g_return_val_if_fail (backend != NULL, FALSE);
 +
@@ -1173,7 +1160,7 @@ diff -Nru a/backends/pacman/backend-packages.c b/backends/pacman/backend-package
 +			if (!search_installed) {
 +				const PacmanList *databases;
 +
-+				for (databases = sync_databases; databases != NULL; databases = pacman_list_next (databases)) {
++				for (databases = pacman_manager_get_sync_databases (pacman); databases != NULL; databases = pacman_list_next (databases)) {
 +					PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (databases);
 +					PacmanPackage *package = pacman_database_find_package (database, package_ids[iterator]);
 +
@@ -1357,8 +1344,8 @@ diff -Nru a/backends/pacman/backend-packages.h b/backends/pacman/backend-package
 +					 gchar		**package_ids);
 diff -Nru a/backends/pacman/backend-pacman.c b/backends/pacman/backend-pacman.c
 --- a/backends/pacman/backend-pacman.c	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman/backend-pacman.c	2010-03-30 23:33:16.839349949 +1300
-@@ -0,0 +1,197 @@
++++ b/backends/pacman/backend-pacman.c	2010-04-05 21:48:27.330966237 +1200
+@@ -0,0 +1,198 @@
 +/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
 + *
 + * Copyright (C) 2007 Andreas Obergrusberger <tradiaz@yahoo.de>
@@ -1409,6 +1396,7 @@ diff -Nru a/backends/pacman/backend-pacman.c b/backends/pacman/backend-pacman.c
 +	switch (level) {
 +		case G_LOG_LEVEL_WARNING:
 +		case G_LOG_LEVEL_MESSAGE:
++			egg_warning ("pacman: %s", message);
 +			backend_message ((PkBackend *) user_data, message);
 +			break;
 +
@@ -1588,7 +1576,7 @@ diff -Nru a/backends/pacman/backend-pacman.h b/backends/pacman/backend-pacman.h
 +extern PacmanManager	*pacman;
 diff -Nru a/backends/pacman/backend-remove.c b/backends/pacman/backend-remove.c
 --- a/backends/pacman/backend-remove.c	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman/backend-remove.c	2010-03-31 23:04:58.470842663 +1300
++++ b/backends/pacman/backend-remove.c	2010-04-05 23:40:45.244455233 +1200
 @@ -0,0 +1,149 @@
 +/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
 + *
@@ -1658,7 +1646,7 @@ diff -Nru a/backends/pacman/backend-remove.c b/backends/pacman/backend-remove.c
 +
 +	/* run the transaction */
 +	if (list != NULL) {
-+		transaction = backend_transaction_run (backend, PACMAN_TYPE_REMOVE, flags, list, FALSE);
++		transaction = backend_transaction_run (backend, PACMAN_TYPE_REMOVE, flags, list);
 +		pacman_list_free_full (list, g_free);
 +	}
 +
@@ -1711,7 +1699,7 @@ diff -Nru a/backends/pacman/backend-remove.c b/backends/pacman/backend-remove.c
 +
 +	/* prepare the transaction */
 +	if (list != NULL) {
-+		transaction = backend_transaction_run (backend, PACMAN_TYPE_REMOVE, flags, list, TRUE);
++		transaction = backend_transaction_simulate (backend, PACMAN_TYPE_REMOVE, flags, list);
 +		if (transaction != NULL) {
 +			const PacmanList *packages;
 +
@@ -1777,8 +1765,8 @@ diff -Nru a/backends/pacman/backend-remove.h b/backends/pacman/backend-remove.h
 +						 gboolean	 autoremove);
 diff -Nru a/backends/pacman/backend-repos.c b/backends/pacman/backend-repos.c
 --- a/backends/pacman/backend-repos.c	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman/backend-repos.c	2010-03-31 16:08:07.790006255 +1300
-@@ -0,0 +1,272 @@
++++ b/backends/pacman/backend-repos.c	2010-04-05 22:44:33.190631315 +1200
+@@ -0,0 +1,260 @@
 +/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
 + *
 + * Copyright (C) 2007 Andreas Obergrusberger <tradiaz@yahoo.de>
@@ -1808,8 +1796,6 @@ diff -Nru a/backends/pacman/backend-repos.c b/backends/pacman/backend-repos.c
 +#include "backend-repos.h"
 +
 +PacmanDatabase *local_database = NULL;
-+PacmanList *sync_databases = NULL;
-+
 +static GHashTable *disabled_repos = NULL;
 +
 +static gboolean
@@ -1911,8 +1897,6 @@ diff -Nru a/backends/pacman/backend-repos.c b/backends/pacman/backend-repos.c
 +gboolean
 +backend_initialize_databases (PkBackend *backend)
 +{
-+	const PacmanList *databases;
-+	gboolean result;
 +	GError *error = NULL;
 +
 +	g_return_val_if_fail (pacman != NULL, FALSE);
@@ -1921,26 +1905,26 @@ diff -Nru a/backends/pacman/backend-repos.c b/backends/pacman/backend-repos.c
 +	local_database = pacman_manager_get_local_database (pacman);
 +	disabled_repos = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 +
-+	g_return_val_if_fail (local_database != NULL, FALSE);
-+	g_return_val_if_fail (disabled_repos != NULL, FALSE);
++	if (disabled_repos_load (&error)) {
++		const PacmanList *databases;
 +
-+	result = disabled_repos_load (&error);
++		/* disable disabled repos */
++		for (databases = pacman_manager_get_sync_databases (pacman); databases != NULL; databases = pacman_list_next (databases)) {
++			PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (databases);
++			const gchar *repo = pacman_database_get_name (database);
 +
-+	/* make a list of databases */
-+	for (databases = pacman_manager_get_sync_databases (pacman); databases != NULL; databases = pacman_list_next (databases)) {
-+		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (databases);
-+
-+		/* don't add disabled repos to the list */
-+		if (g_hash_table_lookup (disabled_repos, pacman_database_get_name (database)) == NULL) {
-+			sync_databases = pacman_list_add (sync_databases, database);
++			if (g_hash_table_lookup (disabled_repos, repo) != NULL) {
++				if (!pacman_manager_unregister_database (pacman, database, &error)) {
++					backend_error (backend, error);
++					return FALSE;
++				}
++			}
 +		}
-+	}
 +
-+	if (!result) {
++		return TRUE;
++	} else {
 +		backend_error (backend, error);
 +		return FALSE;
-+	} else {
-+		return TRUE;
 +	}
 +}
 +
@@ -1957,7 +1941,6 @@ diff -Nru a/backends/pacman/backend-repos.c b/backends/pacman/backend-repos.c
 +	if (disabled_repos != NULL) {
 +		g_hash_table_unref (disabled_repos);
 +	}
-+	pacman_list_free (sync_databases);
 +
 +	if (!result) {
 +		backend_error (backend, error);
@@ -1974,6 +1957,8 @@ diff -Nru a/backends/pacman/backend-repos.c b/backends/pacman/backend-repos.c
 +backend_get_repo_list (PkBackend *backend, PkBitfield filters)
 +{
 +	const PacmanList *databases;
++	GHashTableIter iter;
++	gpointer key, value;
 +
 +	g_return_if_fail (pacman != NULL);
 +	g_return_if_fail (disabled_repos != NULL);
@@ -1981,37 +1966,25 @@ diff -Nru a/backends/pacman/backend-repos.c b/backends/pacman/backend-repos.c
 +
 +	pk_backend_set_status (backend, PK_STATUS_ENUM_QUERY);
 +
-+	/* emit repos from database list */
++	/* emit enabled repos */
 +	for (databases = pacman_manager_get_sync_databases (pacman); databases != NULL; databases = pacman_list_next (databases)) {
 +		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (databases);
 +		const gchar *repo = pacman_database_get_name (database);
-+		gboolean enabled = (g_hash_table_lookup (disabled_repos, repo) == NULL);
 +
-+		pk_backend_repo_detail (backend, repo, repo, enabled);
++		pk_backend_repo_detail (backend, repo, repo, TRUE);
 +	}
 +
-+	pk_backend_finished (backend);
-+}
++	/* emit disabled repos */
++	g_hash_table_iter_init (&iter, disabled_repos);
++	while (g_hash_table_iter_next (&iter, &key, &value)) {
++		if (value != NULL) {
++			const gchar *repo = (const gchar *) key;
 +
-+static gint
-+database_sort_compare (gconstpointer first, gconstpointer second)
-+{
-+	const PacmanList *databases;
-+
-+	g_return_val_if_fail (pacman != NULL, 0);
-+
-+	/* find which database first comes in the database list */
-+	for (databases = pacman_manager_get_sync_databases (pacman); databases != NULL; databases = pacman_list_next (databases)) {
-+		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (databases);
-+
-+		if (first == database) {
-+			return (second == database) ? 0 : -1;
-+		} else if (second == database) {
-+			return 1;
++			pk_backend_repo_detail (backend, repo, repo, FALSE);
 +		}
 +	}
 +
-+	return 0;
++	pk_backend_finished (backend);
 +}
 +
 +/**
@@ -2020,32 +1993,35 @@ diff -Nru a/backends/pacman/backend-repos.c b/backends/pacman/backend-repos.c
 +void
 +backend_repo_enable (PkBackend *backend, const gchar *repo, gboolean enable)
 +{
-+	PacmanDatabase *database;
++	GError *error = NULL;
 +
++	g_return_if_fail (pacman != NULL);
 +	g_return_if_fail (disabled_repos != NULL);
 +	g_return_if_fail (backend != NULL);
 +	g_return_if_fail (repo != NULL);
 +
 +	pk_backend_set_status (backend, PK_STATUS_ENUM_QUERY);
 +
-+	/* make sure repo exists */
-+	database = pacman_manager_find_sync_database (pacman, repo);
-+	if (database == NULL) {
-+		pk_backend_error_code (backend, PK_ERROR_ENUM_REPO_NOT_FOUND, "Could not find repo [%s]", repo);
-+		pk_backend_finished (backend);
-+		return;
-+	}
-+
-+	/* remove repo from disabled and add to enabled, or vice versa */
 +	if (enable) {
++		/* register database if repo is actually disabled */
 +		if (g_hash_table_remove (disabled_repos, repo)) {
-+			sync_databases = pacman_list_add_sorted (sync_databases, database, database_sort_compare);
++			if (!pacman_manager_register_sync_database (pacman, repo, &error)) {
++				backend_error (backend, error);
++			}
++		} else {
++			pk_backend_error_code (backend, PK_ERROR_ENUM_REPO_NOT_FOUND, "Could not find repo [%s]", repo);
 +		}
 +	} else {
-+		gpointer removed = NULL;
-+		sync_databases = pacman_list_remove_direct (sync_databases, database, &removed);
-+		if (removed != NULL) {
-+			g_hash_table_insert (disabled_repos, g_strdup (repo), GINT_TO_POINTER (1));
++		PacmanDatabase *database = pacman_manager_find_sync_database (pacman, repo);
++
++		if (database != NULL) {
++			if (pacman_manager_unregister_database (pacman, database, &error)) {
++				g_hash_table_insert (disabled_repos, g_strdup (repo), GINT_TO_POINTER (1));
++			} else {
++				backend_error (backend, error);
++			}
++		} else {
++			pk_backend_error_code (backend, PK_ERROR_ENUM_REPO_NOT_FOUND, "Could not find repo [%s]", repo);
 +		}
 +	}
 +
@@ -2053,8 +2029,8 @@ diff -Nru a/backends/pacman/backend-repos.c b/backends/pacman/backend-repos.c
 +}
 diff -Nru a/backends/pacman/backend-repos.h b/backends/pacman/backend-repos.h
 --- a/backends/pacman/backend-repos.h	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman/backend-repos.h	2010-03-21 10:41:03.370861754 +1300
-@@ -0,0 +1,37 @@
++++ b/backends/pacman/backend-repos.h	2010-04-05 22:45:01.647294496 +1200
+@@ -0,0 +1,36 @@
 +/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
 + *
 + * Copyright (C) 2007 Andreas Obergrusberger <tradiaz@yahoo.de>
@@ -2082,7 +2058,6 @@ diff -Nru a/backends/pacman/backend-repos.h b/backends/pacman/backend-repos.h
 +#include <pk-backend.h>
 +
 +extern PacmanDatabase	*local_database;
-+extern PacmanList	*sync_databases;
 +
 +gboolean	 backend_initialize_databases	(PkBackend	*backend);
 +gboolean	 backend_destroy_databases	(PkBackend	*backend);
@@ -2094,8 +2069,8 @@ diff -Nru a/backends/pacman/backend-repos.h b/backends/pacman/backend-repos.h
 +						 gboolean	 enable);
 diff -Nru a/backends/pacman/backend-search.c b/backends/pacman/backend-search.c
 --- a/backends/pacman/backend-search.c	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman/backend-search.c	2010-03-31 19:03:26.642287713 +1300
-@@ -0,0 +1,391 @@
++++ b/backends/pacman/backend-search.c	2010-04-05 23:53:14.281050915 +1200
+@@ -0,0 +1,398 @@
 +/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
 + *
 + * Copyright (C) 2007 Andreas Obergrusberger <tradiaz@yahoo.de>
@@ -2123,6 +2098,7 @@ diff -Nru a/backends/pacman/backend-search.c b/backends/pacman/backend-search.c
 +#include "backend-error.h"
 +#include "backend-groups.h"
 +#include "backend-packages.h"
++#include "backend-pacman.h"
 +#include "backend-repos.h"
 +#include "backend-search.h"
 +
@@ -2154,7 +2130,12 @@ diff -Nru a/backends/pacman/backend-search.c b/backends/pacman/backend-search.c
 +}
 +
 +static void
-+backend_package_with_database (PkBackend *backend, PacmanPackage *package, PacmanDatabase *database) {
++backend_package_with_database (PkBackend *backend, PacmanPackage *package, PacmanDatabase *database)
++{
++	g_return_if_fail (backend != NULL);
++	g_return_if_fail (package != NULL);
++	g_return_if_fail (database != NULL);
++
 +	if (database == local_database) {
 +		backend_package (backend, package, PK_INFO_ENUM_INSTALLED);
 +	} else if (!pacman_package_is_installed (package)) {
@@ -2374,6 +2355,7 @@ diff -Nru a/backends/pacman/backend-search.c b/backends/pacman/backend-search.c
 +	gboolean search_installed;
 +	gboolean search_not_installed;
 +
++	g_return_val_if_fail (pacman != NULL, FALSE);
 +	g_return_val_if_fail (local_database != NULL, FALSE);
 +	g_return_val_if_fail (backend != NULL, FALSE);
 +
@@ -2403,7 +2385,7 @@ diff -Nru a/backends/pacman/backend-search.c b/backends/pacman/backend-search.c
 +	if (!search_installed) {
 +		const PacmanList *databases;
 +
-+		for (databases = sync_databases; databases != NULL; databases = pacman_list_next (databases)) {
++		for (databases = pacman_manager_get_sync_databases (pacman); databases != NULL; databases = pacman_list_next (databases)) {
 +			PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (databases);
 +			if (match_func != NULL && !backend_search_database (backend, database, search, match_func)) {
 +				return FALSE;
@@ -2533,8 +2515,8 @@ diff -Nru a/backends/pacman/backend-search.h b/backends/pacman/backend-search.h
 +				 gchar		**values);
 diff -Nru a/backends/pacman/backend-transaction.c b/backends/pacman/backend-transaction.c
 --- a/backends/pacman/backend-transaction.c	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman/backend-transaction.c	2010-03-31 23:00:11.647537178 +1300
-@@ -0,0 +1,457 @@
++++ b/backends/pacman/backend-transaction.c	2010-04-05 23:55:10.663541029 +1200
+@@ -0,0 +1,501 @@
 +/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
 + *
 + * Copyright (C) 2007 Andreas Obergrusberger <tradiaz@yahoo.de>
@@ -2672,7 +2654,7 @@ diff -Nru a/backends/pacman/backend-transaction.c b/backends/pacman/backend-tran
 +		backend_package (backend, download->package, PK_INFO_ENUM_DOWNLOADING);
 +
 +		/* only emit files downloaded for DownloadPackages */
-+		if ((pacman_transaction_get_flags (transaction) & PACMAN_TRANSACTION_FLAGS_SYNC_DOWNLOAD_ONLY) != 0) {
++		if (pk_backend_get_role (backend) == PK_ROLE_ENUM_DOWNLOAD_PACKAGES) {
 +			gchar *path = backend_filename_make_path (backend, filename);
 +			download->files = g_string_new (path);
 +			g_free (path);
@@ -2685,9 +2667,9 @@ diff -Nru a/backends/pacman/backend-transaction.c b/backends/pacman/backend-tran
 +{
 +	BackendDownloadData *download;
 +
++	g_return_if_fail (pacman != NULL);
 +	g_return_if_fail (transaction != NULL);
 +	g_return_if_fail (user_data != NULL);
-+	g_return_if_fail (transaction != NULL);
 +
 +	download = (BackendDownloadData *) g_hash_table_lookup (downloads, transaction);
 +
@@ -2715,11 +2697,12 @@ diff -Nru a/backends/pacman/backend-transaction.c b/backends/pacman/backend-tran
 +		}
 +
 +		if (strstr (filename, ".db.tar.") != NULL) {
-+			guint databases = pacman_list_length (sync_databases);
++			const PacmanList *databases = pacman_manager_get_sync_databases (pacman);
++			guint database_total = pacman_list_length (databases);
 +
 +			/* report download progress for databases */
-+			if (databases > 0) {
-+				percentage = (sub_percentage + download->complete * 100) / databases;
++			if (database_total > 0) {
++				percentage = (sub_percentage + download->complete * 100) / database_total;
 +			}
 +
 +			if (complete == total) {
@@ -2764,6 +2747,7 @@ diff -Nru a/backends/pacman/backend-transaction.c b/backends/pacman/backend-tran
 +		case PACMAN_TRANSACTION_PROGRESS_INSTALL:
 +		case PACMAN_TRANSACTION_PROGRESS_UPGRADE:
 +		case PACMAN_TRANSACTION_PROGRESS_REMOVE:
++		case PACMAN_TRANSACTION_PROGRESS_FILE_CONFLICT_CHECK:
 +		{
 +			egg_debug ("pacman: progress for %s (%u of %u) is %u%%", target, current, targets, percent);
 +			pk_backend_set_sub_percentage ((PkBackend *) user_data, percent);
@@ -2785,15 +2769,30 @@ diff -Nru a/backends/pacman/backend-transaction.c b/backends/pacman/backend-tran
 +	switch (question) {
 +		case PACMAN_TRANSACTION_QUESTION_INSTALL_IGNORE_PACKAGE:
 +		{
-+			gchar *packages = pacman_package_make_list (pacman_transaction_get_marked_packages (transaction));
-+			gchar *warning = g_strdup_printf ("The following packages were marked as ignored:\n%s\n", packages);
++			PkRoleEnum role = pk_backend_get_role ((PkBackend *) user_data);
++			if (role == PK_ROLE_ENUM_INSTALL_PACKAGES || role == PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES) {
++				gchar *packages = pacman_package_make_list (pacman_transaction_get_marked_packages (transaction));
++				gchar *warning = g_strdup_printf ("The following packages were marked as ignored:\n%s\n", packages);
 +
-+			/* ignored packages are blocked in updates, can be explicitly installed */
-+			backend_message ((PkBackend *) user_data, warning);
++				/* ignored packages are blocked in updates, can be explicitly installed */
++				egg_warning ("pacman: %s", warning);
++				backend_message ((PkBackend *) user_data, warning);
 +
-+			g_free (warning);
-+			g_free (packages);
-+			return TRUE;
++				g_free (warning);
++				g_free (packages);
++				return TRUE;
++			} else if (role == PK_ROLE_ENUM_GET_UPDATES) {
++				const PacmanList *packages;
++
++				for (packages = pacman_transaction_get_marked_packages (transaction); packages != NULL; packages = pacman_list_next (packages)) {
++					PacmanPackage *package = (PacmanPackage *) pacman_list_get (packages);
++					backend_package ((PkBackend *) user_data, package, PK_INFO_ENUM_BLOCKED);
++				}
++
++				return FALSE;
++			} else {
++				return FALSE;
++			}
 +		}
 +		case PACMAN_TRANSACTION_QUESTION_REPLACE_PACKAGE:
 +		{
@@ -2802,6 +2801,7 @@ diff -Nru a/backends/pacman/backend-transaction.c b/backends/pacman/backend-tran
 +			gchar *warning = g_strdup_printf ("Package %s has been replaced with %s\n", second, first);
 +
 +			/* replacement is usually safe */
++			egg_warning ("pacman: %s", warning);
 +			backend_message ((PkBackend *) user_data, warning);
 +
 +			g_free (warning);
@@ -2809,31 +2809,44 @@ diff -Nru a/backends/pacman/backend-transaction.c b/backends/pacman/backend-tran
 +		}
 +		case PACMAN_TRANSACTION_QUESTION_SYNC_FIRST:
 +		{
-+			gchar *packages = pacman_package_make_list (pacman_transaction_get_marked_packages (transaction));
-+			gchar *warning = g_strdup_printf ("The following packages should probably have been installed first:\n%s\n", packages);
++			PkRoleEnum role = pk_backend_get_role ((PkBackend *) user_data);
++			if (role == PK_ROLE_ENUM_GET_UPDATES) {
++				const PacmanList *packages;
 +
-+			/* sync first packages are marked as important in updates */
-+			backend_message ((PkBackend *) user_data, warning);
++				for (packages = pacman_transaction_get_marked_packages (transaction); packages != NULL; packages = pacman_list_next (packages)) {
++					PacmanPackage *package = (PacmanPackage *) pacman_list_get (packages);
++					backend_package ((PkBackend *) user_data, package, PK_INFO_ENUM_IMPORTANT);
++				}
 +
-+			g_free (warning);
-+			g_free (packages);
-+			return FALSE;
++				return FALSE;
++			} else {
++				gchar *packages = pacman_package_make_list (pacman_transaction_get_marked_packages (transaction));
++				gchar *warning = g_strdup_printf ("The following packages should probably have been installed first:\n%s\n", packages);
++
++				/* sync first packages are marked as important in updates */
++				egg_warning ("pacman: %s", warning);
++				backend_message ((PkBackend *) user_data, warning);
++
++				g_free (warning);
++				g_free (packages);
++				return FALSE;
++			}
 +		}
 +		case PACMAN_TRANSACTION_QUESTION_REMOVE_CONFLICTING_PACKAGE:
 +		case PACMAN_TRANSACTION_QUESTION_SKIP_UNRESOLVABLE_PACKAGES:
 +		case PACMAN_TRANSACTION_QUESTION_REMOVE_HOLD_PACKAGES:
 +			/* none of these actions are safe */
-+			egg_debug ("pacman: ignoring question '%s'", message);
++			egg_warning ("pacman: ignoring question '%s'", message);
 +			return FALSE;
 +
 +		case PACMAN_TRANSACTION_QUESTION_INSTALL_OLDER_PACKAGE:
 +		case PACMAN_TRANSACTION_QUESTION_DELETE_CORRUPTED_PACKAGE:
 +			/* these actions are mostly harmless */
-+			egg_debug ("pacman: confirming question '%s'", message);
++			egg_warning ("pacman: confirming question '%s'", message);
 +			return TRUE;
 +
 +		default:
-+			egg_debug ("pacman: unrecognised question '%s'", message);
++			egg_warning ("pacman: unrecognised question '%s'", message);
 +			return FALSE;
 +	}
 +}
@@ -2881,7 +2894,7 @@ diff -Nru a/backends/pacman/backend-transaction.c b/backends/pacman/backend-tran
 +		case PACMAN_TRANSACTION_STATUS_CONFLICT_CHECK_START:
 +		case PACMAN_TRANSACTION_STATUS_PACKAGE_INTEGRITY_CHECK_START:
 +		case PACMAN_TRANSACTION_STATUS_DELTA_INTEGRITY_CHECK_START:
-+			state = PK_STATUS_ENUM_QUERY;
++			state = PK_STATUS_ENUM_TEST_COMMIT;
 +			info = PK_INFO_ENUM_UNKNOWN;
 +			break;
 +
@@ -2919,7 +2932,7 @@ diff -Nru a/backends/pacman/backend-transaction.c b/backends/pacman/backend-tran
 +}
 +
 +PacmanTransaction *
-+backend_transaction_run (PkBackend *backend, GType type, guint32 flags, const PacmanList *targets, gboolean simulate)
++backend_transaction_simulate (PkBackend *backend, GType type, guint32 flags, const PacmanList *targets)
 +{
 +	PacmanTransaction *transaction;
 +	GError *error = NULL;
@@ -2951,19 +2964,32 @@ diff -Nru a/backends/pacman/backend-transaction.c b/backends/pacman/backend-tran
 +
 +	if (!pacman_transaction_prepare (transaction, targets, &error)) {
 +		backend_error (backend, error);
++		g_object_unref (transaction);
 +		return NULL;
 +	}
 +
-+	if (simulate) {
-+		return transaction;
-+	} else {
++	return transaction;
++}
++
++PacmanTransaction *
++backend_transaction_run (PkBackend *backend, GType type, guint32 flags, const PacmanList *targets)
++{
++	PacmanTransaction *transaction;
++	GError *error = NULL;
++
++	g_return_val_if_fail (backend != NULL, NULL);
++
++	transaction = backend_transaction_simulate (backend, type, flags, targets);
++
++	if (transaction != NULL) {
 +		pk_backend_set_status (backend, PK_STATUS_ENUM_RUNNING);
-+	}
 +
-+	if (!pacman_transaction_commit (transaction, &error)) {
-+		backend_error (backend, error);
-+		g_hash_table_remove (downloads, transaction);
-+		return NULL;
++		if (!pacman_transaction_commit (transaction, &error)) {
++			backend_error (backend, error);
++			g_hash_table_remove (downloads, transaction);
++			g_object_unref (transaction);
++			return NULL;
++		}
 +	}
 +
 +	return transaction;
@@ -2994,8 +3020,8 @@ diff -Nru a/backends/pacman/backend-transaction.c b/backends/pacman/backend-tran
 +}
 diff -Nru a/backends/pacman/backend-transaction.h b/backends/pacman/backend-transaction.h
 --- a/backends/pacman/backend-transaction.h	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman/backend-transaction.h	2010-03-31 23:00:27.954202500 +1300
-@@ -0,0 +1,37 @@
++++ b/backends/pacman/backend-transaction.h	2010-04-05 23:36:30.573655211 +1200
+@@ -0,0 +1,41 @@
 +/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
 + *
 + * Copyright (C) 2007 Andreas Obergrusberger <tradiaz@yahoo.de>
@@ -3025,18 +3051,22 @@ diff -Nru a/backends/pacman/backend-transaction.h b/backends/pacman/backend-tran
 +gboolean		 backend_initialize_downloads	(PkBackend		*backend);
 +gboolean		 backend_destroy_downloads	(PkBackend		*backend);
 +
++PacmanTransaction	*backend_transaction_simulate	(PkBackend		*backend,
++							 GType			 type,
++							 guint32		 flags,
++							 const PacmanList	*targets);
 +PacmanTransaction	*backend_transaction_run	(PkBackend		*backend,
 +							 GType			 type,
 +							 guint32		 flags,
-+							 const PacmanList	*targets,
-+							 gboolean		 simulate);
++							 const PacmanList	*targets);
++
 +gboolean		 backend_transaction_finish	(PkBackend		*backend,
 +							 PacmanTransaction	*transaction);
 +void			 backend_cancel			(PkBackend		*backend);
 diff -Nru a/backends/pacman/backend-update.c b/backends/pacman/backend-update.c
 --- a/backends/pacman/backend-update.c	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman/backend-update.c	2010-03-31 23:05:11.284174178 +1300
-@@ -0,0 +1,333 @@
++++ b/backends/pacman/backend-update.c	2010-04-06 00:10:49.323445999 +1200
+@@ -0,0 +1,347 @@
 +/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
 + *
 + * Copyright (C) 2007 Andreas Obergrusberger <tradiaz@yahoo.de>
@@ -3067,6 +3097,27 @@ diff -Nru a/backends/pacman/backend-update.c b/backends/pacman/backend-update.c
 +#include "backend-repos.h"
 +#include "backend-transaction.h"
 +#include "backend-update.h"
++
++static PacmanList *
++pacman_removes_add_replaces (PacmanList *removes, PacmanPackage *package)
++{
++	const PacmanList *list;
++
++	g_return_val_if_fail (local_database != NULL, NULL);
++	g_return_val_if_fail (package != NULL, NULL);
++
++	/* append the packages that package replaces */
++	for (list = pacman_package_get_replaces (package); list != NULL; list = pacman_list_next (list)) {
++		const gchar *name = pacman_list_get (list);
++		PacmanPackage *replaces = pacman_database_find_package (local_database, name);
++
++		if (replaces != NULL && pacman_list_find_string (removes, name) == NULL) {
++			removes = pacman_list_add (removes, g_strdup (name));
++		}
++	}
++
++	return removes;
++}
 +
 +static gchar *
 +pacman_package_make_replaces_ids (PacmanPackage *package)
@@ -3194,49 +3245,26 @@ diff -Nru a/backends/pacman/backend-update.c b/backends/pacman/backend-update.c
 +}
 +
 +static gboolean
-+pacman_package_should_ignore (PacmanPackage *package)
++backend_get_updates_thread (PkBackend *backend)
 +{
-+	const PacmanList *groups;
-+	const PacmanList *ignore_packages;
-+	const PacmanList *ignore_groups;
++	PacmanTransaction *transaction = NULL;
++	PacmanTransactionFlags flags = PACMAN_TRANSACTION_FLAGS_NONE;
 +
-+	g_return_val_if_fail (pacman != NULL, TRUE);
-+	g_return_val_if_fail (package != NULL, TRUE);
++	g_return_val_if_fail (backend != NULL, FALSE);
 +
-+	ignore_packages = pacman_manager_get_ignore_packages (pacman);
-+	ignore_groups = pacman_manager_get_ignore_groups (pacman);
++	/* prepare the transaction */
++	transaction = backend_transaction_simulate (backend, PACMAN_TYPE_SYNC, flags, NULL);
++	if (transaction != NULL) {
++		const PacmanList *packages;
 +
-+	/* check if package is an IgnorePkg */
-+	if (pacman_list_find_string (ignore_packages, pacman_package_get_name (package)) != NULL) {
-+		return TRUE;
-+	}
-+
-+	/* check if package is in an IgnoreGroup */
-+	for (groups = pacman_package_get_groups (package); groups != NULL; groups = pacman_list_next (groups)) {
-+		if (pacman_list_find_string (ignore_groups, (const gchar *) pacman_list_get (groups)) != NULL) {
-+			return TRUE;
++		/* emit packages that need updating */
++		for (packages = pacman_transaction_get_packages (transaction); packages != NULL; packages = pacman_list_next (packages)) {
++			PacmanPackage *package = (PacmanPackage *) pacman_list_get (packages);
++			backend_package (backend, package, PK_INFO_ENUM_NORMAL);
 +		}
 +	}
 +
-+	return FALSE;
-+}
-+
-+static gboolean
-+pacman_package_should_sync_first (PacmanPackage *package)
-+{
-+	const PacmanList *sync_firsts;
-+
-+	g_return_val_if_fail (pacman != NULL, FALSE);
-+	g_return_val_if_fail (package != NULL, FALSE);
-+
-+	sync_firsts = pacman_manager_get_sync_firsts (pacman);
-+
-+	/* check if package is in SyncFirst */
-+	if (pacman_list_find_string (sync_firsts, pacman_package_get_name (package)) != NULL) {
-+		return TRUE;
-+	}
-+
-+	return FALSE;
++	return backend_transaction_finish (backend, transaction);
 +}
 +
 +/**
@@ -3245,42 +3273,15 @@ diff -Nru a/backends/pacman/backend-update.c b/backends/pacman/backend-update.c
 +void
 +backend_get_updates (PkBackend *backend, PkBitfield filters)
 +{
-+	const PacmanList *packages;
-+
-+	g_return_if_fail (local_database != NULL);
 +	g_return_if_fail (backend != NULL);
 +
 +	pk_backend_set_status (backend, PK_STATUS_ENUM_QUERY);
-+
-+	/* find updates for installed packages */
-+	for (packages = pacman_database_get_packages (local_database); packages != NULL; packages = pacman_list_next (packages)) {
-+		PacmanPackage *upgrade, *package = (PacmanPackage *) pacman_list_get (packages);
-+		upgrade = pacman_package_find_new_version (package, sync_databases);
-+
-+		if (upgrade != NULL) {
-+			PkInfoEnum info;
-+
-+			if (pacman_package_should_ignore (upgrade)) {
-+				info = PK_INFO_ENUM_BLOCKED;
-+			} else if (pacman_package_should_sync_first (upgrade)) {
-+				info = PK_INFO_ENUM_IMPORTANT;
-+			} else {
-+				info = PK_INFO_ENUM_NORMAL;
-+			}
-+
-+			backend_package (backend, upgrade, info);
-+		}
-+	}
-+
-+	pk_backend_finished (backend);
++	pk_backend_thread_create (backend, backend_get_updates_thread);
 +}
 +
 +static gboolean
 +backend_refresh_cache_thread (PkBackend *backend)
 +{
-+	const PacmanList *databases;
-+	PacmanList *list = NULL;
-+
 +	gboolean force;
 +
 +	PacmanTransaction *transaction = NULL;
@@ -3295,17 +3296,8 @@ diff -Nru a/backends/pacman/backend-update.c b/backends/pacman/backend-update.c
 +		flags |= PACMAN_TRANSACTION_FLAGS_UPDATE_ALLOW_DOWNGRADE;
 +	}
 +
-+	/* collect enabled databases for the transaction */
-+	for (databases = sync_databases; databases != NULL; databases = pacman_list_next (databases)) {
-+		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (databases);
-+		list = pacman_list_add (list, g_strdup (pacman_database_get_name (database)));
-+	}
-+
 +	/* run the transaction */
-+	if (list != NULL) {
-+		transaction = backend_transaction_run (backend, PACMAN_TYPE_UPDATE, flags, list, FALSE);
-+		pacman_list_free_full (list, g_free);
-+	}
++	transaction = backend_transaction_run (backend, PACMAN_TYPE_UPDATE, flags, NULL);
 +
 +	return backend_transaction_finish (backend, transaction);
 +}
@@ -3323,38 +3315,90 @@ diff -Nru a/backends/pacman/backend-update.c b/backends/pacman/backend-update.c
 +}
 +
 +static gboolean
-+backend_update_system_thread (PkBackend *backend)
++backend_update_packages_thread (PkBackend *backend)
 +{
-+	const PacmanList *packages;
-+	PacmanList *list = NULL;
++	guint iterator;
++	PacmanList *list = NULL, *removes = NULL;
 +
 +	/* TODO: use only_trusted once pacman implements package signing */
++	gchar **package_ids;
 +
 +	PacmanTransaction *transaction = NULL;
-+	PacmanTransactionFlags flags = PACMAN_TRANSACTION_FLAGS_NONE;
++	PacmanTransactionFlags flags = PACMAN_TRANSACTION_FLAGS_NONE, rflags = PACMAN_TRANSACTION_FLAGS_IGNORE_DEPENDENCIES;
 +
-+	g_return_val_if_fail (local_database != NULL, FALSE);
 +	g_return_val_if_fail (backend != NULL, FALSE);
 +
-+	/* collect targets that need updating */
-+	for (packages = pacman_database_get_packages (local_database); packages != NULL; packages = pacman_list_next (packages)) {
-+		PacmanPackage *upgrade, *package = (PacmanPackage *) pacman_list_get (packages);
-+		upgrade = pacman_package_find_new_version (package, sync_databases);
++	package_ids = pk_backend_get_strv (backend, "package_ids");
 +
-+		if (upgrade != NULL && !pacman_package_should_ignore (upgrade)) {
-+			PacmanDatabase *database = pacman_package_get_database (upgrade);
++	g_return_val_if_fail (package_ids != NULL, FALSE);
++
++	/* collect targets for the transaction */
++	for (iterator = 0; package_ids[iterator] != NULL; ++iterator) {
++		PacmanPackage *package = backend_get_package (backend, package_ids[iterator]);
++		if (package == NULL) {
++			pacman_list_free_full (list, g_free);
++			pacman_list_free_full (removes, g_free);
++			pk_backend_finished (backend);
++			return FALSE;
++		} else {
++			PacmanDatabase *database = pacman_package_get_database (package);
++			const gchar *name = pacman_package_get_name (package);
 +			const gchar *repo = pacman_database_get_name (database);
-+			const gchar *name = pacman_package_get_name (upgrade);
 +
 +			list = pacman_list_add (list, g_strdup_printf ("%s/%s", repo, name));
++			removes = pacman_removes_add_replaces (removes, package);
++		}
++	}
++
++	/* remove all obsoleted packages */
++	if (removes != NULL) {
++		pk_backend_set_status (backend, PK_STATUS_ENUM_OBSOLETE);
++		transaction = backend_transaction_run (backend, PACMAN_TYPE_REMOVE, rflags, removes);
++		pacman_list_free_full (removes, g_free);
++
++		if (transaction != NULL) {
++			g_object_unref (transaction);
++		} else {
++			pacman_list_free_full (list, g_free);
++			pk_backend_finished (backend);
++			return FALSE;
 +		}
 +	}
 +
 +	/* run the transaction */
 +	if (list != NULL) {
-+		transaction = backend_transaction_run (backend, PACMAN_TYPE_SYNC, flags, list, FALSE);
++		transaction = backend_transaction_run (backend, PACMAN_TYPE_SYNC, flags, list);
 +		pacman_list_free_full (list, g_free);
 +	}
++
++	return backend_transaction_finish (backend, transaction);
++}
++
++/**
++ * backend_update_packages:
++ **/
++void
++backend_update_packages (PkBackend *backend, gboolean only_trusted, gchar **package_ids)
++{
++	g_return_if_fail (backend != NULL);
++	g_return_if_fail (package_ids != NULL);
++
++	pk_backend_set_status (backend, PK_STATUS_ENUM_SETUP);
++	pk_backend_thread_create (backend, backend_update_packages_thread);
++}
++
++static gboolean
++backend_update_system_thread (PkBackend *backend)
++{
++	/* TODO: use only_trusted once pacman implements package signing */
++
++	PacmanTransaction *transaction = NULL;
++	PacmanTransactionFlags flags = PACMAN_TRANSACTION_FLAGS_NONE;
++
++	g_return_val_if_fail (backend != NULL, FALSE);
++
++	/* run the transaction */
++	transaction = backend_transaction_run (backend, PACMAN_TYPE_SYNC, flags, NULL);
 +
 +	return backend_transaction_finish (backend, transaction);
 +}
@@ -3372,8 +3416,8 @@ diff -Nru a/backends/pacman/backend-update.c b/backends/pacman/backend-update.c
 +}
 diff -Nru a/backends/pacman/backend-update.h b/backends/pacman/backend-update.h
 --- a/backends/pacman/backend-update.h	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman/backend-update.h	2010-03-21 10:23:23.357630694 +1300
-@@ -0,0 +1,33 @@
++++ b/backends/pacman/backend-update.h	2010-04-05 23:06:55.187162989 +1200
+@@ -0,0 +1,36 @@
 +/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
 + *
 + * Copyright (C) 2007 Andreas Obergrusberger <tradiaz@yahoo.de>
@@ -3405,6 +3449,9 @@ diff -Nru a/backends/pacman/backend-update.h b/backends/pacman/backend-update.h
 +					 PkBitfield	 filters);
 +void	 backend_refresh_cache		(PkBackend	*backend,
 +					 gboolean	 force);
++void	 backend_update_packages	(PkBackend	*backend,
++					 gboolean	 only_trusted,
++					 gchar		**package_ids);
 +void	 backend_update_system		(PkBackend	*backend,
 +					 gboolean	 only_trusted);
 diff -Nru a/backends/pacman/groups.list b/backends/pacman/groups.list
@@ -3478,12 +3525,12 @@ diff -Nru a/backends/pacman/groups.list b/backends/pacman/groups.list
 +xorg-video-drivers	desktop-other
 diff -Nru a/backends/pacman/Makefile.am b/backends/pacman/Makefile.am
 --- a/backends/pacman/Makefile.am	1970-01-01 12:00:00.000000000 +1200
-+++ b/backends/pacman/Makefile.am	2010-03-31 16:07:35.483343437 +1300
-@@ -0,0 +1,47 @@
++++ b/backends/pacman/Makefile.am	2010-04-02 13:09:45.333751761 +1300
+@@ -0,0 +1,46 @@
 +PACMAN_CONFIG_FILE = $(confdir)/pacman.conf
 +PACMAN_GROUP_LIST = $(confdir)/groups.list
 +PACMAN_REPO_LIST = $(confdir)/repos.list
-+PACMAN_REPO_LIST_HEADER = "\# Generated by $(PACKAGE_NAME) $(PACKAGE_VERSION) - DO NOT MODIFY"
++PACMAN_REPO_LIST_HEADER = "\# Generated by $(PACKAGE_NAME) - DO NOT MODIFY"
 +PACMAN_DEFAULT_PATH = "/bin:/usr/bin:/sbin:/usr/sbin"
 +PACMAN_PACKAGE_URL = "http://www.archlinux.org/packages/%s/%s/%s/"
 +
@@ -3519,8 +3566,7 @@ diff -Nru a/backends/pacman/Makefile.am b/backends/pacman/Makefile.am
 +libpk_backend_pacman_la_LDFLAGS = -module -avoid-version
 +libpk_backend_pacman_la_CFLAGS = $(PK_PLUGIN_CFLAGS) \
 +                                 $(PACMAN_CFLAGS) \
-+                                 $(WARNINGFLAGS_C) \
-+                                 -include $(CONFIG_HEADER)
++                                 $(WARNINGFLAGS_C)
 +repos.list:
 +	echo $(PACMAN_REPO_LIST_HEADER) > $@
 +
