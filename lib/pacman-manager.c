@@ -100,7 +100,7 @@ static void pacman_manager_finalize (GObject *object) {
 static void pacman_manager_log_cb (pmloglevel_t level, gchar *format, va_list args) {
 	GLogLevelFlags flags = 0;
 	
-	if (format != NULL && format[0] != '\0') {
+	if (format == NULL || format[0] == '\0') {
 		return;
 	}
 	
