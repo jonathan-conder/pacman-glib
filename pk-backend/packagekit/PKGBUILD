@@ -2,14 +2,14 @@
 # Contributor: onestep_ua <onestep@ukr.net>
 
 pkgname=packagekit
-pkgver=0.6.2
+pkgver=0.6.3
 pkgrel=1
 pkgdesc='A system designed to make installing and updating software on your computer easier'
 arch=('i686' 'x86_64')
 url='http://www.packagekit.org/'
 license=('GPL')
-depends=('dbus-glib>=0.74' 'polkit>=0.92' 'networkmanager>=0.6.4'
-         'pacman-glib>=3.3.0' 'libtar' 'python>=2.6' 'sqlite3')
+depends=('glib2>=2.22.0' 'dbus-glib>=0.74' 'networkmanager>=0.6.4'
+         'polkit>=0.92' 'pacman-glib>=3.3.0' 'python>=2.6' 'sqlite3')
 makedepends=('intltool' 'pm-utils' 'gobject-introspection')
 backup=('var/lib/PackageKit/transactions.db'
         'etc/PackageKit/pacman.d/pacman.conf'
@@ -17,8 +17,8 @@ backup=('var/lib/PackageKit/transactions.db'
 options=('!libtool')
 source=("http://www.packagekit.org/releases/PackageKit-${pkgver}.tar.bz2"
         'pacman-glib.patch')
-md5sums=('c5a07b023054882750bb273381000194'
-         '309da99c1e170d6f759c3e309781e076')
+md5sums=('b6eb8f09d319a02158a1bcac25468a63'
+         'c133c4a5260e1d662cd926f6f04c2806')
 
 build() {
 	cd "${srcdir}/PackageKit-${pkgver}"

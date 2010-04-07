@@ -2,41 +2,26 @@
 # Contributor: onestep_ua <onestep@ukr.net>
 
 pkgname=gnome-packagekit
-pkgver=2.29.91
+pkgver=2.30.0
 pkgrel=1
 pkgdesc='Collection of graphical tools for PackageKit to be used in the GNOME desktop'
 arch=('i686' 'x86_64')
 url='http://www.packagekit.org/'
 license=('GPL')
-depends=('packagekit>=0.5.5' 'gconf>=2.28.0' 'gnome-icon-theme>=2.28.0'
+depends=('packagekit>=0.5.5' 'glib2>=2.18.0' 'gtk2>=2.19.3' 'gconf>=2.22.0'
          'dbus-glib>=0.73' 'libnotify>=0.4.3' 'libunique>=1.0.0'
-         'libcanberra>=0.10' 'gnome-menus>=2.24.1')
+         'gnome-menus>=2.24.1' 'upower>=0.9.1' 'libcanberra>=0.10')
 makedepends=('gtk-doc' 'intltool')
 install="${pkgname}.install"
-source=("http://www.packagekit.org/releases/${pkgname}-${pkgver}.tar.gz"
-        'gconf.patch'
-        'gtk-2.28.patch'
-        'install-local-files.patch'
-        'hide-icon-blocked.patch'
-        'disable-cancel-button.patch'
-        'filters.patch')
-md5sums=('f79a38ec3c1a0e759b9c7f455ff44310'
-         '91608b91b46e322eea7f2b8f3c12d5dd'
-         '2fac82791bcb7e01ed1d6b0dda54430b'
-         '403783bdf7c1192e3cb60a8fb924f6ac'
-         'd6b082732c2de096265399c0fa47016a'
-         '80e4186bddac2de3620a6973ae2e1312'
-         '004ae9c5cd063806b02407a77df7d32d')
+source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${pkgver%.*}/${pkgname}-${pkgver}.tar.bz2"
+        'arch.patch')
+md5sums=('6f96d71ad1567122075ab60d4dd60a98'
+         '828ca76a465a934d40501a6f69169b2b')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	
-	patch -Np1 -i "${srcdir}/gconf.patch" || return 1
-	patch -Np1 -i "${srcdir}/gtk-2.28.patch" || return 1
-	patch -Np1 -i "${srcdir}/install-local-files.patch" || return 1
-	patch -Np1 -i "${srcdir}/hide-icon-blocked.patch" || return 1
-	patch -Np1 -i "${srcdir}/disable-cancel-button.patch" || return 1
-	patch -Np1 -i "${srcdir}/filters.patch" || return 1
+	patch -Np1 -i "${srcdir}/arch.patch" || return 1
 	
 	autoreconf || return 1
 	./configure --prefix=/usr \
