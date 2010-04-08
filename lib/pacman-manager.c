@@ -1314,14 +1314,16 @@ PacmanTransaction *pacman_manager_new_transaction (PacmanManager *manager, GType
 	
 	priv = PACMAN_MANAGER_GET_PRIVATE (manager);
 	
-	if (type == G_TYPE_NONE) {
-		priv->transaction = NULL;
-		return NULL;
-	} else if (priv->transaction != NULL) {
+	if (priv->transaction != NULL) {
 		g_object_unref (priv->transaction);
 	}
 	
-	priv->transaction = PACMAN_TRANSACTION (g_object_new (type, NULL));
+	if (type == G_TYPE_NONE) {
+		priv->transaction = NULL;
+	} else {
+		priv->transaction = PACMAN_TRANSACTION (g_object_new (type, NULL));
+	}
+	
 	return priv->transaction;
 }
 
