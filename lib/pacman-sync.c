@@ -137,7 +137,7 @@ static gboolean pacman_sync_real_prepare (PacmanTransaction *transaction, const 
 			}
 		}
 	} else {
-		alpm_logaction ("starting full system upgrade\n");
+		/* TODO: provide an option to do alpm_logaction ("starting full system upgrade\n");*/
 		if (alpm_trans_sysupgrade ((pacman_transaction_get_flags (transaction) & PACMAN_TRANSACTION_FLAGS_SYNC_ALLOW_DOWNGRADE) != 0) < 0) {
 			g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not prepare transaction: %s"), alpm_strerrorlast ());
 			return FALSE;
