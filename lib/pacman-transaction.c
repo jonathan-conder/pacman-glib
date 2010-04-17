@@ -723,7 +723,11 @@ static void pacman_transaction_total_download_cb (off_t total) {
 gboolean pacman_transaction_start (pmtranstype_t type, guint32 flags, GError **error) {
 	g_return_val_if_fail (pacman_manager != NULL, FALSE);
 	
-	pacman_manager_new_transaction (pacman_manager, G_TYPE_NONE);
+	if (pacman_manager_get_transaction (pacman_manager) != NULL) {
+		PacmanError code = PACMAN_ERROR_TRANSACTION_ALREADY_INITIALIZED;
+		g_set_error (error, PACMAN_ERROR, code, _("Could not initialize transaction: %s"), alpm_strerror (code));
+		return FALSE;
+	}
 	
 	if (alpm_trans_init (type, flags, pacman_transaction_event_cb, pacman_transaction_question_cb, pacman_transaction_progress_cb) < 0) {
 		if (pm_errno == PACMAN_ERROR_ALREADY_RUNNING) {

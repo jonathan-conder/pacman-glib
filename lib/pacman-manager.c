@@ -1314,17 +1314,13 @@ PacmanTransaction *pacman_manager_new_transaction (PacmanManager *manager, GType
 	
 	priv = PACMAN_MANAGER_GET_PRIVATE (manager);
 	
-	if (priv->transaction != NULL) {
-		g_object_unref (priv->transaction);
-	}
-	
 	if (type == G_TYPE_NONE) {
-		priv->transaction = NULL;
+		return priv->transaction = NULL;
 	} else {
-		priv->transaction = PACMAN_TRANSACTION (g_object_new (type, NULL));
+		g_return_val_if_fail (priv->transaction == NULL, NULL);
 	}
 	
-	return priv->transaction;
+	return priv->transaction = PACMAN_TRANSACTION (g_object_new (type, NULL));
 }
 
 static void pacman_manager_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec) {
