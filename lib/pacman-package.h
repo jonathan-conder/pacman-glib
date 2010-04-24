@@ -36,8 +36,10 @@ PacmanDatabase *pacman_package_get_database (PacmanPackage *package);
 const gchar *pacman_package_get_filename (PacmanPackage *package);
 
 const gchar *pacman_package_get_version (PacmanPackage *package);
-PacmanPackage *pacman_package_find_new_version (PacmanPackage *package, const PacmanList *databases);
 gint pacman_package_compare_version (const gchar *a, const gchar *b);
+gboolean pacman_package_will_upgrade (PacmanPackage *package, PacmanPackage *update);
+PacmanPackage *pacman_package_find_new_version (PacmanPackage *package, const PacmanList *databases);
+PacmanPackage *pacman_package_find_upgrade (PacmanPackage *package, const PacmanList *databases);
 
 const gchar *pacman_package_get_arch (PacmanPackage *package);
 const gchar *pacman_package_get_description (PacmanPackage *package);

@@ -22,6 +22,7 @@
 #include "pacman-error.h"
 #include "pacman-list.h"
 #include "pacman-delta.h"
+#include "pacman-database.h"
 #include "pacman-private.h"
 #include "pacman-package.h"
 
@@ -131,6 +132,48 @@ const gchar *pacman_package_get_version (PacmanPackage *package) {
 }
 
 /**
+ * pacman_package_compare_version:
+ * @a: A version string.
+ * @b: A version string.
+ *
+ * Compares the versions @a and @b in accordance to the rules used by pacman.
+ *
+ * Returns: -1 if a is older than b, 1 if a is newer than b, or 0 if the versions are the same, 
+ */
+gint pacman_package_compare_version (const gchar *a, const gchar *b) {
+	g_return_val_if_fail (a != NULL, (b == NULL) ? 0 : -1);
+	g_return_val_if_fail (b != NULL, 1);
+	
+	return alpm_pkg_vercmp (a, b);
+}
+
+/**
+ * pacman_package_will_upgrade:
+ * @package: A local #PacmanPackage.
+ * @update: A sync #PacmanPackage.
+ *
+ * Decides whether @update is newer than @package, or had the force flag set.
+ *
+ * Returns: %TRUE if @update will be chosen as an update for @package, or %FALSE otherwise.
+ */
+gboolean pacman_package_will_upgrade (PacmanPackage *package, PacmanPackage *update) {
+	gint result;
+	
+	g_return_val_if_fail (package != NULL, FALSE);
+	g_return_val_if_fail (update != NULL, FALSE);
+	
+	result = pacman_package_compare_version (pacman_package_get_version (package), pacman_package_get_version (update));
+	
+	if (result < 0) {
+		return TRUE;
+	} else if (result > 0) {
+		return pacman_package_has_force (update);
+	} else {
+		return FALSE;
+	}
+}
+
+/**
  * pacman_package_find_new_version:
  * @package: A #PacmanPackage.
  * @databases: A list of sync #PacmanDatabase to search.
@@ -146,19 +189,43 @@ PacmanPackage *pacman_package_find_new_version (PacmanPackage *package, const Pa
 }
 
 /**
- * pacman_package_compare_version:
- * @a: A version string.
- * @b: A version string.
+ * pacman_package_find_upgrade:
+ * @package: A #PacmanPackage.
+ * @databases: A list of sync #PacmanDatabase to search.
  *
- * Compares the versions @a and @b in accordance to the rules used by pacman.
+ * Finds a newer version of or a replacement for @package in @databases.
  *
- * Returns: -1 if a is older than b, 1 if a is newer than b, or 0 if the versions are the same, 
+ * Returns: A #PacmanPackage, or %NULL if none were found.
  */
-gint pacman_package_compare_version (const gchar *a, const gchar *b) {
-	g_return_val_if_fail (a != NULL, a != b);
-	g_return_val_if_fail (b != NULL, a != b);
+PacmanPackage *pacman_package_find_upgrade (PacmanPackage *package, const PacmanList *databases) {
+	const gchar *name;
+	const PacmanList *packages;
 	
-	return alpm_pkg_vercmp (a, b);
+	g_return_val_if_fail (package != NULL, NULL);
+	
+	name = pacman_package_get_name (package);
+	
+	for (; databases != NULL; databases = pacman_list_next (databases)) {
+		PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (databases);
+		PacmanPackage *upgrade = pacman_database_find_package (database, name);
+		
+		if (upgrade != NULL) {
+			if (pacman_package_will_upgrade (package, upgrade)) {
+				return upgrade;
+			} else {
+				return NULL;
+			}
+		} else {
+			for (packages = pacman_database_get_packages (database); packages != NULL; packages = pacman_list_next (packages)) {
+				upgrade = (PacmanPackage *) pacman_list_get (packages);
+				if (pacman_list_find_string (pacman_package_get_replaces (upgrade), name) != NULL) {
+					return upgrade;
+				}
+			}
+		}
+	}
+	
+	return NULL;
 }
 
 /**
