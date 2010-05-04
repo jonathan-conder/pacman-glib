@@ -2123,7 +2123,7 @@ index 0000000..90f0374
 +						 gboolean	 autoremove);
 diff --git a/backends/pacman/backend-repos.c b/backends/pacman/backend-repos.c
 new file mode 100644
-index 0000000..8373cac
+index 0000000..5e12dc0
 --- /dev/null
 +++ b/backends/pacman/backend-repos.c
 @@ -0,0 +1,295 @@
@@ -2367,7 +2367,7 @@ index 0000000..8373cac
 +	g_return_val_if_fail (disabled_repos != NULL, FALSE);
 +	g_return_val_if_fail (backend != NULL, FALSE);
 +
-+	repo = pk_backend_get_string (backend, "repo");
++	repo = pk_backend_get_string (backend, "repo_id");
 +	enabled = pk_backend_get_bool (backend, "enabled");
 +
 +	g_return_val_if_fail (repo != NULL, FALSE);
