@@ -1,6 +1,6 @@
 diff -Nru a/data/gnome-packagekit.schemas.in b/data/gnome-packagekit.schemas.in
---- a/data/gnome-packagekit.schemas.in	2010-03-24 04:53:09.000000000 +1300
-+++ b/data/gnome-packagekit.schemas.in	2010-04-06 03:05:22.380093365 +1200
+--- a/data/gnome-packagekit.schemas.in	2010-04-26 21:06:36.000000000 +1200
++++ b/data/gnome-packagekit.schemas.in	2010-05-04 21:38:02.047514585 +1200
 @@ -62,6 +62,18 @@
      </schema>
  
@@ -39,8 +39,8 @@ diff -Nru a/data/gnome-packagekit.schemas.in b/data/gnome-packagekit.schemas.in
          <short>GTK+ module for font installation</short>
          <long>This key determines if applications should be able to prompt for fonts</long>
 diff -Nru a/data/gpk-install-file.desktop.in b/data/gpk-install-file.desktop.in
---- a/data/gpk-install-file.desktop.in	2010-01-28 05:29:15.000000000 +1300
-+++ b/data/gpk-install-file.desktop.in	2010-04-06 03:05:45.710089123 +1200
+--- a/data/gpk-install-file.desktop.in	2010-04-26 21:06:36.000000000 +1200
++++ b/data/gpk-install-file.desktop.in	2010-05-04 21:38:42.824180693 +1200
 @@ -10,5 +10,5 @@
  Icon=system-software-install
  StartupNotify=true
@@ -49,8 +49,8 @@ diff -Nru a/data/gpk-install-file.desktop.in b/data/gpk-install-file.desktop.in
 +MimeType=application/x-compressed-tar;application/x-xz-compressed-tar;application/x-servicepack;
  
 diff -Nru a/src/gpk-application.c b/src/gpk-application.c
---- a/src/gpk-application.c	2010-03-24 04:53:09.000000000 +1300
-+++ b/src/gpk-application.c	2010-04-06 03:05:22.384258980 +1200
+--- a/src/gpk-application.c	2010-04-26 21:07:41.000000000 +1200
++++ b/src/gpk-application.c	2010-05-04 21:41:02.930830041 +1200
 @@ -2115,6 +2115,7 @@
  gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
  {
@@ -72,17 +72,9 @@ diff -Nru a/src/gpk-application.c b/src/gpk-application.c
  					       (PkProgressCallback) gpk_application_progress_cb, application,
  					       (GAsyncReadyCallback) gpk_application_remove_packages_cb, application);
  
-@@ -4039,6 +4042,7 @@
- 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_cancel"));
- 	g_signal_connect (widget, "clicked",
- 			  G_CALLBACK (gpk_application_cancel_cb), application);
-+	gtk_widget_set_sensitive (widget, FALSE);
- 	/* TRANSLATORS: tooltip on the cancel button */
- 	gtk_widget_set_tooltip_text (widget, _("Cancel search"));
- 
 diff -Nru a/src/gpk-common.h b/src/gpk-common.h
---- a/src/gpk-common.h	2010-03-24 04:53:09.000000000 +1300
-+++ b/src/gpk-common.h	2010-04-06 03:05:22.387591527 +1200
+--- a/src/gpk-common.h	2010-04-26 21:06:38.000000000 +1200
++++ b/src/gpk-common.h	2010-05-04 21:41:42.577493912 +1200
 @@ -37,6 +37,7 @@
  #define GPK_CONF_SHOW_COPY_CONFIRM		"/apps/gnome-packagekit/show_copy_confirm"
  #define GPK_CONF_DBUS_DEFAULT_INTERACTION	"/apps/gnome-packagekit/dbus_default_interaction"
@@ -91,17 +83,3 @@ diff -Nru a/src/gpk-common.h b/src/gpk-common.h
  #define GPK_CONF_ENABLE_FONT_HELPER		"/apps/gnome-packagekit/enable_font_helper"
  #define GPK_CONF_ENABLE_CODEC_HELPER		"/apps/gnome-packagekit/enable_codec_helper"
  #define GPK_CONF_ENABLE_MIME_TYPE_HELPER	"/apps/gnome-packagekit/enable_mime_type_helper"
-diff -Nru a/src/gpk-update-viewer.c b/src/gpk-update-viewer.c
---- a/src/gpk-update-viewer.c	2010-03-26 22:32:42.000000000 +1300
-+++ b/src/gpk-update-viewer.c	2010-04-06 03:16:55.884184124 +1200
-@@ -962,6 +962,10 @@
- 		if (role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
- 			/* if the info is finished, change the status to past tense */
- 			if (info == PK_INFO_ENUM_FINISHED) {
-+				/* clear the remaining size */
-+				gtk_tree_store_set (priv->array_store_updates, &iter,
-+						    GPK_UPDATES_COLUMN_SIZE_DISPLAY, 0, -1);
-+
- 				gtk_tree_model_get (model, &iter,
- 						    GPK_UPDATES_COLUMN_STATUS, &info, -1);
- 				/* promote to past tense if present tense */

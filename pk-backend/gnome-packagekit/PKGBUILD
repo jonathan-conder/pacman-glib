@@ -2,7 +2,7 @@
 # Contributor: onestep_ua <onestep@ukr.net>
 
 pkgname=gnome-packagekit
-pkgver=2.30.0
+pkgver=2.30.1
 pkgrel=1
 pkgdesc='Collection of graphical tools for PackageKit to be used in the GNOME desktop'
 arch=('i686' 'x86_64')
@@ -15,8 +15,8 @@ makedepends=('gtk-doc' 'intltool')
 install="${pkgname}.install"
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${pkgver%.*}/${pkgname}-${pkgver}.tar.bz2"
         'arch.patch')
-md5sums=('6f96d71ad1567122075ab60d4dd60a98'
-         '828ca76a465a934d40501a6f69169b2b')
+sha256sums=('02dd94dd064ffb342745622508def95df04e5fe4fe783329747ed2af9ee6c11d'
+            '56f2288d95f9d05151570b752d7a9d2709d61f087ddf0eebd7509570f2d697a9')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
