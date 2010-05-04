@@ -17,8 +17,8 @@ backup=('var/lib/PackageKit/transactions.db'
 options=('!libtool')
 source=("http://www.packagekit.org/releases/PackageKit-${pkgver}.tar.bz2"
         'pacman-glib.patch')
-md5sums=('b6eb8f09d319a02158a1bcac25468a63'
-         'bffe7f9a341d070dcc3e58bc3d958a1f')
+sha256sums=('8da8be09c30f9a2839e5109f5617b26e548b6aa2e466be85efe2dda34a40aec3'
+            '5315d8e857f40d6e106af37b80c721c3602f3ec69b7d5c4703505c5280bd3e7b')
 
 build() {
 	cd "${srcdir}/PackageKit-${pkgver}"
