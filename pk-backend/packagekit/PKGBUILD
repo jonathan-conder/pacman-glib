@@ -2,7 +2,7 @@
 # Contributor: onestep_ua <onestep@ukr.net>
 
 pkgname=packagekit
-pkgver=0.6.3
+pkgver=0.6.4
 pkgrel=1
 pkgdesc='A system designed to make installing and updating software on your computer easier'
 arch=('i686' 'x86_64')
@@ -14,11 +14,11 @@ makedepends=('intltool' 'pm-utils' 'gobject-introspection')
 backup=('var/lib/PackageKit/transactions.db'
         'etc/PackageKit/pacman.d/pacman.conf'
         'etc/PackageKit/pacman.d/repos.list')
-options=('!libtool')
+options=('!libtool' '!strip')
 source=("http://www.packagekit.org/releases/PackageKit-${pkgver}.tar.bz2"
         'pacman-glib.patch')
-sha256sums=('8da8be09c30f9a2839e5109f5617b26e548b6aa2e466be85efe2dda34a40aec3'
-            '46b53f6b46468671aba0ed7aea9a81af82279f55e4f2b70281be28d31cd469d9')
+sha256sums=('8112808350dc5f26f2216bdad779e480d61e0744c6f827710e6f6130d985884d'
+            '4dd0b96e0091c4717d6e53b6eb8dbea6a5f92ac2b361f5e6a0e9f30367ca7174')
 
 build() {
 	cd "${srcdir}/PackageKit-${pkgver}"
@@ -43,12 +43,11 @@ build() {
 		--disable-cron \
 		--disable-debuginfo-install \
 		--enable-pm-utils \
-		--disable-ruck \
 		--disable-dummy \
 		--enable-pacman \
 		--with-default-backend=pacman || return 1
 	
-	make -s || return 1
+	make CFLAGS='-g -O0' -s || return 1
 	make -s DESTDIR="${pkgdir}" install || return 1
 	
 	# clean up unneeded stuff
