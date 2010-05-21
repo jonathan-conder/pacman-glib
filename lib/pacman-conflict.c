@@ -46,6 +46,7 @@ void pacman_conflict_free (PacmanConflict *conflict) {
 	/* this is a hack, but it's better than a memory leak */
 	free ((gchar *) pacman_conflict_get_first_package (conflict));
 	free ((gchar *) pacman_conflict_get_second_package (conflict));
+	free ((gchar *) pacman_conflict_get_reason (conflict));
 	free (conflict);
 }
 
@@ -75,6 +76,20 @@ const gchar *pacman_conflict_get_second_package (PacmanConflict *conflict) {
 	g_return_val_if_fail (conflict != NULL, NULL);
 	
 	return alpm_conflict_get_package2 (conflict);
+}
+
+/**
+ * pacman_conflict_get_reason:
+ * @conflict: A #PacmanConflict.
+ *
+ * Gets the name of the package that is the reason for @conflict.
+ *
+ * Returns: The name of a package. Do not free.
+ */
+const gchar *pacman_conflict_get_reason (PacmanConflict *conflict) {
+	g_return_val_if_fail (conflict != NULL, NULL);
+	
+	return alpm_conflict_get_reason (conflict);
 }
 
 /**
@@ -109,8 +124,13 @@ gchar *pacman_conflict_make_list (const PacmanList *conflicts) {
 		PacmanConflict *conflict = (PacmanConflict *) pacman_list_get (i);
 		const gchar *first = pacman_conflict_get_first_package (conflict);
 		const gchar *second = pacman_conflict_get_second_package (conflict);
+		const gchar *reason = pacman_conflict_get_reason (conflict);
 		
-		g_string_append_printf (result, _("\n%s conflicts with %s"), first, second);
+		if (g_strcmp0 (reason, first) == 0 || g_strcmp0 (reason, second) == 0) {
+			g_string_append_printf (result, _("\n%s conflicts with %s"), first, second);
+		} else {
+			g_string_append_printf (result, _("\n%s conflicts with %s (%s)"), first, second, reason);
+		}
 	}
 	
 	return g_string_free (result, FALSE);

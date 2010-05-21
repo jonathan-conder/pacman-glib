@@ -558,22 +558,26 @@ gboolean pacman_transaction_ask (PacmanTransaction *transaction, PacmanTransacti
 struct __pmconflict_t {
 	gchar *first;
 	gchar *second;
+	gchar *reason;
 };
 
-static PacmanConflict *pacman_conflict_new (const gchar *first, const gchar *second) {
+static PacmanConflict *pacman_conflict_new (const gchar *first, const gchar *second, const gchar *reason) {
 	PacmanConflict *result;
 	
 	g_return_val_if_fail (first != NULL, NULL);
 	g_return_val_if_fail (second != NULL, NULL);
+	g_return_val_if_fail (reason != NULL, NULL);
 	
 	result = malloc (sizeof (PacmanConflict));
 	g_return_val_if_fail (result != NULL, NULL);
 	
 	result->first = strdup (first);
 	result->second = strdup (second);
+	result->reason = strdup (reason);
 	
 	g_warn_if_fail (first != pacman_conflict_get_first_package (result));
 	g_warn_if_fail (second != pacman_conflict_get_second_package (result));
+	g_warn_if_fail (reason != pacman_conflict_get_reason (result));
 	
 	return result;
 }
@@ -597,19 +601,23 @@ static void pacman_transaction_question_cb (pmtransconv_t question, gpointer dat
 		} case PM_TRANS_CONV_REPLACE_PKG: {
 			/* called in sync_sysupgrade, data1 = package to replace, data2 = replacement package, data3 = database name */
 			const gchar *replace = pacman_package_get_name ((PacmanPackage *) data1), *replacement = pacman_package_get_name ((PacmanPackage *) data2);
-			PacmanConflict *conflict = pacman_conflict_new (replacement, replace);
+			PacmanConflict *conflict = pacman_conflict_new (replacement, replace, replace);
 			
 			pacman_transaction_set_conflicts (transaction, pacman_list_add (NULL, conflict));
 			*response = (gint) pacman_transaction_ask (transaction, PACMAN_TRANSACTION_QUESTION_REPLACE_PACKAGE, _("Do you want to replace %s with %s from [%s]?"), replace, replacement, (const gchar *) data3);
 			pacman_transaction_set_conflicts (transaction, NULL);
 			break;
 		} case PM_TRANS_CONV_CONFLICT_PKG: {
-			/* called in sync_prepare, data1 = name of sync package, data2 = name of local package */
-			const gchar *replacement = (const gchar *) data1, *replace = (const gchar *) data2;
-			PacmanConflict *conflict = pacman_conflict_new (replacement, replace);
+			/* called in sync_prepare, data1 = name of sync package, data2 = name of local package, data3 = conflict reason */
+			const gchar *replacement = (const gchar *) data1, *replace = (const gchar *) data2, *reason = (const gchar *) data3;
+			PacmanConflict *conflict = pacman_conflict_new (replacement, replace, reason);
 			
 			pacman_transaction_set_conflicts (transaction, pacman_list_add (NULL, conflict));
-			*response = (gint) pacman_transaction_ask (transaction, PACMAN_TRANSACTION_QUESTION_REMOVE_CONFLICTING_PACKAGE, _("%s conflicts with %s. Do you want to remove %s?"), replacement, replace, replace);
+			if (g_strcmp0 (reason, replacement) == 0 || g_strcmp0 (reason, replace) == 0) {
+				*response = (gint) pacman_transaction_ask (transaction, PACMAN_TRANSACTION_QUESTION_REMOVE_CONFLICTING_PACKAGE, _("%s conflicts with %s. Do you want to remove %s?"), replacement, replace, replace);
+			} else {
+				*response = (gint) pacman_transaction_ask (transaction, PACMAN_TRANSACTION_QUESTION_REMOVE_CONFLICTING_PACKAGE, _("%s conflicts with %s (%s). Do you want to remove %s?"), replacement, replace, reason, replace);
+			}
 			pacman_transaction_set_conflicts (transaction, NULL);
 			break;
 		} case PM_TRANS_CONV_REMOVE_PKGS: {

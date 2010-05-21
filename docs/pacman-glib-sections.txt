@@ -275,6 +275,7 @@ pacman_delta_get_to_filename
 PacmanConflict
 pacman_conflict_get_first_package
 pacman_conflict_get_second_package
+pacman_conflict_get_reason
 pacman_conflict_check_packages
 pacman_conflict_make_list
 <SUBSECTION Private>
