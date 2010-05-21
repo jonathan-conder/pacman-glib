@@ -66,6 +66,7 @@ G_BEGIN_DECLS
  * @PACMAN_ERROR_PACKAGE_OPEN_FAILED: Could not open the package file.
  * @PACMAN_ERROR_PACKAGE_REMOVE_FAILED: Could not remove the package from the system.
  * @PACMAN_ERROR_PACKAGE_UNKNOWN_FILENAME: Could not find the filename of the package.
+ * @PACMAN_ERROR_PACKAGE_WRONG_ARCHITECTURE: The package architecture was not the same as the system.
  * @PACMAN_ERROR_PACKAGE_DATABASE_NOT_FOUND: Could not find the specified database.
  * @PACMAN_ERROR_DELTA_INVALID: The delta patch was invalid or corrupted.
  * @PACMAN_ERROR_DELTA_PATCH_FAILED: Could not patch using a delta.
@@ -121,6 +122,7 @@ typedef enum {
 	PACMAN_ERROR_PACKAGE_OPEN_FAILED,
 	PACMAN_ERROR_PACKAGE_REMOVE_FAILED,
 	PACMAN_ERROR_PACKAGE_UNKNOWN_FILENAME,
+	PACMAN_ERROR_PACKAGE_WRONG_ARCHITECTURE,
 	PACMAN_ERROR_PACKAGE_DATABASE_NOT_FOUND,
 	
 	PACMAN_ERROR_DELTA_INVALID,

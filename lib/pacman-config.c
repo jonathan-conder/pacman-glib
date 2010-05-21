@@ -31,6 +31,7 @@ typedef struct {
 	gboolean use_delta;
 	gboolean use_syslog;
 	
+	gchar *architecture;
 	gchar *clean_method;
 	gchar *database_path;
 	gchar *log_file;
@@ -67,6 +68,7 @@ static void pacman_config_free (PacmanConfig *config) {
 	
 	g_return_if_fail (config != NULL);
 	
+	g_free (config->architecture);
 	g_free (config->clean_method);
 	g_free (config->database_path);
 	g_free (config->log_file);
@@ -138,6 +140,14 @@ static void pacman_config_add_cache_path (PacmanConfig *config, const gchar *pat
 	config->cache_paths = pacman_list_add (config->cache_paths, g_strdup (path));
 }
 
+static void pacman_config_set_architecture (PacmanConfig *config, const gchar *architecture) {
+	g_return_if_fail (config != NULL);
+	g_return_if_fail (architecture != NULL);
+	
+	g_free (config->architecture);
+	config->architecture = g_strdup (architecture);
+}
+
 static void pacman_config_set_clean_method (PacmanConfig *config, const gchar *method) {
 	g_return_if_fail (config != NULL);
 	g_return_if_fail (method != NULL);
@@ -185,6 +195,7 @@ typedef struct {
 
 /* keep this in alphabetical order */
 static const PacmanConfigString pacman_config_string_options[] = {
+	{ "Architecture", pacman_config_set_architecture },
 	{ "CacheDir", pacman_config_add_cache_path },
 	{ "CleanMethod", pacman_config_set_clean_method },
 	{ "DBPath", pacman_config_set_database_path },
@@ -285,7 +296,7 @@ static gboolean pacman_config_parse (PacmanConfig *config, const gchar *filename
 	GFileInputStream *file_stream;
 	GDataInputStream *data_stream;
 	
-	GRegex *repo = NULL;
+	GRegex *repo = NULL, *arch = NULL;
 	GError *e = NULL;
 	
 	gchar *key, *str, *line = NULL;
@@ -398,18 +409,38 @@ static gboolean pacman_config_parse (PacmanConfig *config, const gchar *filename
 						}
 					}
 				} else if (g_strcmp0 (key, "Server") == 0) {
-					gchar *server;
+					gchar *server, *temp;
 					
+					/* initialize here so we don't waste time in option files */
 					if (repo == NULL) {
-						/* initialize here so we don't waste time for option sections */
 						repo = g_regex_new ("\\$repo", 0, 0, &e);
 						if (repo == NULL) {
 							break;
 						}
 					}
+					if (arch == NULL) {
+						arch = g_regex_new ("\\$arch", 0, 0, &e);
+						if (arch == NULL) {
+							break;
+						}
+					}
 					
-					server = g_regex_replace_literal (repo, str, -1, 0, section, 0, &e);
-					if (server == NULL) {
+					temp = g_regex_replace_literal (repo, str, -1, 0, section, 0, &e);
+					if (temp == NULL) {
+						break;
+					}
+					
+					if (config->architecture != NULL) {
+						server = g_regex_replace_literal (arch, temp, -1, 0, config->architecture, 0, &e);
+						g_free (temp);
+						if (server == NULL) {
+							break;
+						}
+					} else if (strstr (temp, "$arch") == NULL) {
+						server = temp;
+					} else {
+						g_set_error (&e, PACMAN_ERROR, PACMAN_ERROR_CONFIG_INVALID, _("Server contained $arch but none is defined in %s on line %d"), filename, num);
+						g_free (temp);
 						break;
 					}
 					
@@ -426,8 +457,12 @@ static gboolean pacman_config_parse (PacmanConfig *config, const gchar *filename
 	
 	g_free (line);
 	g_free (section);
+	
 	if (repo != NULL) {
 		g_regex_unref (repo);
+	}
+	if (arch != NULL) {
+		g_regex_unref (arch);
 	}
 	
 	g_object_unref (data_stream);
@@ -523,6 +558,9 @@ static gboolean pacman_config_configure_manager (PacmanConfig *config, PacmanMan
 	pacman_manager_set_use_delta (manager, config->use_delta);
 	pacman_manager_set_use_syslog (manager, config->use_syslog);
 	
+	if (config->architecture != NULL) {
+		pacman_manager_set_architecture (manager, config->architecture);
+	}
 	if (config->clean_method != NULL) {
 		pacman_manager_set_clean_method (manager, config->clean_method);
 	}

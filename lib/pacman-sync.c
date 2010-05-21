@@ -145,7 +145,14 @@ static gboolean pacman_sync_real_prepare (PacmanTransaction *transaction, const 
 	}
 	
 	if (alpm_trans_prepare (&data) < 0) {
-		if (pm_errno == PACMAN_ERROR_DEPENDENCY_UNSATISFIED) {
+		if (pm_errno == PACMAN_ERROR_PACKAGE_WRONG_ARCHITECTURE) {
+			gchar *packages = pacman_package_make_list (data);
+			pacman_transaction_set_marked_packages (transaction, data);
+			
+			g_set_error (error, PACMAN_ERROR, pm_errno, _("The following packages have the wrong architecture: %s"), packages);
+			g_free (packages);
+			return FALSE;
+		} else if (pm_errno == PACMAN_ERROR_DEPENDENCY_UNSATISFIED) {
 			gchar *missing = pacman_missing_dependency_make_list (data);
 			pacman_transaction_set_missing_dependencies (transaction, data);
 			

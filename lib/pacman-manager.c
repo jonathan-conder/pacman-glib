@@ -679,6 +679,39 @@ void pacman_manager_set_transfer_command (PacmanManager *manager, const gchar *c
 }
 
 /**
+ * pacman_manager_get_architecture:
+ * @manager: A #PacmanManager.
+ *
+ * Gets the architecture of packages that are allowed to be installed. If %NULL, no restrictions are placed on package architectures.
+ *
+ * Returns: One of "i686", "x86_64", etc., or %NULL if none is set. Do not free.
+ */
+const gchar *pacman_manager_get_architecture (PacmanManager *manager) {
+	g_return_val_if_fail (manager != NULL, NULL);
+	
+	return alpm_option_get_arch ();
+}
+
+/**
+ * pacman_manager_set_architecture:
+ * @manager: A #PacmanManager.
+ * @architecture: A processor architecture.
+ *
+ * Sets Architecture to @architecture. See pacman_manager_get_architecture(). The special value "auto" will set this automatically.
+ */
+void pacman_manager_set_architecture (PacmanManager *manager, const gchar *architecture) {
+	g_return_if_fail (manager != NULL);
+	
+	if (g_strcmp0 (architecture, "auto") == 0) {
+		struct utsname un;
+		uname (&un);
+		alpm_option_set_arch (un.machine);
+	} else {
+		alpm_option_set_arch (architecture);
+	}
+}
+
+/**
  * pacman_manager_get_clean_method:
  * @manager: A #PacmanManager.
  *

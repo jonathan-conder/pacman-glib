@@ -94,6 +94,9 @@ void pacman_manager_set_transfer_closure (PacmanManager *manager, GClosure *clos
 void pacman_manager_set_transfer_handler (PacmanManager *manager, PacmanTransferFunc func, gpointer user_data, GClosureNotify destroy_data);
 void pacman_manager_set_transfer_command (PacmanManager *manager, const gchar *command);
 
+const gchar *pacman_manager_get_architecture (PacmanManager *manager);
+void pacman_manager_set_architecture (PacmanManager *manager, const gchar *architecture);
+
 const gchar *pacman_manager_get_clean_method (PacmanManager *manager);
 void pacman_manager_set_clean_method (PacmanManager *manager, const gchar *method);
 
