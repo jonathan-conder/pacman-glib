@@ -422,33 +422,6 @@ void pacman_manager_set_total_download (PacmanManager *manager, gboolean value) 
 }
 
 /**
- * pacman_manager_get_no_passive_ftp:
- * @manager: A #PacmanManager.
- *
- * Checks whether pacman will use FTP passive mode when downloading files.
- *
- * Returns: %TRUE if passive mode will be disabled, %FALSE otherwise.
- */
-gboolean pacman_manager_get_no_passive_ftp (PacmanManager *manager) {
-	g_return_val_if_fail (manager != NULL, FALSE);
-	
-	return alpm_option_get_nopassiveftp ();
-}
-
-/**
- * pacman_manager_set_no_passive_ftp:
- * @manager: A #PacmanManager.
- * @value: %TRUE or %FALSE.
- *
- * Sets NoPassiveFtp to @value. See pacman_manager_get_no_passive_ftp().
- */
-void pacman_manager_set_no_passive_ftp (PacmanManager *manager, gboolean value) {
-	g_return_if_fail (manager != NULL);
-	
-	alpm_option_set_nopassiveftp (value);
-}
-
-/**
  * pacman_manager_get_use_delta:
  * @manager: A #PacmanManager.
  *

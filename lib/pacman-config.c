@@ -26,7 +26,6 @@
 
 typedef struct {
 	gboolean i_love_candy;
-	gboolean no_passive_ftp;
 	gboolean show_size;
 	gboolean total_download;
 	gboolean use_delta;
@@ -93,12 +92,6 @@ static void pacman_config_set_i_love_candy (PacmanConfig *config, gboolean value
 	config->i_love_candy = value;
 }
 
-static void pacman_config_set_no_passive_ftp (PacmanConfig *config, gboolean value) {
-	g_return_if_fail (config != NULL);
-	
-	config->no_passive_ftp = value;
-}
-
 static void pacman_config_set_show_size (PacmanConfig *config, gboolean value) {
 	g_return_if_fail (config != NULL);
 	
@@ -131,7 +124,6 @@ typedef struct {
 /* keep this in alphabetical order */
 static const PacmanConfigBoolean pacman_config_boolean_options[] = {
 	{ "ILoveCandy", pacman_config_set_i_love_candy },
-	{ "NoPassiveFtp", pacman_config_set_no_passive_ftp },
 	{ "ShowSize", pacman_config_set_show_size },
 	{ "TotalDownload", pacman_config_set_total_download },
 	{ "UseDelta", pacman_config_set_use_delta },
@@ -528,7 +520,6 @@ static gboolean pacman_config_configure_manager (PacmanConfig *config, PacmanMan
 	pacman_manager_set_i_love_candy (manager, config->i_love_candy);
 	pacman_manager_set_show_size (manager, config->show_size);
 	pacman_manager_set_total_download (manager, config->total_download);
-	pacman_manager_set_no_passive_ftp (manager, config->no_passive_ftp);
 	pacman_manager_set_use_delta (manager, config->use_delta);
 	pacman_manager_set_use_syslog (manager, config->use_syslog);
 	

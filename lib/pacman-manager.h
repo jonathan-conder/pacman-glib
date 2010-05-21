@@ -71,9 +71,6 @@ void pacman_manager_set_show_size (PacmanManager *manager, gboolean value);
 gboolean pacman_manager_get_total_download (PacmanManager *manager);
 void pacman_manager_set_total_download (PacmanManager *manager, gboolean value);
 
-gboolean pacman_manager_get_no_passive_ftp (PacmanManager *manager);
-void pacman_manager_set_no_passive_ftp (PacmanManager *manager, gboolean value);
-
 gboolean pacman_manager_get_use_delta (PacmanManager *manager);
 void pacman_manager_set_use_delta (PacmanManager *manager, gboolean value);
 
