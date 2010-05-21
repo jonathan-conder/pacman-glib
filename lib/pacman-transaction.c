@@ -33,7 +33,7 @@
  * @title: PacmanTransaction
  * @short_description: Manipulate installed packages
  *
- * #PacmanTransaction is an abstract base class for package management operations. Transactions can be obtained from a #PacmanManager and prepared in a transaction-specific way using pacman_transaction_prepare(). At this point the transaction can be carried out using pacman_transaction_commit(), and then cancelled with pacman_transaction_cancel(). Transactions emit a number of signals to report on their progress and/or interact with the user.
+ * #PacmanTransaction is an abstract base class for package management operations. Transactions can be created by a #PacmanManager and prepared in a transaction-specific way using pacman_transaction_prepare(). At this point the transaction can be carried out using pacman_transaction_commit(), and then cancelled with pacman_transaction_cancel(). Transactions emit a number of signals to report on their progress and/or interact with the user.
  */
 
 /**

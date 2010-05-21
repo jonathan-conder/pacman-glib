@@ -25,7 +25,7 @@
  * @title: PacmanDatabase
  * @short_description: Package databases
  *
- * A #PacmanDatabase (commonly known as a repository) contains a list of packages and groups. These can be searched for specific packages, and should be updated periodically.
+ * A #PacmanDatabase (commonly known as a repository) contains a list of packages and groups. These can be searched for specific packages, and should be updated periodically using pacman_manager_update().
  */
 
 /**

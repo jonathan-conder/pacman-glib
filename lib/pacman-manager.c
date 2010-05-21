@@ -30,7 +30,7 @@
  * @title: PacmanManager
  * @short_description: Package management
  *
- * A #PacmanManager object manages settings, transactions and other important operations. A reference to the global #PacmanManager object can be obtained using pacman_manager_get(), and package management can be configured from a config file using pacman_manager_configure(). Alternatively, #PacmanManager supplies methods with which it can be configured manually. Transactions can be created using pacman_manager_install(), pacman_manager_remove(), pacman_manager_sync() and pacman_manager_update().
+ * A #PacmanManager object manages settings, transactions and other important operations. A reference to the global #PacmanManager object can be obtained using pacman_manager_get(), and settings can be initialized from a pacman.conf-style config file using pacman_manager_configure(). Package management itself is performed through a #PacmanTransaction. These can be created using pacman_manager_install(), pacman_manager_remove(), pacman_manager_sync() and pacman_manager_update().
  */
 
 /**
