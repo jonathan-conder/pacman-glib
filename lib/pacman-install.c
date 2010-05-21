@@ -122,7 +122,6 @@ static gboolean pacman_install_prepare (PacmanTransaction *transaction, const Pa
 			g_free (packages);
 			return FALSE;
 		} else if (pm_errno == PACMAN_ERROR_DEPENDENCY_UNSATISFIED) {
-			/* TODO: offer option to sync dependencies first? (like makepkg -s) */
 			gchar *missing = pacman_missing_dependency_make_list (data);
 			pacman_transaction_set_missing_dependencies (transaction, data);
 			
