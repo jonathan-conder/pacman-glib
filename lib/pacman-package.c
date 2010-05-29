@@ -395,20 +395,6 @@ const PacmanList *pacman_package_get_replaces (PacmanPackage *package) {
 }
 
 /**
- * pacman_package_get_removes:
- * @package: A #PacmanPackage.
- *
- * Gets a list of packages that @package will replace in the current transaction.
- *
- * Returns: A list of #PacmanPackage. Do not free.
- */
-const PacmanList *pacman_package_get_removes (PacmanPackage *package) {
-	g_return_val_if_fail (package != NULL, NULL);
-	
-	return alpm_pkg_get_removes (package);
-}
-
-/**
  * pacman_package_get_backup:
  * @package: A #PacmanPackage.
  *

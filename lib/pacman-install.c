@@ -69,7 +69,7 @@ PacmanTransaction *pacman_manager_install (PacmanManager *manager, guint32 flags
 	
 	g_return_val_if_fail (manager != NULL, NULL);
 	
-	if (!pacman_transaction_start (PM_TRANS_TYPE_UPGRADE, flags, error)) {
+	if (!pacman_transaction_start (flags, error)) {
 		return NULL;
 	}
 	
@@ -83,7 +83,7 @@ static gboolean pacman_install_prepare (PacmanTransaction *transaction, const Pa
 	g_return_val_if_fail (transaction != NULL, FALSE);
 	g_return_val_if_fail (targets != NULL, FALSE);
 	
-	if (pacman_transaction_get_packages (transaction) != NULL) {
+	if (pacman_transaction_get_installs (transaction) != NULL) {
 		/* reinitialize so transaction can be prepared multiple times */
 		if (!pacman_transaction_restart (transaction, error)) {
 			return FALSE;
@@ -101,10 +101,10 @@ static gboolean pacman_install_prepare (PacmanTransaction *transaction, const Pa
 				return FALSE;
 			}
 			
-			result = alpm_trans_addtarget (target);
+			result = alpm_add_target (target);
 			free (target);
 		} else {
-			result = alpm_trans_addtarget (target);
+			result = alpm_add_target (target);
 		}
 		
 		if (result < 0) {

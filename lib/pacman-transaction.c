@@ -144,17 +144,31 @@ guint32 pacman_transaction_get_flags (PacmanTransaction *transaction) {
 }
 
 /**
- * pacman_transaction_get_packages:
+ * pacman_transaction_get_installs:
  * @transaction: A #PacmanTransaction.
  *
- * Gets a list of the packages that will be affected when @transaction is committed.
+ * Gets a list of the packages that will be installed when @transaction is committed.
  *
  * Returns: A list of #PacmanPackage. Do not free.
  */
-const PacmanList *pacman_transaction_get_packages (PacmanTransaction *transaction) {
+const PacmanList *pacman_transaction_get_installs (PacmanTransaction *transaction) {
 	g_return_val_if_fail (transaction != NULL, NULL);
 	
-	return alpm_trans_get_pkgs ();
+	return alpm_trans_get_add ();
+}
+
+/**
+ * pacman_transaction_get_removes:
+ * @transaction: A #PacmanTransaction.
+ *
+ * Gets a list of the packages that will be removed when @transaction is committed.
+ *
+ * Returns: A list of #PacmanPackage. Do not free.
+ */
+const PacmanList *pacman_transaction_get_removes (PacmanTransaction *transaction) {
+	g_return_val_if_fail (transaction != NULL, NULL);
+	
+	return alpm_trans_get_remove ();
 }
 
 /**
@@ -728,7 +742,7 @@ static void pacman_transaction_total_download_cb (off_t total) {
 	}
 }
 
-gboolean pacman_transaction_start (pmtranstype_t type, guint32 flags, GError **error) {
+gboolean pacman_transaction_start (guint32 flags, GError **error) {
 	g_return_val_if_fail (pacman_manager != NULL, FALSE);
 	
 	if (pacman_manager_get_transaction (pacman_manager) != NULL) {
@@ -737,7 +751,7 @@ gboolean pacman_transaction_start (pmtranstype_t type, guint32 flags, GError **e
 		return FALSE;
 	}
 	
-	if (alpm_trans_init (type, flags, pacman_transaction_event_cb, pacman_transaction_question_cb, pacman_transaction_progress_cb) < 0) {
+	if (alpm_trans_init (flags, pacman_transaction_event_cb, pacman_transaction_question_cb, pacman_transaction_progress_cb) < 0) {
 		if (pm_errno == PACMAN_ERROR_ALREADY_RUNNING) {
 			g_message (_("If you are certain no other package manager is running, you can remove %s\n"), alpm_option_get_lockfile ());
 		}
@@ -764,7 +778,6 @@ gboolean pacman_transaction_end (GError **error) {
 }
 
 gboolean pacman_transaction_restart (PacmanTransaction *transaction, GError **error) {
-	pmtranstype_t type = alpm_trans_get_type ();
 	guint32 flags = pacman_transaction_get_flags (transaction);
 	
 	pacman_transaction_set_marked_packages (transaction, NULL);
@@ -773,7 +786,7 @@ gboolean pacman_transaction_restart (PacmanTransaction *transaction, GError **er
 	pacman_transaction_set_file_conflicts (transaction, NULL);
 	pacman_transaction_set_invalid_files (transaction, NULL);
 	
-	if (!pacman_transaction_end (error) || !pacman_transaction_start (type, flags, error)) {
+	if (!pacman_transaction_end (error) || !pacman_transaction_start (flags, error)) {
 		return FALSE;
 	}
 	

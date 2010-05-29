@@ -69,7 +69,7 @@ PacmanTransaction *pacman_manager_remove (PacmanManager *manager, guint32 flags,
 	
 	g_return_val_if_fail (manager != NULL, NULL);
 	
-	if (!pacman_transaction_start (PM_TRANS_TYPE_REMOVE, flags, error)) {
+	if (!pacman_transaction_start (flags, error)) {
 		return NULL;
 	}
 	
@@ -84,7 +84,7 @@ static gboolean pacman_remove_prepare (PacmanTransaction *transaction, const Pac
 	g_return_val_if_fail (targets != NULL, FALSE);
 	g_return_val_if_fail (pacman_manager != NULL, FALSE);
 	
-	if (pacman_transaction_get_packages (transaction) != NULL) {
+	if (pacman_transaction_get_removes (transaction) != NULL) {
 		/* reinitialize so transaction can be prepared multiple times */
 		if (!pacman_transaction_restart (transaction, error)) {
 			return FALSE;
@@ -94,34 +94,7 @@ static gboolean pacman_remove_prepare (PacmanTransaction *transaction, const Pac
 	for (i = targets; i != NULL; i = pacman_list_next (i)) {
 		const gchar *target = (const gchar *) pacman_list_get (i);
 		
-		if (alpm_trans_addtarget ((gchar *) target) < 0) {
-			if (pm_errno == PACMAN_ERROR_PACKAGE_NOT_FOUND) {
-				PacmanDatabase *database;
-				PacmanGroup *group;
-				
-				database = pacman_manager_get_local_database (pacman_manager);
-				g_return_val_if_fail (database != NULL, FALSE);
-				group = pacman_database_find_group (database, target);
-				
-				if (group != NULL) {
-					const PacmanList *j;
-					for (j = pacman_group_get_packages (group); j != NULL; j = pacman_list_next (j)) {
-						PacmanPackage *package = (PacmanPackage *) pacman_list_get (j);
-						target = pacman_package_get_name (package);
-						
-						if (alpm_trans_addtarget ((gchar *) target) < 0) {
-							/* report error further down */
-							break;
-						}
-					}
-					
-					if (j == NULL) {
-						/* added all packages in group */
-						continue;
-					}
-				}
-			}
-			
+		if (alpm_remove_target ((gchar *) target) < 0) {
 			g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not mark the package %s for removal: %s"), target, alpm_strerrorlast ());
 			return FALSE;
 		}
@@ -150,7 +123,7 @@ static gboolean pacman_remove_prepare (PacmanTransaction *transaction, const Pac
 		return FALSE;
 	}
 	
-	for (i = pacman_transaction_get_packages (transaction); i != NULL; i = pacman_list_next (i)) {
+	for (i = pacman_transaction_get_removes (transaction); i != NULL; i = pacman_list_next (i)) {
 		PacmanPackage *package = (PacmanPackage *) pacman_list_get (i);
 		const gchar *name = pacman_package_get_name (package);
 		

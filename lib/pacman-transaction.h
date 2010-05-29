@@ -207,7 +207,8 @@ GType pacman_transaction_question_get_type (void);
 GType pacman_transaction_progress_get_type (void);
 
 guint32 pacman_transaction_get_flags (PacmanTransaction *transaction);
-const PacmanList *pacman_transaction_get_packages (PacmanTransaction *transaction);
+const PacmanList *pacman_transaction_get_installs (PacmanTransaction *transaction);
+const PacmanList *pacman_transaction_get_removes (PacmanTransaction *transaction);
 
 const PacmanList *pacman_transaction_get_marked_packages (PacmanTransaction *transaction);
 const PacmanList *pacman_transaction_get_missing_dependencies (PacmanTransaction *transaction);

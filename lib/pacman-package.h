@@ -54,7 +54,6 @@ PacmanList *pacman_package_find_required_by (PacmanPackage *package);
 const PacmanList *pacman_package_get_conflicts (PacmanPackage *package);
 const PacmanList *pacman_package_get_provides (PacmanPackage *package);
 const PacmanList *pacman_package_get_replaces (PacmanPackage *package);
-const PacmanList *pacman_package_get_removes (PacmanPackage *package);
 
 const PacmanList *pacman_package_get_backup (PacmanPackage *package);
 const PacmanList *pacman_package_get_deltas (PacmanPackage *package);

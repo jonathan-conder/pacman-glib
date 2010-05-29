@@ -96,7 +96,7 @@ PacmanTransaction *pacman_manager_update (PacmanManager *manager, guint32 flags,
 	
 	alpm_logaction ("synchronizing package lists\n");
 	
-	if (!pacman_transaction_start (PM_TRANS_TYPE_SYNC, flags, error)) {
+	if (!pacman_transaction_start (flags, error)) {
 		return NULL;
 	}
 	

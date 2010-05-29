@@ -71,7 +71,7 @@ PacmanTransaction *pacman_manager_sync (PacmanManager *manager, guint32 flags, G
 	
 	g_return_val_if_fail (manager != NULL, NULL);
 	
-	if (!pacman_transaction_start (PM_TRANS_TYPE_SYNC, flags, error)) {
+	if (!pacman_transaction_start (flags, error)) {
 		return NULL;
 	}
 	
@@ -85,7 +85,7 @@ static gboolean pacman_sync_real_prepare (PacmanTransaction *transaction, const 
 	g_return_val_if_fail (transaction != NULL, FALSE);
 	g_return_val_if_fail (pacman_manager != NULL, FALSE);
 	
-	if (pacman_transaction_get_packages (transaction) != NULL) {
+	if (pacman_transaction_get_installs (transaction) != NULL) {
 		/* reinitialize so transaction can be prepared multiple times */
 		if (!pacman_transaction_restart (transaction, error)) {
 			return FALSE;
@@ -94,51 +94,32 @@ static gboolean pacman_sync_real_prepare (PacmanTransaction *transaction, const 
 	
 	if (targets != NULL) {
 		for (i = targets; i != NULL; i = pacman_list_next (i)) {
-			const gchar *target = (const gchar *) pacman_list_get (i);
+			const gchar *name, *target = (const gchar *) pacman_list_get (i);
 			
-			if (alpm_trans_addtarget ((gchar *) target) < 0) {
-				if (pm_errno == PACMAN_ERROR_TRANSACTION_DUPLICATE_TARGET || pm_errno == PACMAN_ERROR_PACKAGE_IGNORED) {
-					/* don't get in a tizzy over this */
+			name = strchr (target, '/');
+			if (name != NULL) {
+				gchar *database = g_strndup (target, name++ - target);
+				if (alpm_sync_dbtarget (database, (char *) name) == 0) {
 					target = NULL;
-				} else if (pm_errno == PACMAN_ERROR_PACKAGE_NOT_FOUND) {
-					const PacmanList *j;
-					for (j = pacman_manager_get_sync_databases (pacman_manager); j != NULL; j = pacman_list_next (j)) {
-						PacmanDatabase *database = (PacmanDatabase *) pacman_list_get (j);
-						PacmanGroup *group = pacman_database_find_group (database, target);
-						
-						if (group != NULL) {
-							const PacmanList *k;
-							for (k = pacman_group_get_packages (group); k != NULL; k = pacman_list_next (k)) {
-								PacmanPackage *package = (PacmanPackage *) pacman_list_get (k);
-								target = pacman_package_get_name (package);
-								
-								if (alpm_trans_addtarget ((gchar *) target) < 0) {
-									/* report error further down */
-									break;
-								}
-							}
-							
-							if (k == NULL) {
-								/* added all packages in group */
-								target = NULL;
-								break;
-							}
-						}
-					}
 				}
-				
-				if (target == NULL) {
-					/* something handled it above */
-					continue;
+				g_free (database);
+			} else {
+				if (alpm_sync_target ((char *) target) == 0) {
+					target = NULL;
 				}
-				
-				g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not mark the package '%s' for installation: %s"), target, alpm_strerrorlast ());
-				return FALSE;
+			}
+			
+			if (target != NULL) {
+				/* ignore minor errors */
+				if (pm_errno != PACMAN_ERROR_TRANSACTION_DUPLICATE_TARGET && pm_errno != PACMAN_ERROR_PACKAGE_IGNORED) {
+					g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not mark the package '%s' for installation: %s"), target, alpm_strerrorlast ());
+					return FALSE;
+				}
 			}
 		}
 	} else {
-		/* TODO: provide an option to do alpm_logaction ("starting full system upgrade\n");*/
-		if (alpm_trans_sysupgrade ((pacman_transaction_get_flags (transaction) & PACMAN_TRANSACTION_FLAGS_SYNC_ALLOW_DOWNGRADE) != 0) < 0) {
+		alpm_logaction ("starting full system upgrade\n");
+		if (alpm_sync_sysupgrade ((pacman_transaction_get_flags (transaction) & PACMAN_TRANSACTION_FLAGS_SYNC_ALLOW_DOWNGRADE) != 0) < 0) {
 			g_set_error (error, PACMAN_ERROR, pm_errno, _("Could not prepare transaction: %s"), alpm_strerrorlast ());
 			return FALSE;
 		}
@@ -179,7 +160,7 @@ static gboolean pacman_sync_real_prepare (PacmanTransaction *transaction, const 
 		PacmanList *sync_firsts = NULL;
 		ask_sync_first = FALSE;
 		
-		for (i = pacman_transaction_get_packages (transaction); i != NULL; i = pacman_list_next (i)) {
+		for (i = pacman_transaction_get_installs (transaction); i != NULL; i = pacman_list_next (i)) {
 			PacmanPackage *package = (PacmanPackage *) pacman_list_get (i);
 			const gchar *name = pacman_package_get_name (package);
 		
