@@ -2,7 +2,7 @@
 # Contributor: onestep_ua <onestep@ukr.net>
 
 pkgname=packagekit
-pkgver=0.6.4
+pkgver=0.6.5
 pkgrel=1
 pkgdesc='A system designed to make installing and updating software on your computer easier'
 arch=('i686' 'x86_64')
@@ -14,16 +14,13 @@ makedepends=('intltool' 'pm-utils' 'gobject-introspection')
 backup=('var/lib/PackageKit/transactions.db'
         'etc/PackageKit/pacman.d/pacman.conf'
         'etc/PackageKit/pacman.d/repos.list')
-options=('!libtool' '!strip')
-source=("http://www.packagekit.org/releases/PackageKit-${pkgver}.tar.bz2"
-        'pacman-glib.patch')
-sha256sums=('8112808350dc5f26f2216bdad779e480d61e0744c6f827710e6f6130d985884d'
-            '4dd0b96e0091c4717d6e53b6eb8dbea6a5f92ac2b361f5e6a0e9f30367ca7174')
+options=('!libtool')
+source=("http://www.packagekit.org/releases/PackageKit-${pkgver}.tar.bz2")
+sha256sums=('cc68e26d69607670aa1ec56ab2e06ad26a3497507436774cbcfebadc39ec50c1')
 
 build() {
 	cd "${srcdir}/PackageKit-${pkgver}"
 	
-	patch -Np1 -i "${srcdir}/pacman-glib.patch" || return 1
 	sed -i 's/SUBDIRS = test/SUBDIRS =/' backends/Makefile.in || return 1
 	
 	./autogen.sh --prefix=/usr \
@@ -47,7 +44,7 @@ build() {
 		--enable-pacman \
 		--with-default-backend=pacman || return 1
 	
-	make CFLAGS='-g -O0' -s || return 1
+	make -s || return 1
 	make -s DESTDIR="${pkgdir}" install || return 1
 	
 	# clean up unneeded stuff
