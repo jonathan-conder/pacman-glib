@@ -63,6 +63,7 @@ gchar *pacman_list_find_string (const PacmanList *haystack, const gchar *needle)
 PacmanList *pacman_list_sort (PacmanList *list, GCompareFunc func);
 PacmanList *pacman_list_reverse (PacmanList *list);
 PacmanList *pacman_list_diff (const PacmanList *lhs, const PacmanList *rhs, GCompareFunc func);
+void pacman_list_diff_sorted (const PacmanList *lhs, const PacmanList *rhs, GCompareFunc func, PacmanList **inlhs, PacmanList **inrhs);
 PacmanList *pacman_list_copy (const PacmanList *list);
 PacmanList *pacman_list_strdup (const PacmanList *list);
 

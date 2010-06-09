@@ -407,6 +407,20 @@ PacmanList *pacman_list_diff (const PacmanList *lhs, const PacmanList *rhs, GCom
 }
 
 /**
+ * pacman_list_diff_sorted:
+ * @lhs: A sorted #PacmanList.
+ * @rhs: A sorted #PacmanList.
+ * @func: A #GCompareFunc function.
+ * @inlhs: Address of a #PacmanList, or %NULL.
+ * @inrhs: Address of a #PacmanList, or %NULL.
+ *
+ * Searches the sorted lists @lhs and @rhs for items that have no equivalent in the other (as determined by @func), and adds these items to @inlhs and @inrhs respectively. Free these lists with pacman_list_free().
+ */
+void pacman_list_diff_sorted (const PacmanList *lhs, const PacmanList *rhs, GCompareFunc func, PacmanList **inlhs, PacmanList **inrhs) {
+	return alpm_list_diff_sorted (lhs, rhs, (alpm_list_fn_cmp) func, inlhs, inrhs);
+}
+
+/**
  * pacman_list_copy:
  * @list: A #PacmanList.
  *

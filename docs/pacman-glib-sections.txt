@@ -359,6 +359,7 @@ pacman_list_find_string
 pacman_list_sort
 pacman_list_reverse
 pacman_list_diff
+pacman_list_diff_sorted
 pacman_list_copy
 pacman_list_strdup
 </SECTION>
