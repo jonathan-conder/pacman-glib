@@ -82,14 +82,14 @@ void pacman_manager_set_use_syslog (PacmanManager *manager, gboolean value);
  * @manager: A #PacmanManager.
  * @url: A URL.
  * @filename: A file name.
- * @mtime: A modification time.
+ * @again: Whether to download an existing file again.
  * @user_data: User data specified when the transfer handler was set.
  *
- * The type of function used to download files. The function should download a file from @url and save it at @filename. Initially, @mtime is set to the modification time of the most recent file downloaded to @filename, or 0 if this is unknown. The function must update this value to the modification time of the downloaded file, or set it to 0 if this is unknown.
+ * The type of function used to download files. The function should download a file from @url and save it at @filename. If @again is set, the file should be downloaded even if the local copy is identical.
  *
- * Returns: %TRUE if the download succeeded, %FALSE otherwise.
+ * Returns: 0 if the download succeeded, 1 if the file did not need to be downloaded again, or -1 if an error occured.
  */
-typedef gboolean (*PacmanTransferFunc) (PacmanManager *manager, const gchar *url, const gchar *filename, time_t *mtime, gpointer user_data);
+typedef gint (*PacmanTransferFunc) (PacmanManager *manager, const gchar *url, const gchar *filename, gboolean again, gpointer user_data);
 void pacman_manager_set_transfer_closure (PacmanManager *manager, GClosure *closure);
 void pacman_manager_set_transfer_handler (PacmanManager *manager, PacmanTransferFunc func, gpointer user_data, GClosureNotify destroy_data);
 void pacman_manager_set_transfer_command (PacmanManager *manager, const gchar *command);

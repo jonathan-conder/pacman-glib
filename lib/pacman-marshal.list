@@ -1,5 +1,5 @@
 # pacman-manager.c
-BOOLEAN:STRING,STRING,POINTER
+INT:STRING,STRING,BOOLEAN
 
 # pacman-transaction.c
 VOID:ENUM,STRING

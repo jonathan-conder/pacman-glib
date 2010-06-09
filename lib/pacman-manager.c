@@ -17,6 +17,7 @@
  */
 
 #include <sys/utsname.h>
+#include <sys/wait.h>
 #include <glib/gi18n-lib.h>
 #include <alpm.h>
 #include "pacman-error.h"
@@ -474,17 +475,15 @@ void pacman_manager_set_use_syslog (PacmanManager *manager, gboolean value) {
 	alpm_option_set_usesyslog (value);
 }
 
-static gint pacman_manager_fetch_cb (const gchar *url, const gchar *path, time_t old_mtime, time_t *new_mtime) {
+static gint pacman_manager_fetch_cb (const gchar *url, const gchar *path, int force) {
 	PacmanManagerPrivate *priv;
 	GValue result = { 0 }, params[4] = { 0 };
-	time_t mtime;
 	
 	g_return_val_if_fail (url != NULL, -1);
 	g_return_val_if_fail (path != NULL, -1);
 	g_return_val_if_fail (pacman_manager != NULL, -1);
 	
 	priv = PACMAN_MANAGER_GET_PRIVATE (pacman_manager);
-	mtime = old_mtime;
 	
 	g_value_init (&params[0], PACMAN_TYPE_MANAGER);
 	g_value_set_instance (&params[0], pacman_manager);
@@ -495,25 +494,13 @@ static gint pacman_manager_fetch_cb (const gchar *url, const gchar *path, time_t
 	g_value_init (&params[2], G_TYPE_STRING);
 	g_value_set_string (&params[2], path);
 	
-	g_value_init (&params[3], G_TYPE_POINTER);
-	g_value_set_pointer (&params[3], &mtime);
+	g_value_init (&params[3], G_TYPE_BOOLEAN);
+	g_value_set_boolean (&params[3], force != 0);
 	
-	g_value_init (&result, G_TYPE_BOOLEAN);
+	g_value_init (&result, G_TYPE_INT);
 	g_closure_invoke (priv->transfer, &result, 4, params, NULL);
 	
-	if (!g_value_get_boolean (&result)) {
-		return -1;
-	}
-	
-	if (new_mtime != NULL) {
-		*new_mtime = mtime;
-	}
-	
-	if (old_mtime != 0 && old_mtime == mtime) {
-		return 1;
-	} else {
-		return 0;
-	}
+	return g_value_get_int (&result);
 }
 
 /**
@@ -544,7 +531,7 @@ void pacman_manager_set_transfer_closure (PacmanManager *manager, GClosure *clos
 	}
 }
 
-void g_cclosure_user_marshal_BOOLEAN__STRING_STRING_POINTER (GClosure *closure, GValue *result, guint param_count, const GValue *param_values, gpointer hint, gpointer marshal_data);
+void g_cclosure_user_marshal_INT__STRING_STRING_BOOLEAN (GClosure *closure, GValue *result, guint param_count, const GValue *param_values, gpointer hint, gpointer marshal_data);
 
 /**
  * pacman_manager_set_transfer_handler:
@@ -562,35 +549,34 @@ void pacman_manager_set_transfer_handler (PacmanManager *manager, PacmanTransfer
 		pacman_manager_set_transfer_closure (manager, NULL);
 	} else {
 		GClosure *closure = g_cclosure_new (G_CALLBACK (func), user_data, destroy_data);
-		g_closure_set_marshal (closure, g_cclosure_user_marshal_BOOLEAN__STRING_STRING_POINTER);
+		g_closure_set_marshal (closure, g_cclosure_user_marshal_INT__STRING_STRING_BOOLEAN);
 		pacman_manager_set_transfer_closure (manager, closure);
 	}
 }
 
-static gboolean pacman_transfer_with_command (PacmanManager *manager, const gchar *url, const gchar *path, time_t *mtime, gpointer user_data) {
+static gint pacman_transfer_with_command (PacmanManager *manager, const gchar *url, const gchar *path, gboolean again, gpointer user_data) {
 	const gchar *transfer_command = (const gchar *) user_data;
 	GRegex *input, *output;
 	gchar *old_pwd, *basename, *tempname, *filename;
 	gchar *temp_command, *final_command;
-	gint exit_status = -1;
+	gint status = -1;
 	
 	g_return_val_if_fail (url != NULL, FALSE);
 	g_return_val_if_fail (path != NULL, FALSE);
-	g_return_val_if_fail (mtime != NULL, FALSE);
 	g_return_val_if_fail (transfer_command != NULL, FALSE);
 	
 	old_pwd = g_get_current_dir ();
 	if (g_chdir (path) < 0) {
 		g_warning ("Could not locate download directory %s\n", path);
 		g_free (old_pwd);
-		return FALSE;
+		return status;
 	}
 	
 	input = g_regex_new ("%u", 0, 0, NULL);
 	if (input == NULL) {
 		g_chdir (old_pwd);
 		g_free (old_pwd);
-		return FALSE;
+		return status;
 	}
 	
 	output = g_regex_new ("%o", 0, 0, NULL);
@@ -598,12 +584,19 @@ static gboolean pacman_transfer_with_command (PacmanManager *manager, const gcha
 		g_regex_unref (input);
 		g_chdir (old_pwd);
 		g_free (old_pwd);
-		return FALSE;
+		return status;
 	}
 	
 	basename = g_path_get_basename (url);
 	tempname = g_strdup_printf ("%s%s.part", path, basename);
 	filename = g_strdup_printf ("%s%s", path, basename);
+	
+	if (again && g_file_test (tempname, G_FILE_TEST_EXISTS)) {
+		g_unlink (tempname);
+	}
+	if (again && g_file_test (filename, G_FILE_TEST_EXISTS)) {
+		g_unlink (filename);
+	}
 	
 	temp_command = g_regex_replace_literal (output, transfer_command, -1, 0, tempname, 0, NULL);
 	if (temp_command != NULL) {
@@ -615,21 +608,29 @@ static gboolean pacman_transfer_with_command (PacmanManager *manager, const gcha
 		
 		final_command = g_regex_replace_literal (input, temp_command, -1, 0, url, 0, NULL);
 		if (final_command != NULL) {
-			if (!g_spawn_command_line_sync (final_command, NULL, NULL, &exit_status, NULL)) {
+			if (!g_spawn_command_line_sync (final_command, NULL, NULL, &status, NULL)) {
 				g_warning ("Could not run transfer command %s\n", final_command);
-			} else if (exit_status != 0) {
-				g_warning ("Transfer command returned error code %d\n", exit_status);
-			} else if (tempname != NULL) {
-				/* using .part filename */
-				if (g_rename (tempname, filename) < 0) {
-					g_warning ("Could not rename resulting file %s\n", tempname);
-					exit_status = -1;
+				status = -1;
+			} else if (WIFEXITED (status) == 0) {
+				g_warning ("Transfer command did not terminate correctly\n");
+				status = -1;
+			} else if (WEXITSTATUS (status) != EXIT_SUCCESS) {
+				g_warning ("Transfer command returned error code %d\n", WEXITSTATUS (status));
+				status = -1;
+			} else {
+				status = 0;
+				
+				if (tempname != NULL) {
+					/* using .part filename */
+					if (g_rename (tempname, filename) < 0) {
+						g_warning ("Could not rename resulting file %s\n", tempname);
+						status = -1;
+					}
 				}
 			}
 		}
 	}
 	
-	/* temp_command might be garbage if fc is NULL */
 	if (final_command != NULL) {
 		g_free (final_command);
 		g_free (temp_command);
@@ -645,8 +646,7 @@ static gboolean pacman_transfer_with_command (PacmanManager *manager, const gcha
 	g_chdir (old_pwd);
 	g_free (old_pwd);
 	
-	*mtime = 0;
-	return exit_status == 0;
+	return status;
 }
 
 static void pacman_transfer_command_free (gpointer user_data, GClosure *closure) {
