@@ -32,6 +32,7 @@
 #include <pacman-list.h>
 #include <pacman-manager.h>
 #include <pacman-missing-dependency.h>
+#include <pacman-modify.h>
 #include <pacman-package.h>
 #include <pacman-remove.h>
 #include <pacman-sync.h>

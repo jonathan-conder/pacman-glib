@@ -37,6 +37,7 @@ typedef struct _PacmanInstall PacmanInstall;
 typedef struct __alpm_list_t PacmanList;
 typedef struct _PacmanManager PacmanManager;
 typedef struct __pmdepmissing_t PacmanMissingDependency;
+typedef struct _PacmanModify PacmanModify;
 typedef struct __pmpkg_t PacmanPackage;
 typedef struct _PacmanRemove PacmanRemove;
 typedef struct _PacmanSync PacmanSync;

@@ -146,6 +146,7 @@ const gchar *pacman_manager_get_version (PacmanManager *manager);
 PacmanTransaction *pacman_manager_get_transaction (PacmanManager *manager);
 
 PacmanTransaction *pacman_manager_install (PacmanManager *manager, guint32 flags, GError **error);
+PacmanTransaction *pacman_manager_modify (PacmanManager *manager, guint32 flags, GError **error);
 PacmanTransaction *pacman_manager_remove (PacmanManager *manager, guint32 flags, GError **error);
 PacmanTransaction *pacman_manager_sync (PacmanManager *manager, guint32 flags, GError **error);
 PacmanTransaction *pacman_manager_update (PacmanManager *manager, guint32 flags, GError **error);

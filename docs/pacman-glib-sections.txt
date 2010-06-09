@@ -66,6 +66,7 @@ pacman_manager_configure
 pacman_manager_get_version
 pacman_manager_get_transaction
 pacman_manager_install
+pacman_manager_modify
 pacman_manager_remove
 pacman_manager_sync
 pacman_manager_update
@@ -148,6 +149,22 @@ PacmanInstallClass
 PACMAN_INSTALL_CLASS
 PACMAN_IS_INSTALL_CLASS
 PACMAN_INSTALL_GET_CLASS
+</SECTION>
+
+<SECTION>
+<FILE>pacman-modify</FILE>
+<TITLE>PacmanModify</TITLE>
+PacmanModify
+pacman_modify_get_packages
+<SUBSECTION Standard>
+PACMAN_MODIFY
+PACMAN_IS_MODIFY
+PACMAN_TYPE_MODIFY
+pacman_modify_get_type
+PacmanModifyClass
+PACMAN_MODIFY_CLASS
+PACMAN_IS_MODIFY_CLASS
+PACMAN_MODIFY_GET_CLASS
 </SECTION>
 
 <SECTION>
