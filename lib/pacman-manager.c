@@ -51,7 +51,6 @@ typedef struct _PacmanManagerPrivate {
 	gboolean i_love_candy;
 	gboolean show_size;
 	gboolean total_download;
-	gboolean use_delta;
 	
 	gchar *clean_method;
 	GClosure *transfer;
@@ -430,12 +429,9 @@ void pacman_manager_set_total_download (PacmanManager *manager, gboolean value) 
  * Returns: %TRUE if delta patches will used, %FALSE otherwise.
  */
 gboolean pacman_manager_get_use_delta (PacmanManager *manager) {
-	PacmanManagerPrivate *priv;
-	
 	g_return_val_if_fail (manager != NULL, FALSE);
 	
-	priv = PACMAN_MANAGER_GET_PRIVATE (manager);
-	return priv->use_delta;
+	return alpm_option_get_usedelta ();
 }
 
 /**
@@ -446,12 +442,8 @@ gboolean pacman_manager_get_use_delta (PacmanManager *manager) {
  * Sets UseDelta to @value. See pacman_manager_get_use_delta().
  */
 void pacman_manager_set_use_delta (PacmanManager *manager, gboolean value) {
-	PacmanManagerPrivate *priv;
-	
 	g_return_if_fail (manager != NULL);
 	
-	priv = PACMAN_MANAGER_GET_PRIVATE (manager);
-	priv->use_delta = value;
 	alpm_option_set_usedelta (value);
 }
 
