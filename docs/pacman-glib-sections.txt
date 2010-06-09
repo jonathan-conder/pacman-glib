@@ -235,6 +235,7 @@ pacman_package_get_provides
 pacman_package_get_replaces
 pacman_package_get_backup
 pacman_package_get_deltas
+pacman_package_find_unused_deltas
 pacman_package_get_files
 pacman_package_get_size
 pacman_package_get_download_size

@@ -423,6 +423,20 @@ const PacmanList *pacman_package_get_deltas (PacmanPackage *package) {
 }
 
 /**
+ * pacman_package_find_unused_deltas:
+ * @package: A #PacmanPackage.
+ *
+ * Finds a list of delta patches that are no longer used by @package.
+ *
+ * Returns: A list of file names. Free with pacman_list_free().
+ */
+PacmanList *pacman_package_find_unused_deltas (PacmanPackage *package) {
+	g_return_val_if_fail (package != NULL, NULL);
+	
+	return alpm_pkg_unused_deltas (package);
+}
+
+/**
  * pacman_package_get_files:
  * @package: A #PacmanPackage.
  *

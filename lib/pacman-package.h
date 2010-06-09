@@ -57,6 +57,7 @@ const PacmanList *pacman_package_get_replaces (PacmanPackage *package);
 
 const PacmanList *pacman_package_get_backup (PacmanPackage *package);
 const PacmanList *pacman_package_get_deltas (PacmanPackage *package);
+PacmanList *pacman_package_find_unused_deltas (PacmanPackage *package);
 const PacmanList *pacman_package_get_files (PacmanPackage *package);
 
 goffset pacman_package_get_size (PacmanPackage *package);
