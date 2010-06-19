@@ -17,6 +17,7 @@
  */
 
 #include <string.h>
+#include <glob.h>
 #include <glib/gi18n-lib.h>
 #include <gio/gio.h>
 #include "pacman-error.h"
@@ -300,7 +301,7 @@ static gboolean pacman_config_parse (PacmanConfig *config, const gchar *filename
 	GError *e = NULL;
 	
 	gchar *key, *str, *line = NULL;
-	int i, num = 0;
+	gint i, num = 0;
 	
 	g_return_if_fail (config != NULL);
 	g_return_if_fail (filename != NULL);
@@ -378,8 +379,19 @@ static gboolean pacman_config_parse (PacmanConfig *config, const gchar *filename
 				g_strchug (str);
 				
 				if (g_strcmp0 (key, "Include") == 0) {
-					/* could get an infinite loop from includes, but root can't be that stupid */
-					if (!pacman_config_parse (config, str, section, &e)) {
+					glob_t match;
+					gsize i;
+					
+					if (glob (str, GLOB_NOCHECK, NULL, &match) == 0) {
+						for (i = 0; i < match.gl_pathc; ++i) {
+							if (!pacman_config_parse (config, match.gl_pathv[i], section, &e)) {
+								break;
+							}
+						}
+					}
+					
+					globfree (&match);
+					if (e != NULL) {
 						break;
 					}
 				} else if (g_strcmp0 (section, "options") == 0) {
