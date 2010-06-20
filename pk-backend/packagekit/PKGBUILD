@@ -9,19 +9,22 @@ arch=('i686' 'x86_64')
 url='http://www.packagekit.org/'
 license=('GPL')
 depends=('glib2>=2.22.0' 'dbus-glib>=0.74' 'networkmanager>=0.6.4'
-         'polkit>=0.92' 'pacman-glib>=3.3.0' 'python>=2.6' 'sqlite3')
+         'polkit>=0.92' 'pacman-glib>=3.4.0' 'python>=2.6' 'sqlite3')
 makedepends=('intltool' 'pm-utils' 'gobject-introspection')
 backup=('var/lib/PackageKit/transactions.db'
         'etc/PackageKit/pacman.d/pacman.conf'
         'etc/PackageKit/pacman.d/repos.list')
 options=('!libtool')
-source=("http://www.packagekit.org/releases/PackageKit-${pkgver}.tar.bz2")
-sha256sums=('cc68e26d69607670aa1ec56ab2e06ad26a3497507436774cbcfebadc39ec50c1')
+source=("http://www.packagekit.org/releases/PackageKit-${pkgver}.tar.bz2"
+        'pacman-glib.patch')
+sha256sums=('cc68e26d69607670aa1ec56ab2e06ad26a3497507436774cbcfebadc39ec50c1'
+            '19a98b43881e856b322d4a41bc315b8490eec45c0e032e5457c0ecc2e44c8fe0')
 
 build() {
 	cd "${srcdir}/PackageKit-${pkgver}"
 	
 	sed -i 's/SUBDIRS = test/SUBDIRS =/' backends/Makefile.in || return 1
+	patch -Np1 -i "$srcdir/pacman-glib.patch" || return 1
 	
 	./autogen.sh --prefix=/usr \
 		--sysconfdir=/etc \
