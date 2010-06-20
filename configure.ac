@@ -1,4 +1,4 @@
-AC_INIT([pacman-glib], [3.3.0])
+AC_INIT([pacman-glib], [3.4.0])
 AC_CONFIG_SRCDIR([lib/pacman.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h])
@@ -21,9 +21,6 @@ AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], "$GETTEXT_PACKAGE")
 AC_SUBST([GETTEXT_PACKAGE])
 AM_GLIB_GNU_GETTEXT
 IT_PROG_INTLTOOL([0.35.0])
-
-LIB_VERSION_INFO="0:0:0"
-AC_SUBST([LIB_VERSION_INFO])
 
 # Earlier versions probably work, but I'm not sure
 GLIB_REQUIRED=[2.22.0]

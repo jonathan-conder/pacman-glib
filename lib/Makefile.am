@@ -7,7 +7,7 @@ lib_LTLIBRARIES = lib@PACKAGE_TARNAME@.la
 lib@PACKAGE_TARNAME@_la_SOURCES = pacman-config.c pacman-conflict.c pacman-database.c pacman-delta.c pacman-dependency.c pacman-enum.c pacman-error.c pacman-file-conflict.c pacman-group.c pacman-install.c pacman-list.c pacman-manager.c pacman-marshal.c pacman-missing-dependency.c pacman-modify.c pacman-package.c pacman-remove.c pacman-sync.c pacman-transaction.c pacman-update.c
 lib@PACKAGE_TARNAME@_la_CFLAGS = $(GLIB_CFLAGS) $(ALPM_CFLAGS) -include $(CONFIG_HEADER)
 lib@PACKAGE_TARNAME@_la_LIBADD = $(GLIB_LIBS) $(ALPM_LIBS)
-lib@PACKAGE_TARNAME@_la_LDFLAGS = -no-undefined -version-info $(LIB_VERSION_INFO)
+lib@PACKAGE_TARNAME@_la_LDFLAGS = -no-undefined -avoid-version
 
 pacman-enum.c: pacman-enum.c.template pacman-dependency.h pacman-error.h pacman-transaction.h
 	$(GLIB_MKENUMS) --template $^ > $@.tmp && \
