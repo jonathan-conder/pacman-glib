@@ -689,18 +689,12 @@ const gchar *pacman_manager_get_architecture (PacmanManager *manager) {
  * @manager: A #PacmanManager.
  * @architecture: A processor architecture.
  *
- * Sets Architecture to @architecture. See pacman_manager_get_architecture(). The special value "auto" will set this automatically.
+ * Sets Architecture to @architecture. See pacman_manager_get_architecture().
  */
 void pacman_manager_set_architecture (PacmanManager *manager, const gchar *architecture) {
 	g_return_if_fail (manager != NULL);
 	
-	if (g_strcmp0 (architecture, "auto") == 0) {
-		struct utsname un;
-		uname (&un);
-		alpm_option_set_arch (un.machine);
-	} else {
-		alpm_option_set_arch (architecture);
-	}
+	alpm_option_set_arch (architecture);
 }
 
 /**

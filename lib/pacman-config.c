@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <sys/utsname.h>
 #include <string.h>
 #include <glob.h>
 #include <glib/gi18n-lib.h>
@@ -146,7 +147,13 @@ static void pacman_config_set_architecture (PacmanConfig *config, const gchar *a
 	g_return_if_fail (architecture != NULL);
 	
 	g_free (config->architecture);
-	config->architecture = g_strdup (architecture);
+	if (g_strcmp0 (architecture, "auto") == 0) {
+		struct utsname un;
+		uname (&un);
+		config->architecture = g_strdup (un.machine);
+	} else {
+		config->architecture = g_strdup (architecture);
+	}
 }
 
 static void pacman_config_set_clean_method (PacmanConfig *config, const gchar *method) {
