@@ -18,7 +18,7 @@ options=('!libtool')
 source=("http://www.packagekit.org/releases/PackageKit-${pkgver}.tar.bz2"
         'pacman-glib.patch')
 sha256sums=('cc68e26d69607670aa1ec56ab2e06ad26a3497507436774cbcfebadc39ec50c1'
-            '19a98b43881e856b322d4a41bc315b8490eec45c0e032e5457c0ecc2e44c8fe0')
+            '1cb05c7bff0f1a0cb18005dfddd13fee81745a2d4c6597903a23e4ee2727c698')
 
 build() {
 	cd "${srcdir}/PackageKit-${pkgver}"

@@ -222,10 +222,27 @@ index af35f69..a00f107 100644
  
  		licenses = g_string_free (string, FALSE);
 diff --git a/backends/pacman/backend-pacman.c b/backends/pacman/backend-pacman.c
-index a032403..8586790 100644
+index a032403..14147c6 100644
 --- a/backends/pacman/backend-pacman.c
 +++ b/backends/pacman/backend-pacman.c
-@@ -246,7 +246,7 @@ PK_BACKEND_OPTIONS (
+@@ -56,6 +56,7 @@ pacman_message_cb (const gchar *domain, GLogLevelFlags level, const gchar *messa
+ 			break;
+ 
+ 		default:
++			egg_warning ("pacman: %s", message);
+ 			break;
+ 	}
+ }
+@@ -67,7 +68,7 @@ static void
+ backend_initialize (PkBackend *backend)
+ {
+ 	GError *error = NULL;
+-	GLogLevelFlags flags = G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO | G_LOG_LEVEL_DEBUG;
++	GLogLevelFlags flags = G_LOG_LEVEL_MASK;
+ 
+ 	g_return_if_fail (backend != NULL);
+ 
+@@ -246,7 +247,7 @@ PK_BACKEND_OPTIONS (
  	backend_update_packages,		/* update_packages */
  	NULL,					/* update_system */
  	backend_what_provides,			/* what_provides */
