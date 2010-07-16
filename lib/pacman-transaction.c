@@ -106,8 +106,8 @@ const gchar *pacman_transaction_question_get_nick (PacmanTransactionQuestion que
 
 static void transaction_signal_questions_make_details (void) {
 	gint i;
-	for (i = 0; i < PACMAN_TRANSACTION_QUESTION_LAST; ++i) {
-		const gchar *name = pacman_transaction_question_get_nick (i);
+	for (i = 0; (1 << i) < PACMAN_TRANSACTION_QUESTION_LAST; ++i) {
+		const gchar *name = pacman_transaction_question_get_nick (1 << i);
 		if (name != NULL) {
 			transaction_signal_questions[i] = g_quark_from_static_string (name);
 		}
@@ -638,7 +638,7 @@ static void pacman_transaction_question_cb (pmtransconv_t question, gpointer dat
 			/* called in sync_prepare, data1 = list of unsyncable packages */
 			gchar *packages = pacman_package_make_list ((PacmanList *) data1);
 			
-			pacman_transaction_set_marked_packages (transaction, (PacmanList *) data1);
+			pacman_transaction_set_marked_packages (transaction, pacman_list_copy ((PacmanList *) data1));
 			*response = (gint) pacman_transaction_ask (transaction, PACMAN_TRANSACTION_QUESTION_SKIP_UNRESOLVABLE_PACKAGES, _("The following packages have unresolved dependencies: %s. Do you want to continue without them?"), packages);
 			pacman_transaction_set_marked_packages (transaction, NULL);
 			

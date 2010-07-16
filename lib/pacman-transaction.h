@@ -161,9 +161,9 @@ typedef enum {
  * @PACMAN_TRANSACTION_QUESTION_INSTALL_IGNORE_PACKAGE: Whether to install a newer version of a package marked as IgnorePkg or IgnoreGroup. The relevant package will be the marked package for the transaction.
  * @PACMAN_TRANSACTION_QUESTION_REPLACE_PACKAGE: Whether to replace an installed package with a different one marked as a replacement. The relevant packages will be in the conflict for the transaction.
  * @PACMAN_TRANSACTION_QUESTION_REMOVE_CONFLICTING_PACKAGE: Whether to replace an installed package with a different one that conflicts with it. The relevant packages will be in the conflict for the transaction.
+ * @PACMAN_TRANSACTION_QUESTION_DELETE_CORRUPTED_PACKAGE: Whether to delete a package file that is corrupt (the transaction will fail either way). The relevant file will be the invalid file for the transaction.
  * @PACMAN_TRANSACTION_QUESTION_SKIP_UNRESOLVABLE_PACKAGES: Whether to continue the transaction even though some of the packages will not be able to be installed. The relevant packages will be the marked packages for the transaction.
  * @PACMAN_TRANSACTION_QUESTION_INSTALL_OLDER_PACKAGE: Whether to install an older version of a package than the one already installed. The older package will be the marked package for the transaction.
- * @PACMAN_TRANSACTION_QUESTION_DELETE_CORRUPTED_PACKAGE: Whether to delete a package file that is corrupt (the transaction will fail either way). The relevant file will be the invalid file for the transaction.
  * @PACMAN_TRANSACTION_QUESTION_REMOVE_HOLD_PACKAGES: Whether to remove packages that are marked as HoldPkg. The relevant packages will be the marked packages for the transaction.
  * @PACMAN_TRANSACTION_QUESTION_SYNC_FIRST: Whether to cancel the transaction and install packages marked as SyncFirst instead. The relevant packages will be the marked packages for the transaction.
  * @PACMAN_TRANSACTION_QUESTION_LAST: Should not be used.
@@ -171,14 +171,14 @@ typedef enum {
  * Questions that will be emitted by the "question" signal of a #PacmanTransaction. If desired, a custom question description could be derived from the question and the marked packages/conflicts/invalid files of the transaction.
  */
 typedef enum {
-	PACMAN_TRANSACTION_QUESTION_INSTALL_IGNORE_PACKAGE,
-	PACMAN_TRANSACTION_QUESTION_REPLACE_PACKAGE,
-	PACMAN_TRANSACTION_QUESTION_REMOVE_CONFLICTING_PACKAGE,
-	PACMAN_TRANSACTION_QUESTION_SKIP_UNRESOLVABLE_PACKAGES,
-	PACMAN_TRANSACTION_QUESTION_INSTALL_OLDER_PACKAGE,
-	PACMAN_TRANSACTION_QUESTION_DELETE_CORRUPTED_PACKAGE,
-	PACMAN_TRANSACTION_QUESTION_REMOVE_HOLD_PACKAGES,
-	PACMAN_TRANSACTION_QUESTION_SYNC_FIRST,
+	PACMAN_TRANSACTION_QUESTION_INSTALL_IGNORE_PACKAGE = (1 << 0),
+	PACMAN_TRANSACTION_QUESTION_REPLACE_PACKAGE = (1 << 1),
+	PACMAN_TRANSACTION_QUESTION_REMOVE_CONFLICTING_PACKAGE = (1 << 2),
+	PACMAN_TRANSACTION_QUESTION_DELETE_CORRUPTED_PACKAGE = (1 << 3),
+	PACMAN_TRANSACTION_QUESTION_SKIP_UNRESOLVABLE_PACKAGES = (1 << 4),
+	PACMAN_TRANSACTION_QUESTION_INSTALL_OLDER_PACKAGE = (1 << 5),
+	PACMAN_TRANSACTION_QUESTION_REMOVE_HOLD_PACKAGES = (1 << 6),
+	PACMAN_TRANSACTION_QUESTION_SYNC_FIRST = (1 << 7),
 	PACMAN_TRANSACTION_QUESTION_LAST /*< skip >*/
 } PacmanTransactionQuestion;
 

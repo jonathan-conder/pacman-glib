@@ -29,7 +29,7 @@ GType @enum_name@_get_type (void) {
 }
 
 const gchar *@enum_name@_get_nick (@EnumName@ value) {
-	const gsize last = sizeof (@enum_name@_values) / sizeof (G@Type@Value);
+	const gsize last = G_N_ELEMENTS (@enum_name@_values);
 	
 	if (G_LIKELY (value < last && value == @enum_name@_values[value].value)) {
 		return @enum_name@_values[value].value_nick;
