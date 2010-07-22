@@ -214,7 +214,7 @@ static gchar *pacman_file_make_list (const PacmanList *files) {
 }
 
 static gboolean pacman_sync_commit (PacmanTransaction *transaction, GError **error) {
-	PacmanList *data;
+	PacmanList *data = NULL;
 	
 	g_return_val_if_fail (transaction != NULL, FALSE);
 	
