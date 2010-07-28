@@ -1,6 +1,6 @@
 diff -Nru a/data/gnome-packagekit.schemas.in b/data/gnome-packagekit.schemas.in
---- a/data/gnome-packagekit.schemas.in	2010-04-26 21:06:36.000000000 +1200
-+++ b/data/gnome-packagekit.schemas.in	2010-05-04 21:38:02.047514585 +1200
+--- a/data/gnome-packagekit.schemas.in	2010-05-28 02:39:59.000000000 +1200
++++ b/data/gnome-packagekit.schemas.in	2010-07-28 12:58:20.737896631 +1200
 @@ -62,6 +62,18 @@
      </schema>
  
@@ -39,8 +39,8 @@ diff -Nru a/data/gnome-packagekit.schemas.in b/data/gnome-packagekit.schemas.in
          <short>GTK+ module for font installation</short>
          <long>This key determines if applications should be able to prompt for fonts</long>
 diff -Nru a/data/gpk-install-file.desktop.in b/data/gpk-install-file.desktop.in
---- a/data/gpk-install-file.desktop.in	2010-04-26 21:06:36.000000000 +1200
-+++ b/data/gpk-install-file.desktop.in	2010-05-04 21:38:42.824180693 +1200
+--- a/data/gpk-install-file.desktop.in	2010-05-27 22:15:01.000000000 +1200
++++ b/data/gpk-install-file.desktop.in	2010-07-28 12:58:20.741229964 +1200
 @@ -10,5 +10,5 @@
  Icon=system-software-install
  StartupNotify=true
@@ -49,8 +49,8 @@ diff -Nru a/data/gpk-install-file.desktop.in b/data/gpk-install-file.desktop.in
 +MimeType=application/x-compressed-tar;application/x-xz-compressed-tar;application/x-servicepack;
  
 diff -Nru a/src/gpk-application.c b/src/gpk-application.c
---- a/src/gpk-application.c	2010-04-26 21:07:41.000000000 +1200
-+++ b/src/gpk-application.c	2010-05-04 21:41:02.930830041 +1200
+--- a/src/gpk-application.c	2010-05-28 02:55:37.000000000 +1200
++++ b/src/gpk-application.c	2010-07-28 12:58:20.744568048 +1200
 @@ -2115,6 +2115,7 @@
  gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
  {
@@ -72,9 +72,23 @@ diff -Nru a/src/gpk-application.c b/src/gpk-application.c
  					       (PkProgressCallback) gpk_application_progress_cb, application,
  					       (GAsyncReadyCallback) gpk_application_remove_packages_cb, application);
  
+diff -Nru a/src/gpk-check-update.c b/src/gpk-check-update.c
+--- a/src/gpk-check-update.c	2010-05-28 02:39:25.000000000 +1200
++++ b/src/gpk-check-update.c	2010-07-28 13:00:19.037053800 +1200
+@@ -1095,7 +1095,9 @@
+ 	}
+ 
+ 	/* get new update list */
+-	pk_client_get_updates_async (PK_CLIENT(cupdate->priv->task), PK_FILTER_ENUM_NONE, cupdate->priv->cancellable, NULL, NULL,
++	pk_client_get_updates_async (PK_CLIENT(cupdate->priv->task),
++				     pk_bitfield_value (PK_FILTER_ENUM_NONE),
++				     cupdate->priv->cancellable, NULL, NULL,
+ 				     (GAsyncReadyCallback) gpk_check_update_get_updates_finished_cb, cupdate);
+ out:
+ 	return;
 diff -Nru a/src/gpk-common.h b/src/gpk-common.h
---- a/src/gpk-common.h	2010-04-26 21:06:38.000000000 +1200
-+++ b/src/gpk-common.h	2010-05-04 21:41:42.577493912 +1200
+--- a/src/gpk-common.h	2010-05-28 02:39:25.000000000 +1200
++++ b/src/gpk-common.h	2010-07-28 12:58:20.744568048 +1200
 @@ -37,6 +37,7 @@
  #define GPK_CONF_SHOW_COPY_CONFIRM		"/apps/gnome-packagekit/show_copy_confirm"
  #define GPK_CONF_DBUS_DEFAULT_INTERACTION	"/apps/gnome-packagekit/dbus_default_interaction"
