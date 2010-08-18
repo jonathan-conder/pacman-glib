@@ -16,7 +16,7 @@ install="${pkgname}.install"
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${pkgver%.*}/${pkgname}-${pkgver}.tar.bz2"
         'arch.patch')
 sha256sums=('7a88c43a8a2db60ca0a126904d4e5094e811ce1c85427cc9306ac3ca1aedc819'
-            '6449912cd753f48f7e49607900c667f3e1b5ef7ca38bf99254f9036cb4281cd8')
+            'f122f630b56d33b58408ee97bc28ec60cf499a9503faaac4af45f1a1e2da6b5b')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

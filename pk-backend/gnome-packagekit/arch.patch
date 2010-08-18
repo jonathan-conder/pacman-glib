@@ -50,8 +50,28 @@ diff -Nru a/data/gpk-install-file.desktop.in b/data/gpk-install-file.desktop.in
  
 diff -Nru a/src/gpk-application.c b/src/gpk-application.c
 --- a/src/gpk-application.c	2010-05-28 02:55:37.000000000 +1200
-+++ b/src/gpk-application.c	2010-07-28 12:58:20.744568048 +1200
-@@ -2115,6 +2115,7 @@
++++ b/src/gpk-application.c	2010-08-18 18:48:37.577310099 +1200
+@@ -1024,7 +1024,8 @@
+ 
+ 	/* get the requires */
+ 	package_ids = pk_package_ids_from_id (package_id_selected);
+-	pk_client_get_requires_async (PK_CLIENT(application->priv->task), PK_FILTER_ENUM_NONE,
++	pk_client_get_requires_async (PK_CLIENT(application->priv->task),
++				      pk_bitfield_value (PK_FILTER_ENUM_NONE),
+ 				      package_ids, TRUE, application->priv->cancellable,
+ 				      (PkProgressCallback) gpk_application_progress_cb, application,
+ 				      (GAsyncReadyCallback) gpk_application_get_requires_cb, application);
+@@ -1147,7 +1148,8 @@
+ 
+ 	/* get the depends */
+ 	package_ids = pk_package_ids_from_id (package_id_selected);
+-	pk_client_get_depends_async (PK_CLIENT(application->priv->task), PK_FILTER_ENUM_NONE,
++	pk_client_get_depends_async (PK_CLIENT(application->priv->task),
++				     pk_bitfield_value (PK_FILTER_ENUM_NONE),
+ 				     package_ids, TRUE, application->priv->cancellable,
+ 				     (PkProgressCallback) gpk_application_progress_cb, application,
+ 				     (GAsyncReadyCallback) gpk_application_get_depends_cb, application);
+@@ -2115,6 +2117,7 @@
  gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
  {
  	gchar **package_ids = NULL;
@@ -59,7 +79,7 @@ diff -Nru a/src/gpk-application.c b/src/gpk-application.c
  
  	g_return_if_fail (GPK_IS_APPLICATION (application));
  
-@@ -2132,8 +2133,10 @@
+@@ -2132,8 +2135,10 @@
  
  	} else if (application->priv->action == PK_ACTION_REMOVE) {
  
@@ -71,6 +91,17 @@ diff -Nru a/src/gpk-application.c b/src/gpk-application.c
 +		pk_task_remove_packages_async (application->priv->task, package_ids, TRUE, autoremove, application->priv->cancellable,
  					       (PkProgressCallback) gpk_application_progress_cb, application,
  					       (GAsyncReadyCallback) gpk_application_remove_packages_cb, application);
+ 
+@@ -4175,7 +4180,9 @@
+ 			  G_CALLBACK (gpk_application_groups_treeview_changed_cb), application);
+ 
+ 	/* get repos, so we can show the full name in the software source box */
+-	pk_client_get_repo_list_async (PK_CLIENT(application->priv->task), PK_FILTER_ENUM_NONE, application->priv->cancellable,
++	pk_client_get_repo_list_async (PK_CLIENT(application->priv->task),
++				       pk_bitfield_value (PK_FILTER_ENUM_NONE),
++				       application->priv->cancellable,
+ 				       (PkProgressCallback) gpk_application_progress_cb, application,
+ 				       (GAsyncReadyCallback) gpk_application_get_repo_list_cb, application);
  
 diff -Nru a/src/gpk-check-update.c b/src/gpk-check-update.c
 --- a/src/gpk-check-update.c	2010-05-28 02:39:25.000000000 +1200
